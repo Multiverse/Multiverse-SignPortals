@@ -31,6 +31,7 @@ public class MVSPPlayerListener extends PlayerListener {
 		if (!b.getType().equals(Material.PORTAL)) return;
 		
 		List<Sign> s = new ArrayList<Sign>();
+
 		for (int x = -2; x <= 2; x++) {
 			for (int y = -1; y <= 3; y++) {
 				for (int z = -2; z <= 2; z++) {
@@ -49,7 +50,7 @@ public class MVSPPlayerListener extends PlayerListener {
 				World world = this.plugin.getServer().getWorld(sign.getLine(2).toString());
 				if (world != null) {
 					if (!plugin.core.getTeleporter().teleport(world, p))
-						p.sendMessage("You can't teleport to this destination.");
+					    plugin.core.getPlayerSession(p).message("You can't teleport to this destination."); // Send a message to the player which won't spam them.
 					break;
 				}
 			}

@@ -12,24 +12,30 @@ import com.onarandombox.MultiVerseCore.MultiVerseCore;
 public class MultiVerseSignPortals extends JavaPlugin {
 
 	public static final Logger log = Logger.getLogger("Minecraft");
-	
+	public static final String logPrefix = "[MultiVerse-SignPortals] ";
+		
 	protected MultiVerseCore core;
-	protected MVSPPlayerListener listener; 
+	protected MVSPPlayerListener playerListener;
 	
 	public void onEnable() {
-		core = (MultiVerseCore) getServer().getPluginManager().getPlugin("MultiVerse-Core"); 
+		
+	    core = (MultiVerseCore) getServer().getPluginManager().getPlugin("MultiVerse-Core"); 
+		
 		if (core == null) {
-			log.log(Level.SEVERE, "MultiVerse-SignPortals will not run; Core not found.");
+		    log.info(logPrefix + "MultiVerse-Core not found, will keep looking.");
 			getServer().getPluginManager().disablePlugin(this);
 			return;
 		}
-		listener = new MVSPPlayerListener(this);
-		getServer().getPluginManager().registerEvent(Type.PLAYER_MOVE, listener, Priority.Normal, this);
-		log.info("MultiVerse-SignPortals is running.");
+		
+		playerListener = new MVSPPlayerListener(this);
+		
+		getServer().getPluginManager().registerEvent(Type.PLAYER_MOVE, playerListener, Priority.Normal, this);
+		
+		log.info(logPrefix + "- Version " + this.getDescription().getVersion() + " Enabled");
 	}
 	
 	public void onDisable() {
-		log.info("MultiVerse-SignPortals was disabled.");
+	    log.log(Level.SEVERE, logPrefix + "- Disabled");
 	}
 	
 }
