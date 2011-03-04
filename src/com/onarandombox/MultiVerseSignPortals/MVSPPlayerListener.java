@@ -15,6 +15,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.util.Vector;
 
 import com.onarandombox.MultiVerseCore.MVPlayerSession;
+import com.onarandombox.MultiVerseCore.MVTeleport;
 
 public class MVSPPlayerListener extends PlayerListener {
 	
@@ -26,6 +27,7 @@ public class MVSPPlayerListener extends PlayerListener {
 	
 	public void onPlayerMove(PlayerMoveEvent event) {
 		if (event.isCancelled()) return;
+		event.setCancelled(true);
 		
 		Player p = event.getPlayer();
 		Location loc = p.getLocation();
@@ -130,8 +132,11 @@ public class MVSPPlayerListener extends PlayerListener {
 
 				World world = this.plugin.getServer().getWorld(sign.getLine(2).toString());
 				if (world != null) {
-					if (!plugin.core.getTeleporter().teleport(world, p))
+					MVTeleport mvtp = plugin.core.getTeleporter();
+					if (!mvtp.teleport(world, p))
 					    plugin.core.getPlayerSession(p).message("You can't teleport to this destination."); // Send a message to the player which won't spam them.
+					else
+						event.setTo(mvtp.target);
 					break;
 				}
 			}
