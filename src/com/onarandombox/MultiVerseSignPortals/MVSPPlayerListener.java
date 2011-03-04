@@ -133,10 +133,9 @@ public class MVSPPlayerListener extends PlayerListener {
 				World world = this.plugin.getServer().getWorld(sign.getLine(2).toString());
 				if (world != null) {
 					MVTeleport mvtp = plugin.core.getTeleporter();
-					if (!mvtp.teleport(world, p))
-					    plugin.core.getPlayerSession(p).message("You can't teleport to this destination."); // Send a message to the player which won't spam them.
-					else
+					if (mvtp.teleport(world, p)) {
 						event.setTo(mvtp.target);
+					}
 					break;
 				}
 			}
