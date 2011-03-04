@@ -1,6 +1,5 @@
 package com.onarandombox.MultiVerseSignPortals;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bukkit.plugin.java.JavaPlugin;
@@ -35,7 +34,7 @@ public class MultiVerseSignPortals extends JavaPlugin {
 	}
 	
 	public void onDisable() {
-	    log.log(Level.SEVERE, logPrefix + "- Disabled");
+	    log.info(logPrefix + "- Disabled");
 	}
 	
 }
