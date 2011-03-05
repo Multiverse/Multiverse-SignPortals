@@ -133,7 +133,7 @@ public class MVSPPlayerListener extends PlayerListener {
 				World world = this.plugin.getServer().getWorld(sign.getLine(2).toString());
 				if (world != null) {
 					MVTeleport mvtp = plugin.core.getTeleporter();
-					if (mvtp.teleport(world, p)) {
+					if (mvtp.teleport(world, p, new Location(world,lowLocX,lowLocY,lowLocZ))) {
 						event.setTo(mvtp.target);
 					}
 					break;
