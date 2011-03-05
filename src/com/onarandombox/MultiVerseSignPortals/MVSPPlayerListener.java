@@ -101,9 +101,9 @@ public class MVSPPlayerListener extends PlayerListener {
         }
 	
         // DEBUG
-        System.out.print("Portal Blocks -" + portalBlocks.size()); // A legitimate portal will contain 6 Portal blocks.
-        System.out.print("Obsidian Blocks -" + obsidianBlocks.size()); // A legitimate portal will contain between 10 and 14 Obsidian Blocks.
-        System.out.print("X Orientation - " + orientX);
+        //System.out.print("Portal Blocks -" + portalBlocks.size()); // A legitimate portal will contain 6 Portal blocks.
+        //System.out.print("Obsidian Blocks -" + obsidianBlocks.size()); // A legitimate portal will contain between 10 and 14 Obsidian Blocks.
+        //System.out.print("X Orientation - " + orientX);
         // DEBUG
         
         
