@@ -16,6 +16,7 @@ import org.bukkit.util.Vector;
 
 import com.onarandombox.MultiVerseCore.MVPlayerSession;
 import com.onarandombox.MultiVerseCore.MVTeleport;
+import com.onarandombox.MultiVerseCore.MultiVerseCore;
 
 public class MVSPPlayerListener extends PlayerListener {
 	
