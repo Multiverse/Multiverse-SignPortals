@@ -3,10 +3,12 @@ package com.onarandombox.MultiVerseSignPortals;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
@@ -28,7 +30,6 @@ public class MVSPPlayerListener extends PlayerListener {
 	
 	public void onPlayerMove(PlayerMoveEvent event) {
 		if (event.isCancelled()) return;
-		event.setCancelled(true);
 		
 		Player p = event.getPlayer();
 		Location loc = p.getLocation();
@@ -88,6 +89,7 @@ public class MVSPPlayerListener extends PlayerListener {
         
         List<Block> portalBlocks = new ArrayList<Block>();
         List<Block> obsidianBlocks = new ArrayList<Block>();
+        List<Sign> s = new ArrayList<Sign>();
         
         for (int x = lowPoint.getBlockX(); x <= highPoint.getBlockX(); x++) {
             for (int y = lowPoint.getBlockY(); y <= highPoint.getBlockY(); y++) {
@@ -95,49 +97,50 @@ public class MVSPPlayerListener extends PlayerListener {
                     Block block = w.getBlockAt(x,y,z);
                     if(block.getType().equals(Material.PORTAL))
                         portalBlocks.add(block);
-                    if(block.getType().equals(Material.OBSIDIAN))
+                    if(block.getType().equals(Material.OBSIDIAN)){
                         obsidianBlocks.add(block);
+                        
+                        // This next bit of mess grabs the BlockState for all 4 possible sides which a sign could be placed on.
+                        // Checks if a WALL_SIGN is present... if so it then checks if the Sign is attached to the Obsidian block or not.
+                        BlockState bs = null;
+                        bs = block.getRelative(BlockFace.NORTH).getState();
+                        if(bs.getType()==Material.WALL_SIGN){ if(((org.bukkit.material.Sign) bs.getData()).getAttachedFace()==BlockFace.SOUTH){ s.add((Sign) bs); } }
+                        bs = block.getRelative(BlockFace.EAST).getState();
+                        if (bs.getType()==Material.WALL_SIGN) { if(((org.bukkit.material.Sign) bs.getData()).getAttachedFace()==BlockFace.WEST){ s.add((Sign) bs); } }
+                        bs = block.getRelative(BlockFace.SOUTH).getState();
+                        if(bs.getType()==Material.WALL_SIGN) { if(((org.bukkit.material.Sign) bs.getData()).getAttachedFace()==BlockFace.NORTH){ s.add((Sign) bs); } }
+                        bs = block.getRelative(BlockFace.WEST).getState();
+                        if (bs.getType()==Material.WALL_SIGN) { if(((org.bukkit.material.Sign) bs.getData()).getAttachedFace()==BlockFace.EAST){ s.add((Sign) bs); } }
+                    }
+                    
                 }
             }
         }
 	
         // DEBUG
-        //System.out.print("Portal Blocks -" + portalBlocks.size()); // A legitimate portal will contain 6 Portal blocks.
-        //System.out.print("Obsidian Blocks -" + obsidianBlocks.size()); // A legitimate portal will contain between 10 and 14 Obsidian Blocks.
-        //System.out.print("X Orientation - " + orientX);
+        //MultiVerseCore.debugMsg(portalBlocks.size() + " - Portal Blocks");
+        //MultiVerseCore.debugMsg(obsidianBlocks.size() + " - Obsidian Blocks");
+        //MultiVerseCore.debugMsg(s.size() + " - Signs");
+        //MultiVerseCore.debugMsg(orientX + " - X Orientation");
         // DEBUG
         
-        
-        // WE CAN ALSO PERFORM A CHECK TO SEE IF WE WANT LEGITIMATE PORTALS ONLY... SO 6 PORTAL BLOCKS.
-
-        
-		List<Sign> s = new ArrayList<Sign>();
-
-		// SCRAP THE FOLLOWING LOOP FOR A NEW LOOP USING THE FOLLOWING.
-        // PERFORM A LOOP THROUGH ALL OBSIDIAN BLOCKS TO FIND A SIGN :)...
-		for (int x = -2; x <= 2; x++) {
-			for (int y = -1; y <= 3; y++) {
-				for (int z = -2; z <= 2; z++) {
-					BlockState block = b.getRelative(x, y, z).getState();
-					if (block.getType() == Material.WALL_SIGN) {
-						s.add((Sign) block);
-					}
-				}
-			}
-		}
-		
-		// THEN CYCLE THROUGH THE SIGNS FOUND.
+        // CYCLE THROUGH ALL SIGNS FOUND TO FIND A DESTINATION
 		for (int i = 0; i < s.size(); i++) {
-			Sign sign = s.get(i);
+		    Sign sign = (Sign) s.get(i);
 			if ((sign.getLine(1).equalsIgnoreCase("[multiverse]") || sign.getLine(1).equalsIgnoreCase("[mv]")) && (sign.getLine(2).length() > 0)) {
 
 				World world = this.plugin.getServer().getWorld(sign.getLine(2).toString());
 				if (world != null) {
 					MVTeleport mvtp = plugin.core.getTeleporter();
 					if (mvtp.teleport(world, p, new Location(world,lowLocX,lowLocY,lowLocZ))) {
+					    // If we're going to act upon the event then we wan't to cancel it to prevent
+					    // other plugins from trying to move the player as well.
+				        // event.setCancelled(true);
 						event.setTo(mvtp.target);
 					}
 					break;
+				} else {
+				    this.plugin.core.getPlayerSession(p).message(ChatColor.RED + "The World \"" + sign.getLine(2).toString() + "\" does not EXIST!");
 				}
 			}
 		}
