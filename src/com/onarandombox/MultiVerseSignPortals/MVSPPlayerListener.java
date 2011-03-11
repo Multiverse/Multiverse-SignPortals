@@ -125,25 +125,53 @@ public class MVSPPlayerListener extends PlayerListener {
         // DEBUG
         
         // CYCLE THROUGH ALL SIGNS FOUND TO FIND A DESTINATION
+        World world = null;
 		for (int i = 0; i < s.size(); i++) {
 		    Sign sign = (Sign) s.get(i);
 			if ((sign.getLine(1).equalsIgnoreCase("[multiverse]") || sign.getLine(1).equalsIgnoreCase("[mv]")) && (sign.getLine(2).length() > 0)) {
-
-				World world = this.plugin.getServer().getWorld(sign.getLine(2).toString());
+				world = this.plugin.getServer().getWorld(sign.getLine(2).toString());
 				if (world != null) {
-					MVTeleport mvtp = plugin.core.getTeleporter();
-					if (mvtp.teleport(world, p, new Location(world,lowLocX,lowLocY,lowLocZ))) {
-					    // If we're going to act upon the event then we wan't to cancel it to prevent
-					    // other plugins from trying to move the player as well.
-				        // event.setCancelled(true);
-						event.setTo(mvtp.target);
-					}
 					break;
 				} else {
 				    this.plugin.core.getPlayerSession(p).message(ChatColor.RED + "The World \"" + sign.getLine(2).toString() + "\" does not EXIST!");
+				    return;
 				}
 			}
 		}
+
+		MVTeleport mvtp = plugin.core.getTeleporter();
+		
+		Location dest;
+		
+		dest = mvtp.getCompressedLocation(p, world);
+		MultiVerseCore.debugMsg(dest.toString());
+		
+		Location portal = mvtp.findPortal(dest);  
+		if(portal!=null){
+		    dest = portal;
+		}
+		
+		MultiVerseCore.debugMsg(dest.toString());
+		
+		dest = mvtp.getSafeDestination(dest);
+		
+		if(dest!=null){
+		    MultiVerseCore.debugMsg(dest.toString());
+		    p.teleportTo(dest);
+		    event.setTo(dest);
+		} else {
+		    MultiVerseCore.debugMsg("Cannot find a safe location, try another portal/location.");
+		    ps.message(ChatColor.RED + "Cannot find a safe location, try another portal/location.");
+            return;
+		}
+
+        /*if (mvtp.teleport(world, p, new Location(world,lowLocX,lowLocY,lowLocZ))) {
+            // If we're going to act upon the event then we wan't to cancel it to prevent
+            // other plugins from trying to move the player as well.
+            // event.setCancelled(true);
+            //event.setTo(mvtp.target);
+            return;
+        }*/
 		
 	}
 
