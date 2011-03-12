@@ -45,6 +45,7 @@ public class MultiVerseSignPortals extends JavaPlugin {
 	}
 	
 	public void onDisable() {
+	    // The Usual
 	    log.info(logPrefix + "- Disabled");
 	}
 	
