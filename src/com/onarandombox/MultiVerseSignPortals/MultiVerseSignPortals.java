@@ -7,6 +7,7 @@ import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 
 import com.onarandombox.MultiVerseCore.MultiVerseCore;
+import com.onarandombox.utils.UpdateChecker;
 
 public class MultiVerseSignPortals extends JavaPlugin {
 
@@ -15,6 +16,8 @@ public class MultiVerseSignPortals extends JavaPlugin {
 		
 	protected MultiVerseCore core;
 	protected MVSPPlayerListener playerListener;
+	
+	public UpdateChecker updateCheck;
 	
 	public void onEnable() {
 		
@@ -31,6 +34,8 @@ public class MultiVerseSignPortals extends JavaPlugin {
 		getServer().getPluginManager().registerEvent(Type.PLAYER_MOVE, playerListener, Priority.Normal, this);
 		
 		log.info(logPrefix + "- Version " + this.getDescription().getVersion() + " Enabled");
+		
+		updateCheck = new UpdateChecker(this.getDescription().getName(),this.getDescription().getVersion());
 	}
 	
 	public void onDisable() {
