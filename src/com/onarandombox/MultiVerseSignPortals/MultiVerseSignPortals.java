@@ -16,12 +16,13 @@ public class MultiVerseSignPortals extends JavaPlugin {
 		
 	protected MultiVerseCore core;
 	protected MVSPPlayerListener playerListener;
+	protected MVSPPluginListener pluginListener;
 	
 	public UpdateChecker updateCheck;
 	
 	public void onEnable() {
 	    // Register the PLUGIN_ENABLE Event as we will need to keep an eye out for the Core Enabling if we don't find it initally.
-	    getServer().getPluginManager().registerEvent(Type.PLUGIN_ENABLE, playerListener, Priority.Normal, this);
+	    getServer().getPluginManager().registerEvent(Type.PLUGIN_ENABLE, pluginListener, Priority.Normal, this);
 	    
 		// Try and grab the Core Plugin, if it doesn't exist it will return null.
 	    core = (MultiVerseCore) getServer().getPluginManager().getPlugin("MultiVerse-Core");
