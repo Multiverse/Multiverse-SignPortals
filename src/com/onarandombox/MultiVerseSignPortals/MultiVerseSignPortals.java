@@ -22,7 +22,7 @@ public class MultiVerseSignPortals extends JavaPlugin {
 	
 	public void onEnable() {
 	    // Register the PLUGIN_ENABLE Event as we will need to keep an eye out for the Core Enabling if we don't find it initally.
-	    getServer().getPluginManager().registerEvent(Type.PLUGIN_ENABLE, pluginListener, Priority.Normal, this);
+	    // getServer().getPluginManager().registerEvent(Type.PLUGIN_ENABLE, pluginListener, Priority.Normal, this);
 	    
 		// Try and grab the Core Plugin, if it doesn't exist it will return null.
 	    core = (MultiVerseCore) getServer().getPluginManager().getPlugin("MultiVerse-Core");
@@ -39,7 +39,7 @@ public class MultiVerseSignPortals extends JavaPlugin {
 		getServer().getPluginManager().registerEvent(Type.PLAYER_MOVE, playerListener, Priority.Normal, this);
 		
 		// Simple Log output to state the plugin is ENABLED
-		log.info(logPrefix + "- Version " + this.getDescription().getVersion() + " Enabled");
+		log.info(logPrefix + "- Version " + this.getDescription().getVersion() + " Enabled - By " + getAuthors());
 		
 		// Setup the Update Checker, this will check every 30 minutes for an update to the plugin and output to the console.
 		updateCheck = new UpdateChecker(this.getDescription().getName(),this.getDescription().getVersion());
@@ -54,5 +54,21 @@ public class MultiVerseSignPortals extends JavaPlugin {
      * This fires before plugins get Enabled... Not needed but saves Console Spam.
      */
     public void onLoad() {
+    }
+    
+    /**
+     * Parse the Authors Array into a readable String with ',' and 'and'.
+     * @return
+     */
+    private String getAuthors(){
+        String authors = "";
+        for(int i=0;i<this.getDescription().getAuthors().size();i++){
+            if(i==this.getDescription().getAuthors().size()-1){
+                authors += " and " + this.getDescription().getAuthors().get(i);
+            } else {
+                authors += ", " + this.getDescription().getAuthors().get(i);
+            }
+        }
+        return authors.substring(2);
     }
 }
