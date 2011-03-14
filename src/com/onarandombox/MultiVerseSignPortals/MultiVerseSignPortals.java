@@ -21,10 +21,11 @@ public class MultiVerseSignPortals extends JavaPlugin {
 	public UpdateChecker updateCheck;
 	
 	public void onEnable() {
-	    // Register the PLUGIN_ENABLE Event as we will need to keep an eye out for the Core Enabling if we don't find it initally.
-	    // getServer().getPluginManager().registerEvent(Type.PLUGIN_ENABLE, pluginListener, Priority.Normal, this);
+        pluginListener = new MVSPPluginListener(this);
+	    // Register the PLUGIN_ENABLE Event as we will need to keep an eye out for the Core Enabling if we don't find it initially.
+        getServer().getPluginManager().registerEvent(Type.PLUGIN_ENABLE, pluginListener, Priority.Normal, this);
 	    
-		// Try and grab the Core Plugin, if it doesn't exist it will return null.
+	    // Try and grab the Core Plugin, if it doesn't exist it will return null.
 	    core = (MultiVerseCore) getServer().getPluginManager().getPlugin("MultiVerse-Core");
 
 	    // Test if the Core was found, if not we'll disable this plugin.
@@ -37,7 +38,7 @@ public class MultiVerseSignPortals extends JavaPlugin {
         // Setup the Player Listener, we only need to listen out for PLAYER_MOVE Events.
 		playerListener = new MVSPPlayerListener(this);		
 		getServer().getPluginManager().registerEvent(Type.PLAYER_MOVE, playerListener, Priority.Normal, this);
-		
+
 		// Simple Log output to state the plugin is ENABLED
 		log.info(logPrefix + "- Version " + this.getDescription().getVersion() + " Enabled - By " + getAuthors());
 		
