@@ -50,4 +50,9 @@ public class MultiVerseSignPortals extends JavaPlugin {
 	    log.info(logPrefix + "- Disabled");
 	}
 	
+    /**
+     * This fires before plugins get Enabled... Not needed but saves Console Spam.
+     */
+    public void onLoad() {
+    }
 }
