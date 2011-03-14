@@ -42,8 +42,6 @@ public class MVSPPlayerListener extends PlayerListener {
 		MVPlayerSession ps = this.plugin.core.getPlayerSession(p);
         if(ps.loc.getBlockX()==loc.getBlockX() && ps.loc.getBlockY()==loc.getBlockY() && ps.loc.getBlockZ()==loc.getBlockZ()) {
             return;
-        } else {
-            ps.loc = loc;
         }
 		
 		int locX = loc.getBlockX();
