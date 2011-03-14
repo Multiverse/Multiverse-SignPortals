@@ -1,4 +1,6 @@
 name: MultiVerse-SignPortals
 main: com.onarandombox.MultiVerseSignPortals.MultiVerseSignPortals
-author: Rigby
+author:
+    - Rigby
+    - Protected
 version: 2.0
