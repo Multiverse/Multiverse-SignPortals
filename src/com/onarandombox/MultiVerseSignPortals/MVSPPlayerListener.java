@@ -2,6 +2,7 @@ package com.onarandombox.MultiVerseSignPortals;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimerTask;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -12,6 +13,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.util.Vector;
@@ -153,15 +155,20 @@ public class MVSPPlayerListener extends PlayerListener {
 		
 		dest = mvtp.getSafeDestination(dest);
 		
-		if(dest!=null){
-		    MultiVerseCore.debugMsg(dest.toString());
-		    p.teleportTo(dest);
-		    event.setTo(dest);
-		} else {
-		    MultiVerseCore.debugMsg("Cannot find a safe location, try another portal/location.");
-		    ps.message(ChatColor.RED + "Cannot find a safe location, try another portal/location.");
-            return;
-		}
+		if(p.teleport(world.getSpawnLocation())){
+            event.setTo(world.getSpawnLocation());
+        }
+		
+//		if(dest!=null){
+//		    MultiVerseCore.debugMsg(dest.toString());
+//		    if(p.teleport(dest)){
+//		        event.setTo(dest);
+//		    }
+//		} else {
+//		    MultiVerseCore.debugMsg("Cannot find a safe location, try another portal/location.");
+//		    ps.message(ChatColor.RED + "Cannot find a safe location, try another portal/location.");
+//            return;
+//		}
 
         /*if (mvtp.teleport(world, p, new Location(world,lowLocX,lowLocY,lowLocZ))) {
             // If we're going to act upon the event then we wan't to cancel it to prevent
@@ -172,5 +179,4 @@ public class MVSPPlayerListener extends PlayerListener {
         }*/
 		
 	}
-
 }

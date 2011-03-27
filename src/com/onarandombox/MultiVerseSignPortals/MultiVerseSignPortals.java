@@ -43,7 +43,7 @@ public class MultiVerseSignPortals extends JavaPlugin {
 		log.info(logPrefix + "- Version " + this.getDescription().getVersion() + " Enabled - By " + getAuthors());
 		
 		// Setup the Update Checker, this will check every 30 minutes for an update to the plugin and output to the console.
-		updateCheck = new UpdateChecker(this.getDescription().getName(),this.getDescription().getVersion());
+		// updateCheck = new UpdateChecker(this.getDescription().getName(),this.getDescription().getVersion());
 	}
 	
 	public void onDisable() {
