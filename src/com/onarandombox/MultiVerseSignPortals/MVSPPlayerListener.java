@@ -173,15 +173,12 @@ public class MVSPPlayerListener extends PlayerListener {
 
         if (d != null) {
             MultiVerseCore.debugMsg(dest.toString());
-            if (p.teleport(d)) {
-                event.setTo(d);
-                plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-                    @Override
-                    public void run() {
-                        p.teleport(d);
-                    }
-                });
-            }
+            plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                @Override
+                public void run() {
+                    p.teleport(d);
+                }
+            });
         } else {
             MultiVerseCore.debugMsg("Cannot find a safe location, try another portal/location.");
             ps.message(ChatColor.RED + "Cannot find a safe location, try another portal/location.");
