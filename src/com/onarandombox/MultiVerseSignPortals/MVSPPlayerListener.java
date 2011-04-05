@@ -140,6 +140,7 @@ public class MVSPPlayerListener extends PlayerListener {
         // MultiVerseCore.debugMsg(orientX + " - X Orientation");
         // DEBUG
 
+        // TODO: Check if a sign exists full stop. -- Below is wrong... cycle all signs for a destination.
         // CYCLE THROUGH ALL SIGNS FOUND TO FIND A DESTINATION
         World world = null;
         for (int i = 0; i < s.size(); i++) {
@@ -154,7 +155,8 @@ public class MVSPPlayerListener extends PlayerListener {
                 }
             }
         }
-
+        
+        
         MVTeleport mvtp = plugin.core.getTeleporter();
 
         Location dest;

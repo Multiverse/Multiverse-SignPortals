@@ -6,7 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 
-import com.onarandombox.MultiVerseCore.MultiVerseCore;
+import com.onarandombox.MultiverseCore.MultiverseCore;
 import com.onarandombox.utils.UpdateChecker;
 
 public class MultiVerseSignPortals extends JavaPlugin {
@@ -14,7 +14,7 @@ public class MultiVerseSignPortals extends JavaPlugin {
 	public static final Logger log = Logger.getLogger("Minecraft");
 	public static final String logPrefix = "[MultiVerse-SignPortals] ";
 		
-	protected MultiVerseCore core;
+	protected MultiverseCore core;
 	protected MVSPPlayerListener playerListener;
 	protected MVSPPluginListener pluginListener;
 	
@@ -26,11 +26,11 @@ public class MultiVerseSignPortals extends JavaPlugin {
         getServer().getPluginManager().registerEvent(Type.PLUGIN_ENABLE, pluginListener, Priority.Normal, this);
 	    
 	    // Try and grab the Core Plugin, if it doesn't exist it will return null.
-	    core = (MultiVerseCore) getServer().getPluginManager().getPlugin("MultiVerse-Core");
+	    core = (MultiverseCore) getServer().getPluginManager().getPlugin("Multiverse-Core");
 
 	    // Test if the Core was found, if not we'll disable this plugin.
         if (core == null) {
-            log.info(logPrefix + "MultiVerse-Core not found, will keep looking.");
+            log.info(logPrefix + "Multiverse-Core not found, will keep looking.");
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
