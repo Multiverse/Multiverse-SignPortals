@@ -3,13 +3,18 @@ package com.onarandombox.MultiverseSignPortals.listeners;
 import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.permissions.PermissionDefault;
 
 import com.onarandombox.MultiverseCore.MVPermissions;
 import com.onarandombox.MultiverseSignPortals.MultiverseSignPortals;
+import com.onarandombox.MultiverseSignPortals.utils.PortalDetector;
+import com.onarandombox.MultiverseSignPortals.utils.SignStatus;
 import com.onarandombox.MultiverseSignPortals.utils.SignTools;
 
 public class MVSPBlockListener extends BlockListener {
@@ -32,6 +37,25 @@ public class MVSPBlockListener extends BlockListener {
             createMultiverseSignPortal(event);
         } else {
             checkForHack(event);
+        }
+    }
+
+    @Override
+    public void onBlockBreak(BlockBreakEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+        BlockState state = event.getBlock().getState();
+        if (state instanceof Sign) {
+            Sign s = (Sign) state;
+            PortalDetector pd = this.plugin.getPortalDetector();
+            if (pd.getSignStatus(s) == SignStatus.NetherPortalSign || pd.getSignStatus(s) == SignStatus.SignPortal) {
+                if(!this.permissions.hasPermission(event.getPlayer(), "multiverse.signportal.create", true)) {
+                    event.setCancelled(true);
+                    event.getPlayer().sendMessage("You don't have permission to destroy a SignPortal!");
+                    event.getPlayer().sendMessage(ChatColor.GREEN + "multiverse.signportal.create");
+                }
+            }
         }
     }
 

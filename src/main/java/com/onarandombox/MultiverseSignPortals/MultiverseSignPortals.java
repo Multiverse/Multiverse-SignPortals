@@ -13,6 +13,7 @@ import com.onarandombox.MultiverseCore.MultiverseCore;
 import com.onarandombox.MultiverseSignPortals.listeners.MVSPBlockListener;
 import com.onarandombox.MultiverseSignPortals.listeners.MVSPPlayerListener;
 import com.onarandombox.MultiverseSignPortals.listeners.MVSPPluginListener;
+import com.onarandombox.MultiverseSignPortals.utils.PortalDetector;
 import com.onarandombox.utils.DebugLog;
 import com.onarandombox.utils.UpdateChecker;
 
@@ -27,6 +28,7 @@ public class MultiverseSignPortals extends JavaPlugin implements MVPlugin {
     protected MVSPBlockListener blockListener;
 
     public UpdateChecker updateCheck;
+    private PortalDetector portalDetector;
 
     public void onEnable() {
         this.core = (MultiverseCore) getServer().getPluginManager().getPlugin("Multiverse-Core");
@@ -51,13 +53,10 @@ public class MultiverseSignPortals extends JavaPlugin implements MVPlugin {
         getServer().getPluginManager().registerEvent(Type.PLAYER_PORTAL, playerListener, Priority.Normal, this);
         getServer().getPluginManager().registerEvent(Type.PLAYER_INTERACT, playerListener, Priority.Normal, this);
         getServer().getPluginManager().registerEvent(Type.SIGN_CHANGE, blockListener, Priority.Normal, this);
-
-
-        // Setup the Player Listener, we only need to listen out for PLAYER_MOVE Events.
+        getServer().getPluginManager().registerEvent(Type.BLOCK_BREAK, blockListener, Priority.Normal, this);
         
-        
+        portalDetector = new PortalDetector(this);
 
-        // Simple Log output to state the plugin is ENABLED
         log.info(logPrefix + "- Version " + this.getDescription().getVersion() + " Enabled - By " + getAuthors());
     }
 
@@ -138,5 +137,9 @@ public class MultiverseSignPortals extends JavaPlugin implements MVPlugin {
     @Override
     public void setCore(MultiverseCore core) {
         this.core = core;
+    }
+
+    public PortalDetector getPortalDetector() {
+        return this.portalDetector;
     }
 }

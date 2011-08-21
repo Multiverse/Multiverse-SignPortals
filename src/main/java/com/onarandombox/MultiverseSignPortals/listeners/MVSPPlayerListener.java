@@ -73,6 +73,8 @@ public class MVSPPlayerListener extends PlayerListener {
                 } else if (status == SignStatus.Legacy) {
                     activateSignPortal(event.getPlayer(), ChatColor.AQUA + "Legacy", s);
                     event.setCancelled(true);
+                } else if (status == SignStatus.NetherPortalSign) { 
+                    event.setCancelled(true);
                 }
             }
         }
