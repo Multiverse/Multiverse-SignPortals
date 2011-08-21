@@ -9,6 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.Player;
 
 import com.onarandombox.MultiverseSignPortals.MultiverseSignPortals;
 import com.onarandombox.MultiverseSignPortals.exceptions.MoreThanOneSignFoundException;
@@ -25,8 +26,9 @@ public class PortalDetector {
         this.plugin = plugin;
     }
 
-    public String getNotchPortalDestination(Location l) throws MoreThanOneSignFoundException, NoMultiverseSignFoundException {
+    public String getNotchPortalDestination(Player p) throws MoreThanOneSignFoundException, NoMultiverseSignFoundException {
         // Determine corner, should be 1 of 4
+        Location l = p.getLocation();
         Block block = l.getBlock();
         Location portalStart;
         Location portalEnd;
@@ -60,7 +62,7 @@ public class PortalDetector {
         }
         if (foundSigns != null) {
             this.plugin.log(Level.FINE, "Woo! Notch Portal!");
-            return processSigns(foundSigns);
+            return processSigns(foundSigns, p);
         } else {
             this.plugin.log(Level.FINE, ":( No Notch Portal Here...");
         }
@@ -75,22 +77,62 @@ public class PortalDetector {
      * @throws MoreThanOneSignFoundException
      * @throws NoMultiverseSignFoundException
      */
-    private String processSigns(List<Sign> foundSigns) throws MoreThanOneSignFoundException, NoMultiverseSignFoundException {
-        String destString = null;
+    private String processSigns(List<Sign> foundSigns, Player player) throws MoreThanOneSignFoundException, NoMultiverseSignFoundException {
+        Sign foundSign = null;
+        Sign legacySign = null;
+        Sign normalSign = null;
         for (Sign s : foundSigns) {
-            if (this.processSign(s) != null) {
-                if (destString != null) {
-                    // 2 MV signs were found around this portal. Whoops.
+            if (this.getSignStatus(s) == SignStatus.NetherPortalSign) {
+                if (foundSign != null) {
                     throw new MoreThanOneSignFoundException();
                 }
-                destString = this.processSign(s);
+                foundSign = s;
+            } else if (foundSign == null && this.getSignStatus(s) == SignStatus.Legacy) {
+                // Found an old sign
+                if (legacySign != null) {
+                    throw new MoreThanOneSignFoundException();
+                }
+                legacySign = s;
+            } else if (foundSign == null && this.getSignStatus(s) == SignStatus.SignPortal) {
+                // Found a normal signPortal
+                if (normalSign != null) {
+                    throw new MoreThanOneSignFoundException();
+                }
+                normalSign = s;
             }
         }
-        if (destString == null) {
+        if (foundSign == null && legacySign == null && normalSign == null) {
             throw new NoMultiverseSignFoundException();
         }
-        return destString;
+        if (foundSign != null) {
+            this.invalidateOtherSigns(foundSign, foundSigns);
+            return foundSign.getLine(1);
+        }
+        if (legacySign != null) {
+            if (this.plugin.getCore().getPermissions().hasPermission(player, "multiverse.signportal.validate", true)) {
+                this.plugin.log(Level.FINE, "Migrating Legacy Sign");
+                legacySign.setLine(0, SignTools.setColor(legacySign.getLine(0), ChatColor.DARK_BLUE));
+                legacySign.update(true);
+                this.invalidateOtherSigns(legacySign, foundSigns);
+                return legacySign.getLine(1);
+            }
+        }
+        if (normalSign != null) {
+            this.plugin.log(Level.FINE, "Migrating Normal Sign");
+            normalSign.setLine(0, SignTools.setColor(normalSign.getLine(0), ChatColor.DARK_BLUE));
+            normalSign.update(true);
+            return normalSign.getLine(1);
+        }
+        throw new NoMultiverseSignFoundException();
+    }
 
+    private void invalidateOtherSigns(Sign sign, List<Sign> foundSigns) {
+        for (Sign s : foundSigns) {
+            if (!s.equals(sign)) {
+                s.setLine(0, SignTools.setColor(s.getLine(0), ChatColor.DARK_RED));
+                s.update(true);
+            }
+        }
     }
 
     public String processSign(Sign sign) {
@@ -195,4 +237,5 @@ public class PortalDetector {
         }
         return signs;
     }
+
 }

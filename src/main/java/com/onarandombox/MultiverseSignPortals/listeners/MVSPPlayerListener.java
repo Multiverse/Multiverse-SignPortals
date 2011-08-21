@@ -40,7 +40,7 @@ public class MVSPPlayerListener extends PlayerListener {
         }
         PortalDetector detector = new PortalDetector(this.plugin);
         try {
-            detector.getNotchPortalDestination(event.getPlayer().getLocation());
+            detector.getNotchPortalDestination(event.getPlayer());
             this.plugin.log(Level.FINER, "Found a Multiverse Sign");
         } catch (NoMultiverseSignFoundException e) {
             // This will simply act as a notch portal.
