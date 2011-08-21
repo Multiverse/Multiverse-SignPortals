@@ -8,7 +8,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 
 import com.onarandombox.MultiverseSignPortals.MultiverseSignPortals;
@@ -21,8 +20,6 @@ enum Axis {
 
 public class PortalDetector {
     private MultiverseSignPortals plugin;
-    private static BlockFace[] faces = { BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST,
-            BlockFace.NORTH_EAST, BlockFace.NORTH_WEST, BlockFace.SOUTH_EAST, BlockFace.SOUTH_WEST };
 
     public PortalDetector(MultiverseSignPortals plugin) {
         this.plugin = plugin;
@@ -81,22 +78,27 @@ public class PortalDetector {
     private String processSigns(List<Sign> foundSigns) throws MoreThanOneSignFoundException, NoMultiverseSignFoundException {
         String destString = null;
         for (Sign s : foundSigns) {
-            if (s.getLine(0).equalsIgnoreCase(ChatColor.DARK_GREEN + "[multiverse]") || s.getLine(0).equalsIgnoreCase(ChatColor.DARK_GREEN + "[mv]")) {
-                this.plugin.log(Level.FINER, "Found a MV Sign");
-                if (destString != null) {
-                    // 2 MV signs were found around this portal. Whoops.
-                    throw new MoreThanOneSignFoundException();
-                }
-                destString = s.getLine(1);
-            } else {
-                this.plugin.log(Level.FINER, "Sign data: " + s.getLine(0));
-            }
+           if(this.processSign(s) != null) {
+               if (destString != null) {
+                   // 2 MV signs were found around this portal. Whoops.
+                   throw new MoreThanOneSignFoundException();
+               }
+               destString = this.processSign(s);
+           }
         }
         if (destString == null) {
             throw new NoMultiverseSignFoundException();
         }
         return destString;
 
+    }
+    
+    public String processSign(Sign sign) {
+        if (sign.getLine(0).equalsIgnoreCase(ChatColor.DARK_GREEN + "[multiverse]") || sign.getLine(0).equalsIgnoreCase(ChatColor.DARK_GREEN + "[mv]")) {
+            this.plugin.log(Level.FINER, "Found a MV Sign");
+            return sign.getLine(1);
+        }
+        return null;
     }
 
     /**

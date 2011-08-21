@@ -3,7 +3,7 @@ package com.onarandombox.MultiverseSignPortals.listeners;
 import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
-import org.bukkit.block.Sign;
+import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.permissions.PermissionDefault;
@@ -37,8 +37,18 @@ public class MVSPBlockListener extends BlockListener {
                 event.getPlayer().sendMessage("You don't have permission to create a SignPortal!");
                 event.getPlayer().sendMessage(ChatColor.GREEN + "multiverse.signportal.create");
             }
-
+        } else if (event.getLine(0).equalsIgnoreCase(ChatColor.DARK_GREEN + "[mv]") || event.getLine(0).equalsIgnoreCase(ChatColor.DARK_GREEN + "[multiverse]")) {
+            this.plugin.log(Level.WARNING, "WOAH! Player: [" + event.getPlayer().getName() + "] tried to HACK a Multiverse SignPortal into existance!");
+            this.warnOps("WOAH! Player: [" + event.getPlayer().getName() + "] tried to " + ChatColor.RED + "HACK" + ChatColor.WHITE + " a"
+                    + ChatColor.AQUA + " Multiverse SignPortal" + ChatColor.WHITE + " into existance!");
         }
     }
 
+    private void warnOps(String string) {
+        for (Player p : this.plugin.getServer().getOnlinePlayers()) {
+            if (p.isOp()) {
+                p.sendMessage(string);
+            }
+        }
+    }
 }
