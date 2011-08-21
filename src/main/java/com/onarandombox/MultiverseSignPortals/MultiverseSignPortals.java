@@ -88,8 +88,28 @@ public class MultiverseSignPortals extends JavaPlugin implements MVPlugin {
 
     @Override
     public void log(Level level, String msg) {
-        // TODO Auto-generated method stub
-        
+        if (level == Level.FINE && MultiverseCore.GlobalDebug >= 1) {
+            staticDebugLog(Level.INFO, msg);
+            return;
+        } else if (level == Level.FINER && MultiverseCore.GlobalDebug >= 2) {
+            staticDebugLog(Level.INFO, msg);
+            return;
+        } else if (level == Level.FINEST && MultiverseCore.GlobalDebug >= 3) {
+            staticDebugLog(Level.INFO, msg);
+            return;
+        } else if (level != Level.FINE && level != Level.FINER && level != Level.FINEST) {
+            staticLog(level, msg);
+        }
+    }
+
+    private void staticLog(Level level, String msg) {
+        log.log(level, logPrefix + " " + msg);
+        debugLog.log(level, logPrefix + " " + msg);
+    }
+
+    private void staticDebugLog(Level level, String msg) {
+        log.log(level, "[MVSignPortals-Debug] " + msg);
+        debugLog.log(level, "[MVSignPortals-Debug] " + msg);
     }
 
     @Override
@@ -102,7 +122,7 @@ public class MultiverseSignPortals extends JavaPlugin implements MVPlugin {
     
     private String logAndAddToPasteBinBuffer(String string) {
         this.log(Level.INFO, string);
-        return "[Multiverse-NetherPortals] " + string + "\n";
+        return "[Multiverse-SignPortals] " + string + "\n";
     }
 
     @Override
