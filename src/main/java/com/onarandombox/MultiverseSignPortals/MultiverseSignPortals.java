@@ -1,17 +1,21 @@
 package com.onarandombox.MultiverseSignPortals;
 
 import java.io.File;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 
+import com.onarandombox.MultiverseCore.MVPlugin;
 import com.onarandombox.MultiverseCore.MultiverseCore;
+import com.onarandombox.MultiverseSignPortals.listeners.MVSPPlayerListener;
+import com.onarandombox.MultiverseSignPortals.listeners.MVSPPluginListener;
 import com.onarandombox.utils.DebugLog;
 import com.onarandombox.utils.UpdateChecker;
 
-public class MultiverseSignPortals extends JavaPlugin {
+public class MultiverseSignPortals extends JavaPlugin implements MVPlugin {
 
     public static final Logger log = Logger.getLogger("Minecraft");
     public static final String logPrefix = "[MultiVerse-SignPortals] ";
@@ -23,29 +27,33 @@ public class MultiverseSignPortals extends JavaPlugin {
     public UpdateChecker updateCheck;
 
     public void onEnable() {
-        pluginListener = new MVSPPluginListener(this);
-        // Register the PLUGIN_ENABLE Event as we will need to keep an eye out for the Core Enabling if we don't find it initially.
-        getServer().getPluginManager().registerEvent(Type.PLUGIN_ENABLE, pluginListener, Priority.Normal, this);
-
-        // Try and grab the Core Plugin, if it doesn't exist it will return null.
-        core = (MultiverseCore) getServer().getPluginManager().getPlugin("Multiverse-Core");
+        this.core = (MultiverseCore) getServer().getPluginManager().getPlugin("Multiverse-Core");
 
         // Test if the Core was found, if not we'll disable this plugin.
-        if (core == null) {
+        if (this.core == null) {
             log.info(logPrefix + "Multiverse-Core not found, will keep looking.");
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
+        debugLog = new DebugLog("Multiverse-SignPortals", getDataFolder() + File.separator + "debug.log");
+        
+        this.core.incrementPluginCount();
+        
+        // Init our listeners
+        pluginListener = new MVSPPluginListener(this);
+        playerListener = new MVSPPlayerListener(this);
+        
+        // Init our events
+        getServer().getPluginManager().registerEvent(Type.PLUGIN_ENABLE, pluginListener, Priority.Normal, this);
+        getServer().getPluginManager().registerEvent(Type.PLAYER_PORTAL, playerListener, Priority.Normal, this);
+
 
         // Setup the Player Listener, we only need to listen out for PLAYER_MOVE Events.
-        playerListener = new MVSPPlayerListener(this);
-        getServer().getPluginManager().registerEvent(Type.PLAYER_MOVE, playerListener, Priority.Normal, this);
+        
+        
 
         // Simple Log output to state the plugin is ENABLED
         log.info(logPrefix + "- Version " + this.getDescription().getVersion() + " Enabled - By " + getAuthors());
-
-        // Setup the Update Checker, this will check every 30 minutes for an update to the plugin and output to the console.
-        // updateCheck = new UpdateChecker(this.getDescription().getName(),this.getDescription().getVersion());
     }
 
     public void onDisable() {
@@ -76,5 +84,34 @@ public class MultiverseSignPortals extends JavaPlugin {
             }
         }
         return authors.substring(2);
+    }
+
+    @Override
+    public void log(Level level, String msg) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public String dumpVersionInfo(String buffer) {
+        buffer += logAndAddToPasteBinBuffer("Multiverse-SignPortals Version: " + this.getDescription().getVersion());
+        buffer += logAndAddToPasteBinBuffer("Bukkit Version: " + this.getServer().getVersion());
+        buffer += logAndAddToPasteBinBuffer("Special Code: FRN001");
+        return buffer;
+    }
+    
+    private String logAndAddToPasteBinBuffer(String string) {
+        this.log(Level.INFO, string);
+        return "[Multiverse-NetherPortals] " + string + "\n";
+    }
+
+    @Override
+    public MultiverseCore getCore() {
+        return this.core;
+    }
+
+    @Override
+    public void setCore(MultiverseCore core) {
+        this.core = core;
     }
 }
