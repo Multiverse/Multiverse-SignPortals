@@ -10,6 +10,7 @@ import org.bukkit.permissions.PermissionDefault;
 
 import com.onarandombox.MultiverseCore.MVPermissions;
 import com.onarandombox.MultiverseSignPortals.MultiverseSignPortals;
+import com.onarandombox.MultiverseSignPortals.utils.SignTools;
 
 public class MVSPBlockListener extends BlockListener {
     private MultiverseSignPortals plugin;
@@ -28,19 +29,30 @@ public class MVSPBlockListener extends BlockListener {
         }
         this.plugin.log(Level.FINER, "Sign changed");
         if (event.getLine(0).equalsIgnoreCase("[mv]") || event.getLine(0).equalsIgnoreCase("[multiverse]")) {
-            if (this.plugin.getCore().getPermissions().hasPermission(event.getPlayer(), "multiverse.signportal.create", true)) {
-                this.plugin.log(Level.FINER, "MV SignPortal Created");
-                event.setLine(0, ChatColor.DARK_GREEN + event.getLine(0));
-            } else {
-                this.plugin.log(Level.FINER, "No Perms to create");
-                event.setLine(0, ChatColor.DARK_RED + event.getLine(0));
-                event.getPlayer().sendMessage("You don't have permission to create a SignPortal!");
-                event.getPlayer().sendMessage(ChatColor.GREEN + "multiverse.signportal.create");
-            }
-        } else if (event.getLine(0).equalsIgnoreCase(ChatColor.DARK_GREEN + "[mv]") || event.getLine(0).equalsIgnoreCase(ChatColor.DARK_GREEN + "[multiverse]")) {
+            createMultiverseSignPortal(event);
+        } else {
+            checkForHack(event);
+        }
+    }
+
+    private void checkForHack(SignChangeEvent event) {
+        if (SignTools.isMVSign(event.getLine(0), ChatColor.DARK_GREEN) || SignTools.isMVSign(event.getLine(0), ChatColor.DARK_BLUE)) {
             this.plugin.log(Level.WARNING, "WOAH! Player: [" + event.getPlayer().getName() + "] tried to HACK a Multiverse SignPortal into existance!");
             this.warnOps("WOAH! Player: [" + event.getPlayer().getName() + "] tried to " + ChatColor.RED + "HACK" + ChatColor.WHITE + " a"
                     + ChatColor.AQUA + " Multiverse SignPortal" + ChatColor.WHITE + " into existance!");
+            event.setCancelled(true);
+        }
+    }
+
+    private void createMultiverseSignPortal(SignChangeEvent event) {
+        if (this.plugin.getCore().getPermissions().hasPermission(event.getPlayer(), "multiverse.signportal.create", true)) {
+            this.plugin.log(Level.FINER, "MV SignPortal Created");
+            event.setLine(0, ChatColor.DARK_GREEN + event.getLine(0));
+        } else {
+            this.plugin.log(Level.FINER, "No Perms to create");
+            event.setLine(0, ChatColor.DARK_RED + event.getLine(0));
+            event.getPlayer().sendMessage("You don't have permission to create a SignPortal!");
+            event.getPlayer().sendMessage(ChatColor.GREEN + "multiverse.signportal.create");
         }
     }
 

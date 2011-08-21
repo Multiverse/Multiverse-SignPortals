@@ -78,13 +78,13 @@ public class PortalDetector {
     private String processSigns(List<Sign> foundSigns) throws MoreThanOneSignFoundException, NoMultiverseSignFoundException {
         String destString = null;
         for (Sign s : foundSigns) {
-           if(this.processSign(s) != null) {
-               if (destString != null) {
-                   // 2 MV signs were found around this portal. Whoops.
-                   throw new MoreThanOneSignFoundException();
-               }
-               destString = this.processSign(s);
-           }
+            if (this.processSign(s) != null) {
+                if (destString != null) {
+                    // 2 MV signs were found around this portal. Whoops.
+                    throw new MoreThanOneSignFoundException();
+                }
+                destString = this.processSign(s);
+            }
         }
         if (destString == null) {
             throw new NoMultiverseSignFoundException();
@@ -92,13 +92,33 @@ public class PortalDetector {
         return destString;
 
     }
-    
+
     public String processSign(Sign sign) {
-        if (sign.getLine(0).equalsIgnoreCase(ChatColor.DARK_GREEN + "[multiverse]") || sign.getLine(0).equalsIgnoreCase(ChatColor.DARK_GREEN + "[mv]")) {
+        if (SignTools.isMVSign(sign.getLine(0), ChatColor.DARK_GREEN)) {
             this.plugin.log(Level.FINER, "Found a MV Sign");
             return sign.getLine(1);
         }
         return null;
+    }
+
+    public SignStatus getSignStatus(Sign sign) {
+        if (SignTools.isMVSign(sign.getLine(0), ChatColor.DARK_GREEN)) {
+            this.plugin.log(Level.FINER, "Found a MV Sign (Sign Portal)");
+            return SignStatus.SignPortal;
+        }
+        if (SignTools.isMVSign(sign.getLine(0), ChatColor.DARK_BLUE)) {
+            this.plugin.log(Level.FINER, "Found a MV Sign (Nether Portal that has a Sign)");
+            return SignStatus.NetherPortalSign;
+        }
+        if (SignTools.isMVSign(sign.getLine(0), ChatColor.DARK_RED)) {
+            this.plugin.log(Level.FINER, "Found a MV Sign (Disabled)");
+            return SignStatus.Disabled;
+        }
+        if (SignTools.isMVSign(sign.getLine(0), null)) {
+            this.plugin.log(Level.FINER, "Found a MV Sign (Legacy)");
+            return SignStatus.Legacy;
+        }
+        return SignStatus.NotASignPortal;
     }
 
     /**
