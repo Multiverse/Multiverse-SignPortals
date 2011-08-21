@@ -4,12 +4,13 @@ import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import com.onarandombox.MultiverseCore.MVPlugin;
 import com.onarandombox.MultiverseCore.MultiverseCore;
+import com.onarandombox.MultiverseSignPortals.listeners.MVSPBlockListener;
 import com.onarandombox.MultiverseSignPortals.listeners.MVSPPlayerListener;
 import com.onarandombox.MultiverseSignPortals.listeners.MVSPPluginListener;
 import com.onarandombox.utils.DebugLog;
@@ -23,6 +24,7 @@ public class MultiverseSignPortals extends JavaPlugin implements MVPlugin {
     protected MultiverseCore core;
     protected MVSPPlayerListener playerListener;
     protected MVSPPluginListener pluginListener;
+    protected MVSPBlockListener blockListener;
 
     public UpdateChecker updateCheck;
 
@@ -42,10 +44,12 @@ public class MultiverseSignPortals extends JavaPlugin implements MVPlugin {
         // Init our listeners
         pluginListener = new MVSPPluginListener(this);
         playerListener = new MVSPPlayerListener(this);
+        blockListener = new MVSPBlockListener(this);
         
         // Init our events
         getServer().getPluginManager().registerEvent(Type.PLUGIN_ENABLE, pluginListener, Priority.Normal, this);
         getServer().getPluginManager().registerEvent(Type.PLAYER_PORTAL, playerListener, Priority.Normal, this);
+        getServer().getPluginManager().registerEvent(Type.SIGN_CHANGE, blockListener, Priority.Normal, this);
 
 
         // Setup the Player Listener, we only need to listen out for PLAYER_MOVE Events.

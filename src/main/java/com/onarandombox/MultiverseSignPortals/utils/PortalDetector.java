@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -69,10 +70,18 @@ public class PortalDetector {
         return null;
     }
 
+    /**
+     * Iterate through the signs and return the text if only one is found.
+     * 
+     * @param foundSigns
+     * @return
+     * @throws MoreThanOneSignFoundException
+     * @throws NoMultiverseSignFoundException
+     */
     private String processSigns(List<Sign> foundSigns) throws MoreThanOneSignFoundException, NoMultiverseSignFoundException {
         String destString = null;
         for (Sign s : foundSigns) {
-            if (s.getLine(0).equalsIgnoreCase("[multiverse]") || s.getLine(0).equalsIgnoreCase("[mv]")) {
+            if (s.getLine(0).equalsIgnoreCase(ChatColor.DARK_GREEN + "[multiverse]") || s.getLine(0).equalsIgnoreCase(ChatColor.DARK_GREEN + "[mv]")) {
                 this.plugin.log(Level.FINER, "Found a MV Sign");
                 if (destString != null) {
                     // 2 MV signs were found around this portal. Whoops.
@@ -91,6 +100,8 @@ public class PortalDetector {
     }
 
     /**
+     * Check to see if the obsidian blocks are in place for a notch portal, since MV-Portals can make portals out of anything.
+     * 
      * @param top The top left of the portal
      * @param bottom The bottom right of the portal
      * @param a
