@@ -21,6 +21,7 @@ import com.onarandombox.MultiverseSignPortals.utils.SignStatus;
 import com.onarandombox.MultiverseSignPortals.utils.SignTools;
 import com.onarandombox.utils.DestinationFactory;
 import com.onarandombox.utils.MVDestination;
+import com.onarandombox.utils.MVTravelAgent;
 
 public class MVSPPlayerListener extends PlayerListener {
 
@@ -40,16 +41,22 @@ public class MVSPPlayerListener extends PlayerListener {
         }
         PortalDetector detector = new PortalDetector(this.plugin);
         try {
-            detector.getNotchPortalDestination(event.getPlayer());
-            this.plugin.log(Level.FINER, "Found a Multiverse Sign");
+            String destString = detector.getNotchPortalDestination(event.getPlayer());
+            if(detector.getNotchPortalDestination(event.getPlayer()) != null) {
+                this.plugin.log(Level.FINER, "Found a Multiverse Sign");
+                DestinationFactory df = this.plugin.getCore().getDestinationFactory();
+                event.setPortalTravelAgent(new MVTravelAgent(this.plugin.getCore(), df.getDestination(destString), event.getPlayer()));
+            }
+            
         } catch (NoMultiverseSignFoundException e) {
             // This will simply act as a notch portal.
             this.plugin.log(Level.FINER, "Did NOT find a Multiverse Sign");
         } catch (MoreThanOneSignFoundException e) {
             event.getPlayer().sendMessage(ChatColor.RED + "Sorry " + ChatColor.WHITE + "but more than 1 sign was found where the first line was [mv] or [multiverse]. Please remove one of them.");
+            event.setCancelled(true);
         }
 
-        event.setCancelled(true);
+        
     }
 
     @Override
