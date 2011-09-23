@@ -1,12 +1,11 @@
+/*
+ * Multiverse 2 Copyright (c) the Multiverse Team 2011.
+ * Multiverse 2 is licensed under the BSD License.
+ * For more information please check the README.md file included
+ * with this project.
+ */
+
 package com.onarandombox.MultiverseSignPortals;
-
-import java.io.File;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import com.onarandombox.MultiverseCore.MVPlugin;
 import com.onarandombox.MultiverseCore.MultiverseCore;
@@ -16,6 +15,13 @@ import com.onarandombox.MultiverseSignPortals.listeners.MVSPPluginListener;
 import com.onarandombox.MultiverseSignPortals.utils.PortalDetector;
 import com.onarandombox.utils.DebugLog;
 import com.onarandombox.utils.UpdateChecker;
+import org.bukkit.event.Event.Priority;
+import org.bukkit.event.Event.Type;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MultiverseSignPortals extends JavaPlugin implements MVPlugin {
 
@@ -40,21 +46,21 @@ public class MultiverseSignPortals extends JavaPlugin implements MVPlugin {
             return;
         }
         debugLog = new DebugLog("Multiverse-SignPortals", getDataFolder() + File.separator + "debug.log");
-        
+
         this.core.incrementPluginCount();
-        
+
         // Init our listeners
         pluginListener = new MVSPPluginListener(this);
         playerListener = new MVSPPlayerListener(this);
         blockListener = new MVSPBlockListener(this);
-        
+
         // Init our events
         getServer().getPluginManager().registerEvent(Type.PLUGIN_ENABLE, pluginListener, Priority.Normal, this);
         getServer().getPluginManager().registerEvent(Type.PLAYER_PORTAL, playerListener, Priority.Normal, this);
         getServer().getPluginManager().registerEvent(Type.PLAYER_INTERACT, playerListener, Priority.Normal, this);
         getServer().getPluginManager().registerEvent(Type.SIGN_CHANGE, blockListener, Priority.Normal, this);
         getServer().getPluginManager().registerEvent(Type.BLOCK_BREAK, blockListener, Priority.Normal, this);
-        
+
         portalDetector = new PortalDetector(this);
 
         log.info(logPrefix + "- Version " + this.getDescription().getVersion() + " Enabled - By " + getAuthors());
@@ -65,9 +71,7 @@ public class MultiverseSignPortals extends JavaPlugin implements MVPlugin {
         log.info(logPrefix + "- Disabled");
     }
 
-    /**
-     * This fires before I get Enabled.
-     */
+    /** This fires before I get Enabled. */
     public void onLoad() {
         getDataFolder().mkdirs();
         debugLog = new DebugLog("Multiverse-SignPortals", getDataFolder() + File.separator + "debug.log");
@@ -123,7 +127,7 @@ public class MultiverseSignPortals extends JavaPlugin implements MVPlugin {
         buffer += logAndAddToPasteBinBuffer("Special Code: FRN001");
         return buffer;
     }
-    
+
     private String logAndAddToPasteBinBuffer(String string) {
         this.log(Level.INFO, string);
         return "[Multiverse-SignPortals] " + string + "\n";

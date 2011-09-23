@@ -1,3 +1,10 @@
+<!--
+  ~ Multiverse 2 Copyright (c) the Multiverse Team 2011.
+  ~ Multiverse 2 is licensed under the BSD License.
+  ~ For more information please check the README.md file included
+  ~ with this project.
+  -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
@@ -108,6 +115,6 @@
             <scope>compile</scope>
         </dependency>
         <!-- End of Multiverse Core Dependency -->
-        
+
     </dependencies>
 </project>

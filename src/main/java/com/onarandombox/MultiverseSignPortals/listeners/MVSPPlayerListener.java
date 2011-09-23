@@ -1,15 +1,11 @@
+/*
+ * Multiverse 2 Copyright (c) the Multiverse Team 2011.
+ * Multiverse 2 is licensed under the BSD License.
+ * For more information please check the README.md file included
+ * with this project.
+ */
+
 package com.onarandombox.MultiverseSignPortals.listeners;
-
-import java.util.logging.Level;
-
-import org.bukkit.ChatColor;
-import org.bukkit.block.Sign;
-import org.bukkit.entity.Player;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerListener;
-import org.bukkit.event.player.PlayerPortalEvent;
-import org.bukkit.permissions.PermissionDefault;
 
 import com.onarandombox.MultiverseCore.MVPermissions;
 import com.onarandombox.MultiverseCore.MVTeleport;
@@ -22,6 +18,16 @@ import com.onarandombox.MultiverseSignPortals.utils.SignTools;
 import com.onarandombox.utils.DestinationFactory;
 import com.onarandombox.utils.MVDestination;
 import com.onarandombox.utils.MVTravelAgent;
+import org.bukkit.ChatColor;
+import org.bukkit.block.Sign;
+import org.bukkit.entity.Player;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerListener;
+import org.bukkit.event.player.PlayerPortalEvent;
+import org.bukkit.permissions.PermissionDefault;
+
+import java.util.logging.Level;
 
 public class MVSPPlayerListener extends PlayerListener {
 
@@ -42,12 +48,12 @@ public class MVSPPlayerListener extends PlayerListener {
         PortalDetector detector = new PortalDetector(this.plugin);
         try {
             String destString = detector.getNotchPortalDestination(event.getPlayer());
-            if(detector.getNotchPortalDestination(event.getPlayer()) != null) {
+            if (detector.getNotchPortalDestination(event.getPlayer()) != null) {
                 this.plugin.log(Level.FINER, "Found a Multiverse Sign");
                 DestinationFactory df = this.plugin.getCore().getDestinationFactory();
                 event.setPortalTravelAgent(new MVTravelAgent(this.plugin.getCore(), df.getDestination(destString), event.getPlayer()));
             }
-            
+
         } catch (NoMultiverseSignFoundException e) {
             // This will simply act as a notch portal.
             this.plugin.log(Level.FINER, "Did NOT find a Multiverse Sign");
@@ -56,7 +62,7 @@ public class MVSPPlayerListener extends PlayerListener {
             event.setCancelled(true);
         }
 
-        
+
     }
 
     @Override
@@ -80,7 +86,7 @@ public class MVSPPlayerListener extends PlayerListener {
                 } else if (status == SignStatus.Legacy) {
                     activateSignPortal(event.getPlayer(), ChatColor.AQUA + "Legacy", s);
                     event.setCancelled(true);
-                } else if (status == SignStatus.NetherPortalSign) { 
+                } else if (status == SignStatus.NetherPortalSign) {
                     event.setCancelled(true);
                 }
             }

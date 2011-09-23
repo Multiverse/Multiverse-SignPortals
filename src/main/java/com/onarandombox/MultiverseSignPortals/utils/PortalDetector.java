@@ -1,9 +1,15 @@
+/*
+ * Multiverse 2 Copyright (c) the Multiverse Team 2011.
+ * Multiverse 2 is licensed under the BSD License.
+ * For more information please check the README.md file included
+ * with this project.
+ */
+
 package com.onarandombox.MultiverseSignPortals.utils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-
+import com.onarandombox.MultiverseSignPortals.MultiverseSignPortals;
+import com.onarandombox.MultiverseSignPortals.exceptions.MoreThanOneSignFoundException;
+import com.onarandombox.utils.LocationManipulation;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -11,9 +17,9 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 
-import com.onarandombox.MultiverseSignPortals.MultiverseSignPortals;
-import com.onarandombox.MultiverseSignPortals.exceptions.MoreThanOneSignFoundException;
-import com.onarandombox.utils.LocationManipulation;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
 
 enum Axis {
     X, Z
@@ -46,8 +52,7 @@ public class PortalDetector {
                 portalStart = block.getRelative(-1, 2, 0).getLocation();
                 foundSigns = this.checkBlocksOutside(l.getWorld().getBlockAt(portalStart), l.getWorld().getBlockAt(portalEnd), Axis.X);
                 this.plugin.log(Level.FINER, "Found inverse X");
-            }
-            else if (block.getRelative(0, 0, 1).getType() == Material.PORTAL) {
+            } else if (block.getRelative(0, 0, 1).getType() == Material.PORTAL) {
                 portalEnd = block.getRelative(0, 0, 1).getLocation();
                 portalStart = block.getRelative(0, 2, 0).getLocation();
                 foundSigns = this.checkBlocksOutside(l.getWorld().getBlockAt(portalStart), l.getWorld().getBlockAt(portalEnd), Axis.Z);
@@ -71,9 +76,11 @@ public class PortalDetector {
 
     /**
      * Iterate through the signs and return the text if only one is found.
-     * 
+     *
      * @param foundSigns
+     *
      * @return
+     *
      * @throws MoreThanOneSignFoundException
      * @throws NoMultiverseSignFoundException
      */
@@ -164,11 +171,13 @@ public class PortalDetector {
     }
 
     /**
-     * Check to see if the obsidian blocks are in place for a notch portal, since MV-Portals can make portals out of anything.
-     * 
-     * @param top The top left of the portal
+     * Check to see if the obsidian blocks are in place for a notch portal, since MV-Portals can make portals out of
+     * anything.
+     *
+     * @param top    The top left of the portal
      * @param bottom The bottom right of the portal
      * @param a
+     *
      * @return
      */
     private List<Sign> checkBlocksOutside(Block top, Block bottom, Axis a) {
