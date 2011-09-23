@@ -11,7 +11,7 @@ import com.onarandombox.MultiverseCore.MVPermissions;
 import com.onarandombox.MultiverseCore.MVTeleport;
 import com.onarandombox.MultiverseSignPortals.MultiverseSignPortals;
 import com.onarandombox.MultiverseSignPortals.exceptions.MoreThanOneSignFoundException;
-import com.onarandombox.MultiverseSignPortals.utils.NoMultiverseSignFoundException;
+import com.onarandombox.MultiverseSignPortals.exceptions.NoMultiverseSignFoundException;
 import com.onarandombox.MultiverseSignPortals.utils.PortalDetector;
 import com.onarandombox.MultiverseSignPortals.utils.SignStatus;
 import com.onarandombox.MultiverseSignPortals.utils.SignTools;

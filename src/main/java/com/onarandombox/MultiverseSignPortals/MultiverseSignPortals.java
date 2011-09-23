@@ -98,13 +98,10 @@ public class MultiverseSignPortals extends JavaPlugin implements MVPlugin {
     public void log(Level level, String msg) {
         if (level == Level.FINE && MultiverseCore.GlobalDebug >= 1) {
             staticDebugLog(Level.INFO, msg);
-            return;
         } else if (level == Level.FINER && MultiverseCore.GlobalDebug >= 2) {
             staticDebugLog(Level.INFO, msg);
-            return;
         } else if (level == Level.FINEST && MultiverseCore.GlobalDebug >= 3) {
             staticDebugLog(Level.INFO, msg);
-            return;
         } else if (level != Level.FINE && level != Level.FINER && level != Level.FINEST) {
             staticLog(level, msg);
         }
@@ -123,14 +120,12 @@ public class MultiverseSignPortals extends JavaPlugin implements MVPlugin {
     @Override
     public String dumpVersionInfo(String buffer) {
         buffer += logAndAddToPasteBinBuffer("Multiverse-SignPortals Version: " + this.getDescription().getVersion());
-        buffer += logAndAddToPasteBinBuffer("Bukkit Version: " + this.getServer().getVersion());
-        buffer += logAndAddToPasteBinBuffer("Special Code: FRN001");
         return buffer;
     }
 
     private String logAndAddToPasteBinBuffer(String string) {
         this.log(Level.INFO, string);
-        return "[Multiverse-SignPortals] " + string + "\n";
+        return logPrefix + string + "\n";
     }
 
     @Override

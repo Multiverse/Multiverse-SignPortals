@@ -5,7 +5,7 @@
  * with this project.
  */
 
-package com.onarandombox.MultiverseSignPortals.utils;
+package com.onarandombox.MultiverseSignPortals.exceptions;
 
 public class NoMultiverseSignFoundException extends Exception {
 
