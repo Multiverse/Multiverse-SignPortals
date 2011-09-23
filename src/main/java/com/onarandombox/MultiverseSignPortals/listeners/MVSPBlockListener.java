@@ -1,7 +1,10 @@
 package com.onarandombox.MultiverseSignPortals.listeners;
 
-import java.util.logging.Level;
-
+import com.onarandombox.MultiverseCore.MVPermissions;
+import com.onarandombox.MultiverseSignPortals.MultiverseSignPortals;
+import com.onarandombox.MultiverseSignPortals.utils.PortalDetector;
+import com.onarandombox.MultiverseSignPortals.utils.SignStatus;
+import com.onarandombox.MultiverseSignPortals.utils.SignTools;
 import org.bukkit.ChatColor;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
@@ -11,20 +14,17 @@ import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.permissions.PermissionDefault;
 
-import com.onarandombox.MultiverseCore.MVPermissions;
-import com.onarandombox.MultiverseSignPortals.MultiverseSignPortals;
-import com.onarandombox.MultiverseSignPortals.utils.PortalDetector;
-import com.onarandombox.MultiverseSignPortals.utils.SignStatus;
-import com.onarandombox.MultiverseSignPortals.utils.SignTools;
+import java.util.logging.Level;
 
 public class MVSPBlockListener extends BlockListener {
+    private final String CREATE_PERM = "multiverse.signportal.create";
     private MultiverseSignPortals plugin;
     private MVPermissions permissions;
 
     public MVSPBlockListener(MultiverseSignPortals plugin) {
         this.plugin = plugin;
         this.permissions = this.plugin.getCore().getPermissions();
-        this.permissions.addPermission("multiverse.signportal.create", PermissionDefault.OP);
+        this.permissions.addPermission(CREATE_PERM, PermissionDefault.OP);
     }
 
     @Override
@@ -50,10 +50,10 @@ public class MVSPBlockListener extends BlockListener {
             Sign s = (Sign) state;
             PortalDetector pd = this.plugin.getPortalDetector();
             if (pd.getSignStatus(s) == SignStatus.NetherPortalSign || pd.getSignStatus(s) == SignStatus.SignPortal) {
-                if(!this.permissions.hasPermission(event.getPlayer(), "multiverse.signportal.create", true)) {
+                if (!this.permissions.hasPermission(event.getPlayer(), CREATE_PERM, true)) {
                     event.setCancelled(true);
                     event.getPlayer().sendMessage("You don't have permission to destroy a SignPortal!");
-                    event.getPlayer().sendMessage(ChatColor.GREEN + "multiverse.signportal.create");
+                    event.getPlayer().sendMessage(ChatColor.GREEN + CREATE_PERM);
                 }
             }
         }
@@ -76,7 +76,7 @@ public class MVSPBlockListener extends BlockListener {
             this.plugin.log(Level.FINER, "No Perms to create");
             event.setLine(0, ChatColor.DARK_RED + event.getLine(0));
             event.getPlayer().sendMessage("You don't have permission to create a SignPortal!");
-            event.getPlayer().sendMessage(ChatColor.GREEN + "multiverse.signportal.create");
+            event.getPlayer().sendMessage(ChatColor.GREEN + CREATE_PERM);
         }
     }
 
