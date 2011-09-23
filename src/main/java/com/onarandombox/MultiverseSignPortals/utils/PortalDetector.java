@@ -114,22 +114,22 @@ public class PortalDetector {
         }
         if (foundSign != null) {
             this.invalidateOtherSigns(foundSign, foundSigns);
-            return foundSign.getLine(1);
+            return foundSign.getLine(2);
         }
         if (legacySign != null) {
             if (this.plugin.getCore().getPermissions().hasPermission(player, "multiverse.signportal.validate", true)) {
                 this.plugin.log(Level.FINE, "Migrating Legacy Sign");
-                legacySign.setLine(0, SignTools.setColor(legacySign.getLine(0), ChatColor.DARK_BLUE));
+                legacySign.setLine(1, SignTools.setColor(legacySign.getLine(1), ChatColor.DARK_BLUE));
                 legacySign.update(true);
                 this.invalidateOtherSigns(legacySign, foundSigns);
-                return legacySign.getLine(1);
+                return legacySign.getLine(2);
             }
         }
         if (normalSign != null) {
             this.plugin.log(Level.FINE, "Migrating Normal Sign");
-            normalSign.setLine(0, SignTools.setColor(normalSign.getLine(0), ChatColor.DARK_BLUE));
+            normalSign.setLine(1, SignTools.setColor(normalSign.getLine(1), ChatColor.DARK_BLUE));
             normalSign.update(true);
-            return normalSign.getLine(1);
+            return normalSign.getLine(2);
         }
         throw new NoMultiverseSignFoundException();
     }
@@ -137,34 +137,34 @@ public class PortalDetector {
     private void invalidateOtherSigns(Sign sign, List<Sign> foundSigns) {
         for (Sign s : foundSigns) {
             if (!s.equals(sign)) {
-                s.setLine(0, SignTools.setColor(s.getLine(0), ChatColor.DARK_RED));
+                s.setLine(1, SignTools.setColor(s.getLine(1), ChatColor.DARK_RED));
                 s.update(true);
             }
         }
     }
 
     public String processSign(Sign sign) {
-        if (SignTools.isMVSign(sign.getLine(0), ChatColor.DARK_GREEN)) {
+        if (SignTools.isMVSign(sign.getLine(1), ChatColor.DARK_GREEN)) {
             this.plugin.log(Level.FINER, "Found a MV Sign");
-            return sign.getLine(1);
+            return sign.getLine(2);
         }
         return null;
     }
 
     public SignStatus getSignStatus(Sign sign) {
-        if (SignTools.isMVSign(sign.getLine(0), ChatColor.DARK_GREEN)) {
+        if (SignTools.isMVSign(sign.getLine(1), ChatColor.DARK_GREEN)) {
             this.plugin.log(Level.FINER, "Found a MV Sign (Sign Portal)");
             return SignStatus.SignPortal;
         }
-        if (SignTools.isMVSign(sign.getLine(0), ChatColor.DARK_BLUE)) {
+        if (SignTools.isMVSign(sign.getLine(1), ChatColor.DARK_BLUE)) {
             this.plugin.log(Level.FINER, "Found a MV Sign (Nether Portal that has a Sign)");
             return SignStatus.NetherPortalSign;
         }
-        if (SignTools.isMVSign(sign.getLine(0), ChatColor.DARK_RED)) {
+        if (SignTools.isMVSign(sign.getLine(1), ChatColor.DARK_RED)) {
             this.plugin.log(Level.FINER, "Found a MV Sign (Disabled)");
             return SignStatus.Disabled;
         }
-        if (SignTools.isMVSign(sign.getLine(0), null)) {
+        if (SignTools.isMVSign(sign.getLine(1), null)) {
             this.plugin.log(Level.FINER, "Found a MV Sign (Legacy)");
             return SignStatus.Legacy;
         }
