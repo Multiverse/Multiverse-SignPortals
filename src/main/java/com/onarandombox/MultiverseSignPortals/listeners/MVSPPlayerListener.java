@@ -9,14 +9,14 @@ package com.onarandombox.MultiverseSignPortals.listeners;
 
 import com.onarandombox.MultiverseCore.MVPermissions;
 import com.onarandombox.MultiverseCore.MVTeleport;
+import com.onarandombox.MultiverseCore.api.MVDestination;
+import com.onarandombox.MultiverseCore.destination.DestinationFactory;
 import com.onarandombox.MultiverseSignPortals.MultiverseSignPortals;
 import com.onarandombox.MultiverseSignPortals.exceptions.MoreThanOneSignFoundException;
 import com.onarandombox.MultiverseSignPortals.exceptions.NoMultiverseSignFoundException;
 import com.onarandombox.MultiverseSignPortals.utils.PortalDetector;
 import com.onarandombox.MultiverseSignPortals.utils.SignStatus;
 import com.onarandombox.MultiverseSignPortals.utils.SignTools;
-import com.onarandombox.utils.DestinationFactory;
-import com.onarandombox.utils.MVDestination;
 import com.onarandombox.utils.MVTravelAgent;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;

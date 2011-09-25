@@ -7,8 +7,8 @@
 
 package com.onarandombox.MultiverseSignPortals;
 
-import com.onarandombox.MultiverseCore.MVPlugin;
 import com.onarandombox.MultiverseCore.MultiverseCore;
+import com.onarandombox.MultiverseCore.api.MVPlugin;
 import com.onarandombox.MultiverseSignPortals.listeners.MVSPBlockListener;
 import com.onarandombox.MultiverseSignPortals.listeners.MVSPPlayerListener;
 import com.onarandombox.MultiverseSignPortals.listeners.MVSPPluginListener;
