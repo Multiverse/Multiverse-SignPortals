@@ -95,7 +95,6 @@ public class MVSPPlayerListener extends PlayerListener {
 
     private void activateSignPortal(Player player, String type, Sign sign) {
         if (this.permissions.hasPermission(player, "multiverse.signportal.validate", true)) {
-            // TODO: Check to see if it's the normal style portal
             sign.setLine(1, SignTools.setColor(sign.getLine(1), ChatColor.DARK_GREEN));
             sign.update(true);
             player.sendMessage("This sign portal has been " + ChatColor.GREEN + " Validated!");
