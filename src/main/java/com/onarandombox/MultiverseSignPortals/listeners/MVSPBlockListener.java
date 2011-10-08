@@ -7,7 +7,7 @@
 
 package com.onarandombox.MultiverseSignPortals.listeners;
 
-import com.onarandombox.MultiverseCore.MVPermissions;
+import com.onarandombox.MultiverseCore.utils.MVPermissions;
 import com.onarandombox.MultiverseSignPortals.MultiverseSignPortals;
 import com.onarandombox.MultiverseSignPortals.utils.PortalDetector;
 import com.onarandombox.MultiverseSignPortals.utils.SignStatus;
@@ -30,7 +30,7 @@ public class MVSPBlockListener extends BlockListener {
 
     public MVSPBlockListener(MultiverseSignPortals plugin) {
         this.plugin = plugin;
-        this.permissions = this.plugin.getCore().getPermissions();
+        this.permissions = this.plugin.getCore().getMVPerms();
         this.permissions.addPermission(CREATE_PERM, PermissionDefault.OP);
     }
 
@@ -76,7 +76,7 @@ public class MVSPBlockListener extends BlockListener {
     }
 
     private void createMultiverseSignPortal(SignChangeEvent event) {
-        if (this.plugin.getCore().getPermissions().hasPermission(event.getPlayer(), "multiverse.signportal.create", true)) {
+        if (this.plugin.getCore().getMVPerms().hasPermission(event.getPlayer(), "multiverse.signportal.create", true)) {
             this.plugin.log(Level.FINER, "MV SignPortal Created");
             event.setLine(1, ChatColor.DARK_GREEN + event.getLine(1));
         } else {

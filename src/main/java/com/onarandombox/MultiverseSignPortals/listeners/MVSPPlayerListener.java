@@ -36,7 +36,7 @@ public class MVSPPlayerListener extends PlayerListener {
 
     public MVSPPlayerListener(MultiverseSignPortals plugin) {
         this.plugin = plugin;
-        this.permissions = this.plugin.getCore().getPermissions();
+        this.permissions = this.plugin.getCore().getMVPerms();
         this.permissions.addPermission("multiverse.signportal.validate", PermissionDefault.OP);
     }
 
@@ -50,7 +50,7 @@ public class MVSPPlayerListener extends PlayerListener {
             String destString = detector.getNotchPortalDestination(event.getPlayer());
             if (detector.getNotchPortalDestination(event.getPlayer()) != null) {
                 this.plugin.log(Level.FINER, "Found a Multiverse Sign");
-                DestinationFactory df = this.plugin.getCore().getDestinationFactory();
+                DestinationFactory df = this.plugin.getCore().getDestFactory();
                 event.useTravelAgent(true);
                 event.setPortalTravelAgent(new MVTravelAgent(this.plugin.getCore(), df.getDestination(destString), event.getPlayer()));
             }
@@ -106,7 +106,7 @@ public class MVSPPlayerListener extends PlayerListener {
         if (destString != null) {
             this.plugin.log(Level.FINER, "Found a SignPortal! (" + destString + ")");
             SafeTTeleporter teleporter = new SafeTTeleporter(this.plugin.getCore());
-            DestinationFactory df = this.plugin.getCore().getDestinationFactory();
+            DestinationFactory df = this.plugin.getCore().getDestFactory();
             MVDestination d = df.getDestination(destString);
             this.plugin.log(Level.FINER, "Found a Destination! (" + d + ")");
             if (!teleporter.safelyTeleport(player, d)) {
