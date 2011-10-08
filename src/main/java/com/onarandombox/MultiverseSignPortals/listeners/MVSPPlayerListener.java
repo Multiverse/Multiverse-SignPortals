@@ -7,17 +7,17 @@
 
 package com.onarandombox.MultiverseSignPortals.listeners;
 
-import com.onarandombox.MultiverseCore.MVPermissions;
-import com.onarandombox.MultiverseCore.MVTeleport;
 import com.onarandombox.MultiverseCore.api.MVDestination;
 import com.onarandombox.MultiverseCore.destination.DestinationFactory;
+import com.onarandombox.MultiverseCore.utils.MVPermissions;
+import com.onarandombox.MultiverseCore.utils.MVTravelAgent;
+import com.onarandombox.MultiverseCore.utils.SafeTTeleporter;
 import com.onarandombox.MultiverseSignPortals.MultiverseSignPortals;
 import com.onarandombox.MultiverseSignPortals.exceptions.MoreThanOneSignFoundException;
 import com.onarandombox.MultiverseSignPortals.exceptions.NoMultiverseSignFoundException;
 import com.onarandombox.MultiverseSignPortals.utils.PortalDetector;
 import com.onarandombox.MultiverseSignPortals.utils.SignStatus;
 import com.onarandombox.MultiverseSignPortals.utils.SignTools;
-import com.onarandombox.utils.MVTravelAgent;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
@@ -105,7 +105,7 @@ public class MVSPPlayerListener extends PlayerListener {
     private void takePlayerToDestination(Player player, String destString) {
         if (destString != null) {
             this.plugin.log(Level.FINER, "Found a SignPortal! (" + destString + ")");
-            MVTeleport teleporter = new MVTeleport(this.plugin.getCore());
+            SafeTTeleporter teleporter = new SafeTTeleporter(this.plugin.getCore());
             DestinationFactory df = this.plugin.getCore().getDestinationFactory();
             MVDestination d = df.getDestination(destString);
             this.plugin.log(Level.FINER, "Found a Destination! (" + d + ")");

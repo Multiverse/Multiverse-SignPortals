@@ -7,10 +7,11 @@
 
 package com.onarandombox.MultiverseSignPortals.utils;
 
+import com.onarandombox.MultiverseCore.utils.LocationManipulation;
 import com.onarandombox.MultiverseSignPortals.MultiverseSignPortals;
+import com.onarandombox.MultiverseSignPortals.enums.Axis;
 import com.onarandombox.MultiverseSignPortals.exceptions.MoreThanOneSignFoundException;
 import com.onarandombox.MultiverseSignPortals.exceptions.NoMultiverseSignFoundException;
-import com.onarandombox.utils.LocationManipulation;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -21,10 +22,6 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
-
-enum Axis {
-    X, Z
-}
 
 public class PortalDetector {
     private MultiverseSignPortals plugin;
@@ -117,7 +114,7 @@ public class PortalDetector {
             return foundSign.getLine(2);
         }
         if (legacySign != null) {
-            if (this.plugin.getCore().getPermissions().hasPermission(player, "multiverse.signportal.validate", true)) {
+            if (this.plugin.getCore().getMVPerms().hasPermission(player, "multiverse.signportal.validate", true)) {
                 this.plugin.log(Level.FINE, "Migrating Legacy Sign");
                 legacySign.setLine(1, SignTools.setColor(legacySign.getLine(1), ChatColor.DARK_BLUE));
                 legacySign.update(true);
@@ -177,9 +174,9 @@ public class PortalDetector {
      *
      * @param top    The top left of the portal
      * @param bottom The bottom right of the portal
-     * @param a
+     * @param a The axis to check along.
      *
-     * @return
+     * @return A list of the sings around the portal.
      */
     private List<Sign> checkBlocksOutside(Block top, Block bottom, Axis a) {
         int xM = (a == Axis.X) ? 1 : 0;
@@ -188,7 +185,7 @@ public class PortalDetector {
         if (top.getRelative(0, 1, 0).getType() != Material.OBSIDIAN) {
             return null;
         }
-        if (top.getRelative(1 * xM, 1, 1 * zM).getType() != Material.OBSIDIAN) {
+        if (top.getRelative(xM, 1, zM).getType() != Material.OBSIDIAN) {
             return null;
         }
         this.plugin.log(Level.FINER, "Found top 2");
@@ -212,18 +209,18 @@ public class PortalDetector {
         }
         this.plugin.log(Level.FINER, "Found left 3");
         // Check the Right 3
-        if (bottom.getRelative(1 * xM, 0, 1 * zM).getType() != Material.OBSIDIAN) {
+        if (bottom.getRelative(xM, 0, zM).getType() != Material.OBSIDIAN) {
             return null;
         }
-        if (bottom.getRelative(1 * xM, 1, 1 * zM).getType() != Material.OBSIDIAN) {
+        if (bottom.getRelative(xM, 1, zM).getType() != Material.OBSIDIAN) {
             return null;
         }
-        if (bottom.getRelative(1 * xM, 2, 1 * zM).getType() != Material.OBSIDIAN) {
+        if (bottom.getRelative(xM, 2, zM).getType() != Material.OBSIDIAN) {
             return null;
         }
         this.plugin.log(Level.FINER, "Found right 3");
-        Block topper = top.getRelative(-1 - (xM * 1), 1, -1 - (zM * 1));
-        Block bottomer = bottom.getRelative(1 + (xM * 1), -1, 1 + (zM * 1));
+        Block topper = top.getRelative(-1 - xM, 1, -1 - zM);
+        Block bottomer = bottom.getRelative(1 + xM, -1, 1 + zM);
         return this.checkZoneForSigns(topper, bottomer);
     }
 
