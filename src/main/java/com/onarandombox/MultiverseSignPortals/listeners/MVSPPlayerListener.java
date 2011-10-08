@@ -51,6 +51,7 @@ public class MVSPPlayerListener extends PlayerListener {
             if (detector.getNotchPortalDestination(event.getPlayer()) != null) {
                 this.plugin.log(Level.FINER, "Found a Multiverse Sign");
                 DestinationFactory df = this.plugin.getCore().getDestinationFactory();
+                event.useTravelAgent(true);
                 event.setPortalTravelAgent(new MVTravelAgent(this.plugin.getCore(), df.getDestination(destString), event.getPlayer()));
             }
 
@@ -61,8 +62,6 @@ public class MVSPPlayerListener extends PlayerListener {
             event.getPlayer().sendMessage(ChatColor.RED + "Sorry " + ChatColor.WHITE + "but more than 1 sign was found where the second line was [mv] or [multiverse]. Please remove one of the signs.");
             event.setCancelled(true);
         }
-
-
     }
 
     @Override
@@ -95,7 +94,6 @@ public class MVSPPlayerListener extends PlayerListener {
 
     private void activateSignPortal(Player player, String type, Sign sign) {
         if (this.permissions.hasPermission(player, "multiverse.signportal.validate", true)) {
-            // TODO: Check to see if it's the normal style portal
             sign.setLine(1, SignTools.setColor(sign.getLine(1), ChatColor.DARK_GREEN));
             sign.update(true);
             player.sendMessage("This sign portal has been " + ChatColor.GREEN + " Validated!");
