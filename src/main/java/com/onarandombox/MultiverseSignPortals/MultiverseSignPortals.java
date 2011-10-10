@@ -13,6 +13,7 @@ import com.onarandombox.MultiverseCore.utils.DebugLog;
 import com.onarandombox.MultiverseSignPortals.listeners.MVSPBlockListener;
 import com.onarandombox.MultiverseSignPortals.listeners.MVSPPlayerListener;
 import com.onarandombox.MultiverseSignPortals.listeners.MVSPPluginListener;
+import com.onarandombox.MultiverseSignPortals.listeners.MVSPVersionListener;
 import com.onarandombox.MultiverseSignPortals.utils.PortalDetector;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
@@ -67,6 +68,8 @@ public class MultiverseSignPortals extends JavaPlugin implements MVPlugin {
         getServer().getPluginManager().registerEvent(Type.PLAYER_INTERACT, playerListener, Priority.Normal, this);
         getServer().getPluginManager().registerEvent(Type.SIGN_CHANGE, blockListener, Priority.Normal, this);
         getServer().getPluginManager().registerEvent(Type.BLOCK_BREAK, blockListener, Priority.Normal, this);
+        getServer().getPluginManager().registerEvent(Type.BLOCK_BREAK, blockListener, Priority.Normal, this);
+        getServer().getPluginManager().registerEvent(Type.CUSTOM_EVENT, new MVSPVersionListener(this), Priority.Normal, this);
 
         portalDetector = new PortalDetector(this);
 
