@@ -109,7 +109,7 @@ public class MVSPPlayerListener extends PlayerListener {
             DestinationFactory df = this.plugin.getCore().getDestFactory();
             MVDestination d = df.getDestination(destString);
             this.plugin.log(Level.FINER, "Found a Destination! (" + d + ")");
-            if (!teleporter.safelyTeleport(player, d)) {
+            if (!teleporter.safelyTeleport(player, player, d)) {
                 player.sendMessage("The Destination was not safe! (" + ChatColor.RED + d + ChatColor.WHITE + ")");
             }
         } else {
