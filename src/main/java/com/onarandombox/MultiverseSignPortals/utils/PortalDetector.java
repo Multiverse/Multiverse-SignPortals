@@ -30,9 +30,8 @@ public class PortalDetector {
         this.plugin = plugin;
     }
 
-    public String getNotchPortalDestination(Player p) throws MoreThanOneSignFoundException, NoMultiverseSignFoundException {
+    public String getNotchPortalDestination(Player p, Location l) throws MoreThanOneSignFoundException, NoMultiverseSignFoundException {
         // Determine corner, should be 1 of 4
-        Location l = p.getLocation();
         Block block = l.getBlock();
         Location portalStart;
         Location portalEnd;

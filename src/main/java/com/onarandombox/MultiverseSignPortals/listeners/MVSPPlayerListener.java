@@ -47,8 +47,8 @@ public class MVSPPlayerListener extends PlayerListener {
         }
         PortalDetector detector = new PortalDetector(this.plugin);
         try {
-            String destString = detector.getNotchPortalDestination(event.getPlayer());
-            if (detector.getNotchPortalDestination(event.getPlayer()) != null) {
+            String destString = detector.getNotchPortalDestination(event.getPlayer(), event.getFrom());
+            if (destString != null) {
                 this.plugin.log(Level.FINER, "Found a Multiverse Sign");
                 DestinationFactory df = this.plugin.getCore().getDestFactory();
                 event.useTravelAgent(true);
