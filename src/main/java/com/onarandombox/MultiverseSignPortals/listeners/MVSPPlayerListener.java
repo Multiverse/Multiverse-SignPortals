@@ -52,7 +52,9 @@ public class MVSPPlayerListener extends PlayerListener {
                 this.plugin.log(Level.FINER, "Found a Multiverse Sign");
                 DestinationFactory df = this.plugin.getCore().getDestFactory();
                 event.useTravelAgent(true);
-                event.setPortalTravelAgent(new MVTravelAgent(this.plugin.getCore(), df.getDestination(destString), event.getPlayer()));
+                MVDestination dest = df.getDestination(destString);
+                event.setPortalTravelAgent(new MVTravelAgent(this.plugin.getCore(), dest, event.getPlayer()));
+                event.setTo(dest.getLocation(event.getPlayer()));
             }
 
         } catch (NoMultiverseSignFoundException e) {
