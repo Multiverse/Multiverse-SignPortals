@@ -32,7 +32,7 @@ public class MultiverseSignPortals extends JavaPlugin implements MVPlugin {
     protected MVSPPlayerListener playerListener;
     protected MVSPPluginListener pluginListener;
     protected MVSPBlockListener blockListener;
-    private final static int requiresProtocol = 1;
+    private final static int requiresProtocol = 7;
 
     private PortalDetector portalDetector;
 
