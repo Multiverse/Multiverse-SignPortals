@@ -9,6 +9,7 @@ package com.onarandombox.MultiverseSignPortals.listeners;
 
 import com.onarandombox.MultiverseCore.api.MVDestination;
 import com.onarandombox.MultiverseCore.destination.DestinationFactory;
+import com.onarandombox.MultiverseCore.enums.TeleportResult;
 import com.onarandombox.MultiverseCore.utils.MVPermissions;
 import com.onarandombox.MultiverseCore.utils.MVTravelAgent;
 import com.onarandombox.MultiverseCore.utils.SafeTTeleporter;
@@ -111,7 +112,8 @@ public class MVSPPlayerListener extends PlayerListener {
             DestinationFactory df = this.plugin.getCore().getDestFactory();
             MVDestination d = df.getDestination(destString);
             this.plugin.log(Level.FINER, "Found a Destination! (" + d + ")");
-            if (!teleporter.safelyTeleport(player, player, d)) {
+            TeleportResult result = teleporter.safelyTeleport(player, player, d);
+            if (result == TeleportResult.FAIL_UNSAFE) {
                 player.sendMessage("The Destination was not safe! (" + ChatColor.RED + d + ChatColor.WHITE + ")");
             }
         } else {
