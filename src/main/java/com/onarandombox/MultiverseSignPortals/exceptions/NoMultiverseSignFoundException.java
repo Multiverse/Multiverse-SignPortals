@@ -5,8 +5,8 @@
  * with this project.
  */
 
-package com.onarandombox.MultiverseSignPortals.utils;
+package com.onarandombox.MultiverseSignPortals.exceptions;
 
-public enum SignStatus {
-    NetherPortalSign, SignPortal, Disabled, Legacy, NotASignPortal
+public class NoMultiverseSignFoundException extends Exception {
+
 }

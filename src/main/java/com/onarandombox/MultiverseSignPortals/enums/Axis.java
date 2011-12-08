@@ -5,8 +5,13 @@
  * with this project.
  */
 
-package com.onarandombox.MultiverseSignPortals.utils;
+package com.onarandombox.MultiverseSignPortals.enums;
 
-public enum SignStatus {
-    NetherPortalSign, SignPortal, Disabled, Legacy, NotASignPortal
+/**
+ * Multiverse 2
+ *
+ * @author fernferret
+ */
+public enum Axis {
+    X, Z
 }
