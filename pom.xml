@@ -20,7 +20,7 @@
 
     <repositories>
         <repository>
-            <id>onarandombox</id>
+            <id>OnARandomBox</id>
             <url>http://repo.onarandombox.com/content/groups/public/</url>
         </repository>
     </repositories>
@@ -133,4 +133,10 @@
         <!-- End of Multiverse Core Dependency -->
 
     </dependencies>
+    <distributionManagement>
+        <repository>
+            <id>OnARandomBox</id>
+            <url>http://repo.onarandombox.com/content/repositories/multiverse</url>
+        </repository>
+    </distributionManagement>
 </project>
