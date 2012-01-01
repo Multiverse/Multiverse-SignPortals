@@ -28,7 +28,6 @@ import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.permissions.PermissionDefault;
 
-import java.awt.*;
 import java.util.logging.Level;
 
 public class MVSPPlayerListener extends PlayerListener {
@@ -44,7 +43,6 @@ public class MVSPPlayerListener extends PlayerListener {
 
     @Override
     public void onPlayerPortal(PlayerPortalEvent event) {
-        this.plugin.log(Level.FINE, "CALLING SP!!!");
         if (event.isCancelled()) {
             return;
         }
