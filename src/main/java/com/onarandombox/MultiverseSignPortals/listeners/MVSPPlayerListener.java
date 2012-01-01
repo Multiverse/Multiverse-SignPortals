@@ -28,6 +28,7 @@ import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.permissions.PermissionDefault;
 
+import java.awt.*;
 import java.util.logging.Level;
 
 public class MVSPPlayerListener extends PlayerListener {
@@ -43,6 +44,7 @@ public class MVSPPlayerListener extends PlayerListener {
 
     @Override
     public void onPlayerPortal(PlayerPortalEvent event) {
+        this.plugin.log(Level.FINE, "CALLING SP!!!");
         if (event.isCancelled()) {
             return;
         }
@@ -83,25 +85,15 @@ public class MVSPPlayerListener extends PlayerListener {
                     this.takePlayerToDestination(event.getPlayer(), destString);
                     event.setCancelled(true);
                 } else if (status == SignStatus.Disabled) {
-                    activateSignPortal(event.getPlayer(), ChatColor.RED + "Disabled", s);
+                    pd.activateSignPortal(event.getPlayer(), ChatColor.RED + "Disabled", s);
                     event.setCancelled(true);
                 } else if (status == SignStatus.Legacy) {
-                    activateSignPortal(event.getPlayer(), ChatColor.AQUA + "Legacy", s);
+                    pd.activateSignPortal(event.getPlayer(), ChatColor.AQUA + "Legacy", s);
                     event.setCancelled(true);
                 } else if (status == SignStatus.NetherPortalSign) {
                     event.setCancelled(true);
                 }
             }
-        }
-    }
-
-    private void activateSignPortal(Player player, String type, Sign sign) {
-        if (this.permissions.hasPermission(player, "multiverse.signportal.validate", true)) {
-            sign.setLine(1, SignTools.setColor(sign.getLine(1), ChatColor.DARK_GREEN));
-            sign.update(true);
-            player.sendMessage("This sign portal has been " + ChatColor.GREEN + " Validated!");
-        } else {
-            player.sendMessage("Sorry you don't have permission to activate this " + type + ChatColor.WHITE + " SignPortal.");
         }
     }
 
@@ -112,12 +104,21 @@ public class MVSPPlayerListener extends PlayerListener {
             DestinationFactory df = this.plugin.getCore().getDestFactory();
             MVDestination d = df.getDestination(destString);
             this.plugin.log(Level.FINER, "Found a Destination! (" + d + ")");
-            TeleportResult result = teleporter.safelyTeleport(player, player, d);
-            if (result == TeleportResult.FAIL_UNSAFE) {
-                player.sendMessage("The Destination was not safe! (" + ChatColor.RED + d + ChatColor.WHITE + ")");
+            if(this.playerCanGoToDestination(player, d)) {
+                TeleportResult result = teleporter.safelyTeleport(player, player, d);
+                if (result == TeleportResult.FAIL_UNSAFE) {
+                    player.sendMessage("The Destination was not safe! (" + ChatColor.RED + d + ChatColor.WHITE + ")");
+                }
+            } else {
+                this.plugin.log(Level.FINER, "Denied permission to go to destination!");
             }
         } else {
             player.sendMessage("The Destination was not set on the sign!");
         }
+    }
+
+    private boolean playerCanGoToDestination(Player player, MVDestination d) {
+        return this.permissions.hasPermission(player, d.getRequiredPermission(), true) &&
+               this.permissions.hasPermission(player, "multiverse.teleport.self." + d.getIdentifier(), true);
     }
 }

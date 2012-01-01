@@ -71,6 +71,24 @@ public class PortalDetector {
         return null;
     }
 
+    public void activateSignPortal(Player player, String type, Sign sign) {
+        if (this.plugin.getCore().getMVPerms().hasPermission(player, "multiverse.signportal.validate", true)) {
+            // Do 2-stage validation
+            ChatColor colorToChange = ChatColor.DARK_GREEN;
+            if(SignTools.isMVSign("mv", ChatColor.GREEN)) {
+                colorToChange = ChatColor.DARK_BLUE;
+                player.sendMessage("This vanilla sign portal has been " + ChatColor.GREEN + " Validated!");
+            } else {
+                player.sendMessage("This MV sign portal has been " + ChatColor.GREEN + " Validated!");
+            }
+            sign.setLine(1, SignTools.setColor(sign.getLine(1), colorToChange));
+            sign.update(true);
+
+        } else {
+            player.sendMessage("Sorry you don't have permission to activate this " + type + ChatColor.WHITE + " SignPortal.");
+        }
+    }
+
     /**
      * Iterate through the signs and return the text if only one is found.
      *
