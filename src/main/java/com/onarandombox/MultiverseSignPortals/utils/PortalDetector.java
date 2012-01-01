@@ -7,6 +7,8 @@
 
 package com.onarandombox.MultiverseSignPortals.utils;
 
+import com.onarandombox.MultiverseCore.api.MVDestination;
+import com.onarandombox.MultiverseCore.destination.InvalidDestination;
 import com.onarandombox.MultiverseCore.utils.LocationManipulation;
 import com.onarandombox.MultiverseSignPortals.MultiverseSignPortals;
 import com.onarandombox.MultiverseSignPortals.enums.Axis;
@@ -261,5 +263,17 @@ public class PortalDetector {
         }
         return signs;
     }
+
+    public boolean playerCanGoToDestination(Player player, MVDestination d) {
+            if (d instanceof InvalidDestination || !d.isValid()) {
+                this.plugin.getCore().getMessaging().sendMessage(player, "The Destination on this sign is Invalid!", false);
+                return false;
+            }
+        // I don't usually do this, but this should be blatently wrong:
+        // return this.plugin.getCore().getMVPerms().hasPermission(player, d.getRequiredPermission(), true) &&
+        //                     this.plugin.getCore().getMVPerms().hasPermission(player, "multiverse.teleport.self." + d.getIdentifier(), true);
+        // And this should be right:
+            return this.plugin.getCore().getMVPerms().hasPermission(player, d.getRequiredPermission(), true);
+        }
 
 }
