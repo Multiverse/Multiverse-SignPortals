@@ -127,12 +127,20 @@ public class MultiverseSignPortals extends JavaPlugin implements MVPlugin {
         debugLog.log(level, "[MVSignPortals-Debug] " + msg);
     }
 
+    // No longer using, use getVersionInfo instead.
     @Override
+    @Deprecated
     public String dumpVersionInfo(String buffer) {
-        buffer += logAndAddToPasteBinBuffer("Multiverse-SignPortals Version: " + this.getDescription().getVersion());
+        buffer += logAndAddToPasteBinBuffer(this.getVersionInfo());
         return buffer;
     }
 
+    public String getVersionInfo() {
+        return new StringBuffer("[Multiverse-SignPortals] Multiverse-SignPortals Version: ").append(this.getDescription().getVersion()).append('\n').toString();
+    }
+
+    // No longer using, use getVersionInfo instead.
+    @Deprecated
     private String logAndAddToPasteBinBuffer(String string) {
         this.log(Level.INFO, string);
         return logPrefix + string + "\n";

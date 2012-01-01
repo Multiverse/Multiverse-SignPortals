@@ -9,7 +9,7 @@ package com.onarandombox.MultiverseSignPortals.listeners;
 
 import com.onarandombox.MultiverseCore.api.MVDestination;
 import com.onarandombox.MultiverseCore.event.MVPlayerTouchedPortalEvent;
-import com.onarandombox.MultiverseCore.event.MVVersionRequestEvent;
+import com.onarandombox.MultiverseCore.event.MVVersionEvent;
 import com.onarandombox.MultiverseSignPortals.MultiverseSignPortals;
 import com.onarandombox.MultiverseSignPortals.exceptions.MoreThanOneSignFoundException;
 import com.onarandombox.MultiverseSignPortals.exceptions.NoMultiverseSignFoundException;
@@ -32,8 +32,8 @@ public class MVSPVersionListener extends CustomEventListener {
     @Override
     public void onCustomEvent(Event event) {
         this.plugin.log(Level.FINEST, "Found event: " + event.getEventName());
-        if (event.getEventName().equals("MVVersion") && event instanceof MVVersionRequestEvent) {
-            ((MVVersionRequestEvent) event).setPasteBinBuffer(this.plugin.dumpVersionInfo(((MVVersionRequestEvent) event).getPasteBinBuffer()));
+        if (event.getEventName().equals("MVVersionEvent") && event instanceof MVVersionEvent) {
+            ((MVVersionEvent) event).appendVersionInfo(this.plugin.getVersionInfo());
         } else if (event.getEventName().equals("MVPlayerTouchedPortalEvent") && event instanceof MVPlayerTouchedPortalEvent) {
             this.plugin.log(Level.FINER, "Found The TouchedPortal event.");
             MVPlayerTouchedPortalEvent pte = ((MVPlayerTouchedPortalEvent) event);
