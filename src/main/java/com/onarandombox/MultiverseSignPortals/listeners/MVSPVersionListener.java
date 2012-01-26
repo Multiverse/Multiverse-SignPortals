@@ -17,54 +17,63 @@ import com.onarandombox.MultiverseSignPortals.utils.PortalDetector;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.event.CustomEventListener;
 import org.bukkit.event.Event;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 
 import java.util.logging.Level;
 
-public class MVSPVersionListener extends CustomEventListener {
+public class MVSPVersionListener implements Listener {
     private MultiverseSignPortals plugin;
 
     public MVSPVersionListener(MultiverseSignPortals plugin) {
         this.plugin = plugin;
     }
 
-    @Override
-    public void onCustomEvent(Event event) {
-        this.plugin.log(Level.FINEST, "Found event: " + event.getEventName());
-        if (event.getEventName().equals("MVVersionEvent") && event instanceof MVVersionEvent) {
-            ((MVVersionEvent) event).appendVersionInfo(this.plugin.getVersionInfo());
-        } else if (event.getEventName().equals("MVPlayerTouchedPortalEvent") && event instanceof MVPlayerTouchedPortalEvent) {
-            this.plugin.log(Level.FINER, "Found The TouchedPortal event.");
-            MVPlayerTouchedPortalEvent pte = ((MVPlayerTouchedPortalEvent) event);
-            Player p = pte.getPlayer();
-            Location l = pte.getBlockTouched();
+    /**
+     * This method is called when Multiverse-Core wants to know what version we are.
+     * @param event The Version event.
+     */
+    @EventHandler
+    public void versionEvent(MVVersionEvent event) {
+        event.appendVersionInfo(this.plugin.getVersionInfo());
+    }
 
-            PortalDetector detector = new PortalDetector(this.plugin);
-            try {
-                String destString = detector.getNotchPortalDestination(p, l);
+    /**
+     * This method is called when a player touches a portal.
+     * It's used to handle the intriquite messiness of priority between MV plugins.
+     * @param event The PTP event.
+     */
+    @EventHandler
+    public void portalTouchEvent(MVPlayerTouchedPortalEvent event) {
+        this.plugin.log(Level.FINER, "Found The TouchedPortal event.");
+        Player p = event.getPlayer();
+        Location l = event.getBlockTouched();
 
-                if (destString != null) {
-                    MVDestination d = this.plugin.getCore().getDestFactory().getDestination(destString);
-                    this.plugin.log(Level.FINE, destString + " ::: " + d);
-                    if (detector.playerCanGoToDestination(p, d)) {
-                        // If the player can go to the destination on the sign...
-                        // We're overriding NetherPortals.
-                        this.plugin.log(Level.FINE, "Player could go to destination!");
-                        pte.setCancelled(true);
-                    } else {
-                        this.plugin.log(Level.FINE, "Player could NOT go to destination!");
-                    }
+        PortalDetector detector = new PortalDetector(this.plugin);
+        try {
+            String destString = detector.getNotchPortalDestination(p, l);
+
+            if (destString != null) {
+                MVDestination d = this.plugin.getCore().getDestFactory().getDestination(destString);
+                this.plugin.log(Level.FINE, destString + " ::: " + d);
+                if (detector.playerCanGoToDestination(p, d)) {
+                    // If the player can go to the destination on the sign...
+                    // We're overriding NetherPortals.
+                    this.plugin.log(Level.FINE, "Player could go to destination!");
+                    event.setCancelled(true);
+                } else {
+                    this.plugin.log(Level.FINE, "Player could NOT go to destination!");
                 }
-
-            } catch (NoMultiverseSignFoundException e) {
-                // This will simply act as a notch portal.
-                this.plugin.log(Level.FINER, "Did NOT find a Multiverse Sign");
-            } catch (MoreThanOneSignFoundException e) {
-                this.plugin.getCore().getMessaging().sendMessage(p,
-                        String.format("%sSorry %sbut more than 1 sign was found where the second line was [mv] or [multiverse]. Please remove one of the signs.",
-                                ChatColor.RED, ChatColor.WHITE), false);
             }
+
+        } catch (NoMultiverseSignFoundException e) {
+            // This will simply act as a notch portal.
+            this.plugin.log(Level.FINER, "Did NOT find a Multiverse Sign");
+        } catch (MoreThanOneSignFoundException e) {
+            this.plugin.getCore().getMessaging().sendMessage(p,
+                    String.format("%sSorry %sbut more than 1 sign was found where the second line was [mv] or [multiverse]. Please remove one of the signs.",
+                            ChatColor.RED, ChatColor.WHITE), false);
         }
     }
 }

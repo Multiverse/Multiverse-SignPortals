@@ -16,6 +16,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.SignChangeEvent;
@@ -23,7 +25,7 @@ import org.bukkit.permissions.PermissionDefault;
 
 import java.util.logging.Level;
 
-public class MVSPBlockListener extends BlockListener {
+public class MVSPBlockListener implements Listener {
     private final String CREATE_PERM = "multiverse.signportal.create";
     private MultiverseSignPortals plugin;
     private MVPermissions permissions;
@@ -34,7 +36,7 @@ public class MVSPBlockListener extends BlockListener {
         this.permissions.addPermission(CREATE_PERM, PermissionDefault.OP);
     }
 
-    @Override
+    @EventHandler
     public void onSignChange(SignChangeEvent event) {
         if (event.isCancelled()) {
             return;
@@ -47,7 +49,7 @@ public class MVSPBlockListener extends BlockListener {
         }
     }
 
-    @Override
+    @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         if (event.isCancelled()) {
             return;

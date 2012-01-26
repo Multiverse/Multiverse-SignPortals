@@ -21,6 +21,8 @@ import com.onarandombox.MultiverseSignPortals.utils.SignStatus;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerListener;
@@ -29,7 +31,7 @@ import org.bukkit.permissions.PermissionDefault;
 
 import java.util.logging.Level;
 
-public class MVSPPlayerListener extends PlayerListener {
+public class MVSPPlayerListener implements Listener {
 
     private MultiverseSignPortals plugin;
     private MVPermissions permissions;
@@ -42,8 +44,12 @@ public class MVSPPlayerListener extends PlayerListener {
         this.pd = new PortalDetector(this.plugin);
     }
 
-    @Override
-    public void onPlayerPortal(PlayerPortalEvent event) {
+    /**
+     * Called when the portal is ready to take the player to the destination.
+     * @param event The Portal event.
+     */
+    @EventHandler
+    public void playerPortal(PlayerPortalEvent event) {
         if (event.isCancelled()) {
             return;
         }
@@ -70,8 +76,12 @@ public class MVSPPlayerListener extends PlayerListener {
         }
     }
 
-    @Override
-    public void onPlayerInteract(PlayerInteractEvent event) {
+    /**
+     * Called when a player clicks on anything.
+     * @param event The Interact event.
+     */
+    @EventHandler
+    public void playerInteract(PlayerInteractEvent event) {
         if (event.isCancelled()) {
             return;
         }

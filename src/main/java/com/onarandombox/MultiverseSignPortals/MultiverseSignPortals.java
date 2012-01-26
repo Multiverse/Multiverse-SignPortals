@@ -17,6 +17,7 @@ import com.onarandombox.MultiverseSignPortals.listeners.MVSPVersionListener;
 import com.onarandombox.MultiverseSignPortals.utils.PortalDetector;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -58,20 +59,18 @@ public class MultiverseSignPortals extends JavaPlugin implements MVPlugin {
         this.core.incrementPluginCount();
 
         // Init our listeners
-        pluginListener = new MVSPPluginListener(this);
-        playerListener = new MVSPPlayerListener(this);
-        blockListener = new MVSPBlockListener(this);
+        this.pluginListener = new MVSPPluginListener(this);
+        this.playerListener = new MVSPPlayerListener(this);
+        this.blockListener = new MVSPBlockListener(this);
 
         // Init our events
-        getServer().getPluginManager().registerEvent(Type.PLUGIN_ENABLE, pluginListener, Priority.Normal, this);
-        getServer().getPluginManager().registerEvent(Type.PLAYER_PORTAL, playerListener, Priority.Normal, this);
-        getServer().getPluginManager().registerEvent(Type.PLAYER_INTERACT, playerListener, Priority.Normal, this);
-        getServer().getPluginManager().registerEvent(Type.SIGN_CHANGE, blockListener, Priority.Normal, this);
-        getServer().getPluginManager().registerEvent(Type.BLOCK_BREAK, blockListener, Priority.Normal, this);
-        getServer().getPluginManager().registerEvent(Type.BLOCK_BREAK, blockListener, Priority.Normal, this);
-        getServer().getPluginManager().registerEvent(Type.CUSTOM_EVENT, new MVSPVersionListener(this), Priority.Normal, this);
+        PluginManager pm = this.getServer().getPluginManager();
+        pm.registerEvents(this.pluginListener, this);
+        pm.registerEvents(this.playerListener, this);
+        pm.registerEvents(this.blockListener, this);
+        pm.registerEvents(new MVSPVersionListener(this), this);
 
-        portalDetector = new PortalDetector(this);
+        this.portalDetector = new PortalDetector(this);
 
         log.info(logPrefix + "- Version " + this.getDescription().getVersion() + " Enabled - By " + getAuthors());
     }
