@@ -105,11 +105,11 @@ public class MultiverseSignPortals extends JavaPlugin implements MVPlugin {
 
     @Override
     public void log(Level level, String msg) {
-        if (level == Level.FINE && MultiverseCore.GlobalDebug >= 1) {
+        if (level == Level.FINE && MultiverseCore.getStaticConfig().getGlobalDebug() >= 1) {
             staticDebugLog(Level.INFO, msg);
-        } else if (level == Level.FINER && MultiverseCore.GlobalDebug >= 2) {
+        } else if (level == Level.FINER && MultiverseCore.getStaticConfig().getGlobalDebug() >= 2) {
             staticDebugLog(Level.INFO, msg);
-        } else if (level == Level.FINEST && MultiverseCore.GlobalDebug >= 3) {
+        } else if (level == Level.FINEST && MultiverseCore.getStaticConfig().getGlobalDebug() >= 3) {
             staticDebugLog(Level.INFO, msg);
         } else if (level != Level.FINE && level != Level.FINER && level != Level.FINEST) {
             staticLog(level, msg);
