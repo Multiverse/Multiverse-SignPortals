@@ -9,7 +9,6 @@ package com.onarandombox.MultiverseSignPortals.utils;
 
 import com.onarandombox.MultiverseCore.api.MVDestination;
 import com.onarandombox.MultiverseCore.destination.InvalidDestination;
-import com.onarandombox.MultiverseCore.utils.LocationManipulation;
 import com.onarandombox.MultiverseSignPortals.MultiverseSignPortals;
 import com.onarandombox.MultiverseSignPortals.enums.Axis;
 import com.onarandombox.MultiverseSignPortals.exceptions.MoreThanOneSignFoundException;
@@ -252,10 +251,12 @@ public class PortalDetector {
                 looking.setY(y);
                 for (int z = topper.getZ(); z <= bottomer.getZ(); z++) {
                     looking.setZ(z);
-                    this.plugin.log(Level.FINEST, "Looking for sign at " + LocationManipulation.strCoordsRaw(looking));
+                    this.plugin.log(Level.FINEST, "Looking for sign at " +
+                            this.plugin.getCore().getLocationManipulation().strCoordsRaw(looking));
                     Material isASign = topper.getWorld().getBlockAt(looking).getType();
                     if (isASign == Material.WALL_SIGN || isASign == Material.SIGN_POST) {
-                        this.plugin.log(Level.FINER, "WOO Found one! " + LocationManipulation.strCoordsRaw(looking));
+                        this.plugin.log(Level.FINER, "WOO Found one! " +
+                                this.plugin.getCore().getLocationManipulation().strCoordsRaw(looking));
                         signs.add((Sign) topper.getWorld().getBlockAt(looking).getState());
                     }
                 }
@@ -269,10 +270,6 @@ public class PortalDetector {
                 this.plugin.getCore().getMessaging().sendMessage(player, "The Destination on this sign is Invalid!", false);
                 return false;
             }
-        // I don't usually do this, but this should be blatently wrong:
-        // return this.plugin.getCore().getMVPerms().hasPermission(player, d.getRequiredPermission(), true) &&
-        //                     this.plugin.getCore().getMVPerms().hasPermission(player, "multiverse.teleport.self." + d.getIdentifier(), true);
-        // And this should be right:
             return this.plugin.getCore().getMVPerms().hasPermission(player, d.getRequiredPermission(), true);
         }
 

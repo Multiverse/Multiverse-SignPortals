@@ -12,7 +12,7 @@ import com.onarandombox.MultiverseCore.destination.DestinationFactory;
 import com.onarandombox.MultiverseCore.enums.TeleportResult;
 import com.onarandombox.MultiverseCore.utils.MVPermissions;
 import com.onarandombox.MultiverseCore.utils.MVTravelAgent;
-import com.onarandombox.MultiverseCore.utils.SafeTTeleporter;
+import com.onarandombox.MultiverseCore.api.SafeTTeleporter;
 import com.onarandombox.MultiverseSignPortals.MultiverseSignPortals;
 import com.onarandombox.MultiverseSignPortals.exceptions.MoreThanOneSignFoundException;
 import com.onarandombox.MultiverseSignPortals.exceptions.NoMultiverseSignFoundException;
@@ -110,7 +110,7 @@ public class MVSPPlayerListener implements Listener {
     private void takePlayerToDestination(Player player, String destString) {
         if (destString != null) {
             this.plugin.log(Level.FINER, "Found a SignPortal! (" + destString + ")");
-            SafeTTeleporter teleporter = new SafeTTeleporter(this.plugin.getCore());
+            SafeTTeleporter teleporter = this.plugin.getCore().getSafeTTeleporter();
             DestinationFactory df = this.plugin.getCore().getDestFactory();
 
             MVDestination d = df.getDestination(destString);
