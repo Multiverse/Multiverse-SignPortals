@@ -12,7 +12,6 @@ import com.onarandombox.MultiverseSignPortals.MultiverseSignPortals;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginEnableEvent;
-import org.bukkit.event.server.ServerListener;
 
 public class MVSPPluginListener implements Listener {
 

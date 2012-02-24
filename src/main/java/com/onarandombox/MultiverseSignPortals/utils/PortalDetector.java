@@ -161,7 +161,7 @@ public class PortalDetector {
     public String processSign(Sign sign) {
         if (SignTools.isMVSign(sign.getLine(1), ChatColor.DARK_GREEN)) {
             this.plugin.log(Level.FINER, "Found a MV Sign");
-            return sign.getLine(2);
+            return sign.getLine(2) + sign.getLine(3);
         }
         return null;
     }

@@ -15,8 +15,6 @@ import com.onarandombox.MultiverseSignPortals.listeners.MVSPPlayerListener;
 import com.onarandombox.MultiverseSignPortals.listeners.MVSPPluginListener;
 import com.onarandombox.MultiverseSignPortals.listeners.MVSPVersionListener;
 import com.onarandombox.MultiverseSignPortals.utils.PortalDetector;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
