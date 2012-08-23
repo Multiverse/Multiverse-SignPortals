@@ -13,13 +13,17 @@ import com.onarandombox.MultiverseSignPortals.utils.PortalDetector;
 import com.onarandombox.MultiverseSignPortals.utils.SignStatus;
 import com.onarandombox.MultiverseSignPortals.utils.SignTools;
 import org.bukkit.ChatColor;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.material.RedstoneTorch;
 import org.bukkit.permissions.PermissionDefault;
 
 import java.util.logging.Level;
@@ -46,6 +50,56 @@ public class MVSPBlockListener implements Listener {
         } else {
             checkForHack(event);
         }
+    }
+
+    @EventHandler
+    public void redstonePower(BlockRedstoneEvent event) {
+        if (event.getNewCurrent() <= 0) {
+            return;
+        }
+        boolean torch = false;
+        if (event.getBlock().getState().getData() instanceof RedstoneTorch) {
+            torch = true;
+        }
+        Block block = getNearbySign(event.getBlock(), torch);
+        if (block == null) {
+            return;
+        }
+        Sign sign = (Sign) block.getState();
+        SignStatus status = plugin.getPortalDetector().getSignStatus(sign);
+        if (status == SignStatus.SignPortal) {
+
+        }
+    }
+
+    private Block getNearbySign(Block block, boolean torch) {
+        Block nearBlock = block.getRelative(BlockFace.EAST);
+        if (nearBlock.getState() instanceof Sign) {
+            return nearBlock;
+        }
+        nearBlock = block.getRelative(BlockFace.NORTH);
+        if (nearBlock.getState() instanceof Sign) {
+            return nearBlock;
+        }
+        nearBlock = block.getRelative(BlockFace.SOUTH);
+        if (nearBlock.getState() instanceof Sign) {
+            return nearBlock;
+        }
+        nearBlock = block.getRelative(BlockFace.WEST);
+        if (nearBlock.getState() instanceof Sign) {
+            return nearBlock;
+        }
+        nearBlock = block.getRelative(BlockFace.UP);
+        if (nearBlock.getState() instanceof Sign) {
+            return nearBlock;
+        }
+        if (torch) {
+            nearBlock = nearBlock.getRelative(BlockFace.UP);
+            if (nearBlock.getState() instanceof Sign) {
+                return nearBlock;
+            }
+        }
+        return null;
     }
 
     @EventHandler
@@ -80,11 +134,18 @@ public class MVSPBlockListener implements Listener {
         if (this.plugin.getCore().getMVPerms().hasPermission(event.getPlayer(), "multiverse.signportal.create", true)) {
             this.plugin.log(Level.FINER, "MV SignPortal Created");
             event.setLine(1, ChatColor.DARK_GREEN + event.getLine(1));
+            checkRedstoneTeleportTargets(event);
         } else {
             this.plugin.log(Level.FINER, "No Perms to create");
             event.setLine(1, ChatColor.DARK_RED + event.getLine(1));
             event.getPlayer().sendMessage("You don't have permission to create a SignPortal!");
             event.getPlayer().sendMessage(ChatColor.GREEN + CREATE_PERM);
+        }
+    }
+
+    private void checkRedstoneTeleportTargets(SignChangeEvent event) {
+        if (PortalDetector.REDSTONE_TELEPORT_PATTERN.matcher(event.getLine(0)).matches()) {
+            event.setLine(0, ChatColor.DARK_GREEN + event.getLine(0));
         }
     }
 

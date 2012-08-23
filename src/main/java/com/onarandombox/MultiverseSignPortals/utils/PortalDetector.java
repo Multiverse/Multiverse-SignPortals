@@ -17,14 +17,19 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.regex.Pattern;
 
 public class PortalDetector {
+
+    public static final Pattern REDSTONE_TELEPORT_PATTERN = Pattern.compile("\\[([pPaAmM]|all|ALL):\\d+:(north|NORTH|south|SOUTH|east|EAST|west|WEST|up|UP|down|DOWN)\\]");
     private MultiverseSignPortals plugin;
 
     public PortalDetector(MultiverseSignPortals plugin) {
@@ -184,6 +189,53 @@ public class PortalDetector {
             return SignStatus.Legacy;
         }
         return SignStatus.NotASignPortal;
+    }
+
+    private final static int ALL = 0;
+    private final static int PLAYERS = 1;
+    private final static int MONSTERS = 2;
+    private final static int ANIMALS = 3;
+
+    public Entity[] getRedstoneTeleportEntities(Sign sign) {
+        if (REDSTONE_TELEPORT_PATTERN.matcher(sign.getLine(0)).matches()) {
+            String[] data = sign.getLine(0).split(":");
+            final int type;
+            if (data[0].equals("ALL") || data[0].equals("all")) {
+                type = ALL;
+            } else if (data[0].equals("p") || data[0].equals("P")) {
+                type = PLAYERS;
+            } else if (data[0].equals("m") || data[0].equals("M")) {
+                type = MONSTERS;
+            } else if (data[0].equals("a") || data[0].equals("A")) {
+                type = ANIMALS;
+            } else {
+                return new Entity[0];
+            }
+            final int radius;
+            try {
+                radius = Integer.valueOf(data[1]);
+            } catch (NumberFormatException e) {
+                return new Entity[0];
+            }
+            final BlockFace facing;
+            if (data[2].equals("north") || data[2].equals("NORTH")) {
+                facing = BlockFace.NORTH;
+            } else if (data[2].equals("south") || data[2].equals("SOUTH")) {
+                facing = BlockFace.SOUTH;
+            } else if (data[2].equals("east") || data[2].equals("EAST")) {
+                facing = BlockFace.EAST;
+            } else if (data[2].equals("west") || data[2].equals("WEST")) {
+                facing = BlockFace.WEST;
+            } else if (data[2].equals("up") || data[2].equals("UP")) {
+                facing = BlockFace.UP;
+            } else if (data[2].equals("down") || data[2].equals("DOWN")) {
+                facing = BlockFace.DOWN;
+            } else {
+                return new Entity[0];
+            }
+            
+        }
+        return new Entity[0];
     }
 
     /**
