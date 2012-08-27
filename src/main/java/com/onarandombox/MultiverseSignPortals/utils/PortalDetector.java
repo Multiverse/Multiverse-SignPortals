@@ -34,7 +34,7 @@ import java.util.regex.Pattern;
 
 public class PortalDetector {
 
-    public static final Pattern REDSTONE_TELEPORT_PATTERN = Pattern.compile(".*\\[([pPaAmM]|all|ALL):\\d+(:(north|NORTH|south|SOUTH|east|EAST|west|WEST|up|UP|down|DOWN)\\])?");
+    public static final Pattern REDSTONE_TELEPORT_PATTERN = Pattern.compile(".*\\[([pPaAmM]|all|ALL):\\d+(:(north|NORTH|south|SOUTH|east|EAST|west|WEST|up|UP|down|DOWN))?\\]");
     private MultiverseSignPortals plugin;
 
     public PortalDetector(MultiverseSignPortals plugin) {
