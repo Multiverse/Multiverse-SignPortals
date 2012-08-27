@@ -7,16 +7,21 @@
 
 package com.onarandombox.MultiverseSignPortals.listeners;
 
+import com.onarandombox.MultiverseCore.api.MVDestination;
+import com.onarandombox.MultiverseCore.api.SafeTTeleporter;
+import com.onarandombox.MultiverseCore.enums.TeleportResult;
 import com.onarandombox.MultiverseCore.utils.MVPermissions;
 import com.onarandombox.MultiverseSignPortals.MultiverseSignPortals;
 import com.onarandombox.MultiverseSignPortals.utils.PortalDetector;
 import com.onarandombox.MultiverseSignPortals.utils.SignStatus;
 import com.onarandombox.MultiverseSignPortals.utils.SignTools;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -68,7 +73,40 @@ public class MVSPBlockListener implements Listener {
         Sign sign = (Sign) block.getState();
         SignStatus status = plugin.getPortalDetector().getSignStatus(sign);
         if (status == SignStatus.SignPortal) {
+            String destString = plugin.getPortalDetector().processSign(sign);
+            for (Entity entity : plugin.getPortalDetector().getRedstoneTeleportEntities(sign)) {
+                this.takeEntityToDestination(entity, destString);
+            }
+        }
+    }
 
+    private void takeEntityToDestination(Entity entity, String destString) {
+        if (destString != null) {
+            SafeTTeleporter teleporter = plugin.getCore().getSafeTTeleporter();
+            MVDestination d = plugin.getCore().getDestFactory().getDestination(destString);
+            plugin.log(Level.FINER, "Found a Destination! (" + d + ")");
+            if (entity instanceof Player) {
+                Player player = (Player) entity;
+                if (plugin.getPortalDetector().playerCanGoToDestination(player, d)) {
+                    TeleportResult result = teleporter.safelyTeleport(Bukkit.getConsoleSender(), player, d);
+                    if (result == TeleportResult.FAIL_UNSAFE) {
+                        plugin.log(Level.FINER, "The Destination was not safe! (" + ChatColor.RED + d + ChatColor.WHITE + ")");
+                    } else {
+                        plugin.log(Level.FINER, "Teleported " + entity + " to: " + ChatColor.GREEN + d);
+                    }
+                } else {
+                    plugin.log(Level.FINER, "Denied permission to go to destination!");
+                }
+            } else {
+                TeleportResult result = teleporter.safelyTeleport(Bukkit.getConsoleSender(), entity, d.getLocation(entity), true);
+                if (result == TeleportResult.FAIL_UNSAFE) {
+                    plugin.log(Level.FINER, "The Destination was not safe! (" + ChatColor.RED + d + ChatColor.WHITE + ")");
+                } else {
+                    plugin.log(Level.FINER, "Teleported " + entity + " to: " + ChatColor.GREEN + d);
+                }
+            }
+        } else {
+            plugin.log(Level.FINER, "The destination was not set on the sign!");
         }
     }
 

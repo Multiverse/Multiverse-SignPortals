@@ -17,10 +17,15 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.Animals;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Squid;
+import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +34,7 @@ import java.util.regex.Pattern;
 
 public class PortalDetector {
 
-    public static final Pattern REDSTONE_TELEPORT_PATTERN = Pattern.compile("\\[([pPaAmM]|all|ALL):\\d+:(north|NORTH|south|SOUTH|east|EAST|west|WEST|up|UP|down|DOWN)\\]");
+    public static final Pattern REDSTONE_TELEPORT_PATTERN = Pattern.compile(".*\\[([pPaAmM]|all|ALL):\\d+(:(north|NORTH|south|SOUTH|east|EAST|west|WEST|up|UP|down|DOWN)\\])?");
     private MultiverseSignPortals plugin;
 
     public PortalDetector(MultiverseSignPortals plugin) {
@@ -198,7 +203,8 @@ public class PortalDetector {
 
     public Entity[] getRedstoneTeleportEntities(Sign sign) {
         if (REDSTONE_TELEPORT_PATTERN.matcher(sign.getLine(0)).matches()) {
-            String[] data = sign.getLine(0).split(":");
+            String line = ChatColor.stripColor(sign.getLine(0).replaceAll("(\\[|\\])", ""));
+            String[] data = line.split(":");
             final int type;
             if (data[0].equals("ALL") || data[0].equals("all")) {
                 type = ALL;
@@ -217,23 +223,46 @@ public class PortalDetector {
             } catch (NumberFormatException e) {
                 return new Entity[0];
             }
-            final BlockFace facing;
-            if (data[2].equals("north") || data[2].equals("NORTH")) {
-                facing = BlockFace.NORTH;
-            } else if (data[2].equals("south") || data[2].equals("SOUTH")) {
-                facing = BlockFace.SOUTH;
-            } else if (data[2].equals("east") || data[2].equals("EAST")) {
-                facing = BlockFace.EAST;
-            } else if (data[2].equals("west") || data[2].equals("WEST")) {
-                facing = BlockFace.WEST;
-            } else if (data[2].equals("up") || data[2].equals("UP")) {
-                facing = BlockFace.UP;
-            } else if (data[2].equals("down") || data[2].equals("DOWN")) {
-                facing = BlockFace.DOWN;
-            } else {
-                return new Entity[0];
+            int xOff = 0, yOff = 0, zOff = 0;
+            if (data.length > 2) {
+                if (data[2].equals("north") || data[2].equals("NORTH")) {
+                    xOff = -radius;
+                } else if (data[2].equals("south") || data[2].equals("SOUTH")) {
+                    xOff = radius;
+                } else if (data[2].equals("east") || data[2].equals("EAST")) {
+                    zOff = -radius;
+                } else if (data[2].equals("west") || data[2].equals("WEST")) {
+                    zOff = radius;
+                } else if (data[2].equals("up") || data[2].equals("UP")) {
+                    yOff = radius;
+                } else if (data[2].equals("down") || data[2].equals("DOWN")) {
+                    yOff = -radius;
+                }
             }
-            
+            Vector signVector = sign.getBlock().getLocation().toVector();
+            Vector min = new Vector(signVector.getX() + (xOff - radius), signVector.getY() + (yOff - radius), signVector.getZ() + (zOff - radius));
+            Vector max = new Vector(signVector.getX() + (xOff + radius), signVector.getY() + (yOff + radius), signVector.getZ() + (zOff + radius));
+            List<LivingEntity> worldEntities = sign.getBlock().getWorld().getLivingEntities();
+            List<LivingEntity> entitiesInRange = new ArrayList<LivingEntity>(worldEntities.size());
+            for (LivingEntity entity : worldEntities) {
+                if ((type == ALL || type == ANIMALS) && (entity instanceof Animals || entity instanceof Squid)) {
+                    if (entity.getLocation().toVector().isInAABB(min, max)) {
+                        plugin.log(Level.FINEST, "Found " + entity + " within range!");
+                        entitiesInRange.add(entity);
+                    }
+                } else if ((type == ALL || type == MONSTERS) && (entity instanceof Monster)) {
+                    if (entity.getLocation().toVector().isInAABB(min, max)) {
+                        plugin.log(Level.FINEST, "Found " + entity + " within range!");
+                        entitiesInRange.add(entity);
+                    }
+                } else if ((type == ALL || type == PLAYERS) && (entity instanceof HumanEntity)) {
+                    if (entity.getLocation().toVector().isInAABB(min, max)) {
+                        plugin.log(Level.FINEST, "Found " + entity + " within range!");
+                        entitiesInRange.add(entity);
+                    }
+                }
+            }
+            return entitiesInRange.toArray(new Entity[entitiesInRange.size()]);
         }
         return new Entity[0];
     }
