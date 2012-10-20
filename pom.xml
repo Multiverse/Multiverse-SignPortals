@@ -134,7 +134,7 @@
                             <relocations>
                                 <relocation>
                                     <pattern>com.dumptruckman.minecraft.util.Logging</pattern>
-                                    <shadedPattern>com.onarandombox.MultiversePortals.util.MVPLogging
+                                    <shadedPattern>com.onarandombox.MultiverseSignPortals.util.MVSPLogging
                                     </shadedPattern>
                                 </relocation>
                                 <relocation>
