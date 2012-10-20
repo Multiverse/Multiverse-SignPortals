@@ -7,9 +7,9 @@
 
 package com.onarandombox.MultiverseSignPortals;
 
+import com.dumptruckman.minecraft.util.Logging;
 import com.onarandombox.MultiverseCore.MultiverseCore;
 import com.onarandombox.MultiverseCore.api.MVPlugin;
-import com.onarandombox.MultiverseCore.utils.DebugLog;
 import com.onarandombox.MultiverseSignPortals.listeners.MVSPBlockListener;
 import com.onarandombox.MultiverseSignPortals.listeners.MVSPPlayerListener;
 import com.onarandombox.MultiverseSignPortals.listeners.MVSPPluginListener;
@@ -18,15 +18,10 @@ import com.onarandombox.MultiverseSignPortals.utils.PortalDetector;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class MultiverseSignPortals extends JavaPlugin implements MVPlugin {
 
-    public static final Logger log = Logger.getLogger("Minecraft");
-    public static final String logPrefix = "[Multiverse-SignPortals] ";
-    protected static DebugLog debugLog;
     protected MultiverseCore core;
     protected MVSPPlayerListener playerListener;
     protected MVSPPluginListener pluginListener;
@@ -39,20 +34,19 @@ public class MultiverseSignPortals extends JavaPlugin implements MVPlugin {
         this.core = (MultiverseCore) getServer().getPluginManager().getPlugin("Multiverse-Core");
         // Test if the Core was found, if not we'll disable this plugin.
         if (this.core == null) {
-            log.info(logPrefix + "Multiverse-Core not found, will keep looking.");
+            Logging.info("Multiverse-Core not found, will keep looking.");
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
         if (this.core.getProtocolVersion() < requiresProtocol) {
-            log.severe(logPrefix + "Your Multiverse-Core is OUT OF DATE");
-            log.severe(logPrefix + "This version of SignPortals requires Protocol Level: " + requiresProtocol);
-            log.severe(logPrefix + "Your of Core Protocol Level is: " + this.core.getProtocolVersion());
-            log.severe(logPrefix + "Grab an updated copy at: ");
-            log.severe(logPrefix + "http://bukkit.onarandombox.com/?dir=multiverse-core");
+            Logging.severe("Your Multiverse-Core is OUT OF DATE");
+            Logging.severe("This version of SignPortals requires Protocol Level: " + requiresProtocol);
+            Logging.severe("Your of Core Protocol Level is: " + this.core.getProtocolVersion());
+            Logging.severe("Grab an updated copy at: ");
+            Logging.severe("http://bukkit.onarandombox.com/?dir=multiverse-core");
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
-        debugLog = new DebugLog("Multiverse-SignPortals", getDataFolder() + File.separator + "debug.log");
 
         this.core.incrementPluginCount();
 
@@ -70,18 +64,18 @@ public class MultiverseSignPortals extends JavaPlugin implements MVPlugin {
 
         this.portalDetector = new PortalDetector(this);
 
-        log.info(logPrefix + "- Version " + this.getDescription().getVersion() + " Enabled - By " + getAuthors());
+        Logging.log(true, Level.INFO, " Enabled - By %s", getAuthors());
     }
 
     public void onDisable() {
         // The Usual
-        log.info(logPrefix + "- Disabled");
+        Logging.info("- Disabled");
     }
 
     /** This fires before I get Enabled. */
     public void onLoad() {
+        Logging.init(this);
         this.getDataFolder().mkdirs();
-        debugLog = new DebugLog("Multiverse-SignPortals", getDataFolder() + File.separator + "debug.log");
     }
 
     /**
@@ -103,25 +97,7 @@ public class MultiverseSignPortals extends JavaPlugin implements MVPlugin {
 
     @Override
     public void log(Level level, String msg) {
-        if (level == Level.FINE && MultiverseCore.getStaticConfig().getGlobalDebug() >= 1) {
-            staticDebugLog(Level.INFO, msg);
-        } else if (level == Level.FINER && MultiverseCore.getStaticConfig().getGlobalDebug() >= 2) {
-            staticDebugLog(Level.INFO, msg);
-        } else if (level == Level.FINEST && MultiverseCore.getStaticConfig().getGlobalDebug() >= 3) {
-            staticDebugLog(Level.INFO, msg);
-        } else if (level != Level.FINE && level != Level.FINER && level != Level.FINEST) {
-            staticLog(level, msg);
-        }
-    }
-
-    private void staticLog(Level level, String msg) {
-        log.log(level, logPrefix + " " + msg);
-        debugLog.log(level, logPrefix + " " + msg);
-    }
-
-    private void staticDebugLog(Level level, String msg) {
-        log.log(level, "[MVSignPortals-Debug] " + msg);
-        debugLog.log(level, "[MVSignPortals-Debug] " + msg);
+        Logging.log(level, msg);
     }
 
     // No longer using, use getVersionInfo instead.
@@ -133,14 +109,14 @@ public class MultiverseSignPortals extends JavaPlugin implements MVPlugin {
     }
 
     public String getVersionInfo() {
-        return new StringBuffer("[Multiverse-SignPortals] Multiverse-SignPortals Version: ").append(this.getDescription().getVersion()).append('\n').toString();
+        return new StringBuilder("[Multiverse-SignPortals] Multiverse-SignPortals Version: ").append(this.getDescription().getVersion()).append('\n').toString();
     }
 
     // No longer using, use getVersionInfo instead.
     @Deprecated
     private String logAndAddToPasteBinBuffer(String string) {
         this.log(Level.INFO, string);
-        return logPrefix + string + "\n";
+        return Logging.getPrefixedMessage(string, false);
     }
 
     @Override
