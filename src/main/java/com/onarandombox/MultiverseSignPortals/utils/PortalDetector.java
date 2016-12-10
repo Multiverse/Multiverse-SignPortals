@@ -245,7 +245,7 @@ public class PortalDetector {
             List<LivingEntity> worldEntities = sign.getBlock().getWorld().getLivingEntities();
             List<LivingEntity> entitiesInRange = new ArrayList<LivingEntity>(worldEntities.size());
             for (LivingEntity entity : worldEntities) {
-                if ((type == ALL || type == ANIMALS) && (entity instanceof Animals || entity instanceof Squid)) {
+                if ((type == ALL || type == ANIMALS) && (entity instanceof Animals || entity instanceof Squid || entity instanceof Villager)) {
                     if (entity.getLocation().toVector().isInAABB(min, max)) {
                         plugin.log(Level.FINEST, "Found " + entity + " within range!");
                         entitiesInRange.add(entity);
