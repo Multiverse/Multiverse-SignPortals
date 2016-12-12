@@ -5,7 +5,7 @@
  * with this project.
  */
 
-package com.onarandombox.MultiverseSignPortals.utils;
+package com.onarandombox.multiversesignportals.utils;
 
 import org.bukkit.ChatColor;
 
