@@ -1,5 +1,5 @@
 name: Multiverse-SignPortals
-main: com.onarandombox.MultiverseSignPortals.MultiverseSignPortals
+main: com.onarandombox.multiversesignportals.MultiverseSignPortals
 authors: ['Rigby','fernferret']
 version: maven-version-number
 depend: ['Multiverse-Core']

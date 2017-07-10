@@ -5,14 +5,14 @@
  * with this project.
  */
 
-package com.onarandombox.MultiverseSignPortals.utils;
+package com.onarandombox.multiversesignportals.utils;
 
 import com.onarandombox.MultiverseCore.api.MVDestination;
 import com.onarandombox.MultiverseCore.destination.InvalidDestination;
-import com.onarandombox.MultiverseSignPortals.MultiverseSignPortals;
-import com.onarandombox.MultiverseSignPortals.enums.Axis;
-import com.onarandombox.MultiverseSignPortals.exceptions.MoreThanOneSignFoundException;
-import com.onarandombox.MultiverseSignPortals.exceptions.NoMultiverseSignFoundException;
+import com.onarandombox.multiversesignportals.MultiverseSignPortals;
+import com.onarandombox.multiversesignportals.enums.Axis;
+import com.onarandombox.multiversesignportals.exceptions.MoreThanOneSignFoundException;
+import com.onarandombox.multiversesignportals.exceptions.NoMultiverseSignFoundException;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;

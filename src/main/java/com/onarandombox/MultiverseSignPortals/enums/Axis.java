@@ -5,7 +5,7 @@
  * with this project.
  */
 
-package com.onarandombox.MultiverseSignPortals.enums;
+package com.onarandombox.multiversesignportals.enums;
 
 /**
  * Multiverse 2

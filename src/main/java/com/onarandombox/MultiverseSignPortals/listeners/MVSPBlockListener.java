@@ -5,16 +5,16 @@
  * with this project.
  */
 
-package com.onarandombox.MultiverseSignPortals.listeners;
+package com.onarandombox.multiversesignportals.listeners;
 
 import com.onarandombox.MultiverseCore.api.MVDestination;
 import com.onarandombox.MultiverseCore.api.SafeTTeleporter;
 import com.onarandombox.MultiverseCore.enums.TeleportResult;
 import com.onarandombox.MultiverseCore.utils.MVPermissions;
-import com.onarandombox.MultiverseSignPortals.MultiverseSignPortals;
-import com.onarandombox.MultiverseSignPortals.utils.PortalDetector;
-import com.onarandombox.MultiverseSignPortals.utils.SignStatus;
-import com.onarandombox.MultiverseSignPortals.utils.SignTools;
+import com.onarandombox.multiversesignportals.MultiverseSignPortals;
+import com.onarandombox.multiversesignportals.utils.PortalDetector;
+import com.onarandombox.multiversesignportals.utils.SignStatus;
+import com.onarandombox.multiversesignportals.utils.SignTools;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;

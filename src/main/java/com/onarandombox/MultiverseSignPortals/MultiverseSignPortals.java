@@ -5,16 +5,16 @@
  * with this project.
  */
 
-package com.onarandombox.MultiverseSignPortals;
+package com.onarandombox.multiversesignportals;
 
 import com.dumptruckman.minecraft.util.Logging;
 import com.onarandombox.MultiverseCore.MultiverseCore;
 import com.onarandombox.MultiverseCore.api.MVPlugin;
-import com.onarandombox.MultiverseSignPortals.listeners.MVSPBlockListener;
-import com.onarandombox.MultiverseSignPortals.listeners.MVSPPlayerListener;
-import com.onarandombox.MultiverseSignPortals.listeners.MVSPPluginListener;
-import com.onarandombox.MultiverseSignPortals.listeners.MVSPVersionListener;
-import com.onarandombox.MultiverseSignPortals.utils.PortalDetector;
+import com.onarandombox.multiversesignportals.listeners.MVSPBlockListener;
+import com.onarandombox.multiversesignportals.listeners.MVSPPlayerListener;
+import com.onarandombox.multiversesignportals.listeners.MVSPPluginListener;
+import com.onarandombox.multiversesignportals.listeners.MVSPVersionListener;
+import com.onarandombox.multiversesignportals.utils.PortalDetector;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 

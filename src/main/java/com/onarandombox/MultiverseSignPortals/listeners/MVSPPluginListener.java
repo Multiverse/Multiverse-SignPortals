@@ -5,10 +5,10 @@
  * with this project.
  */
 
-package com.onarandombox.MultiverseSignPortals.listeners;
+package com.onarandombox.multiversesignportals.listeners;
 
 import com.onarandombox.MultiverseCore.MultiverseCore;
-import com.onarandombox.MultiverseSignPortals.MultiverseSignPortals;
+import com.onarandombox.multiversesignportals.MultiverseSignPortals;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginEnableEvent;

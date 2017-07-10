@@ -5,19 +5,18 @@
  * with this project.
  */
 
-package com.onarandombox.MultiverseSignPortals.listeners;
+package com.onarandombox.multiversesignportals.listeners;
 
 import com.onarandombox.MultiverseCore.api.MVDestination;
 import com.onarandombox.MultiverseCore.event.MVPlayerTouchedPortalEvent;
 import com.onarandombox.MultiverseCore.event.MVVersionEvent;
-import com.onarandombox.MultiverseSignPortals.MultiverseSignPortals;
-import com.onarandombox.MultiverseSignPortals.exceptions.MoreThanOneSignFoundException;
-import com.onarandombox.MultiverseSignPortals.exceptions.NoMultiverseSignFoundException;
-import com.onarandombox.MultiverseSignPortals.utils.PortalDetector;
+import com.onarandombox.multiversesignportals.MultiverseSignPortals;
+import com.onarandombox.multiversesignportals.exceptions.MoreThanOneSignFoundException;
+import com.onarandombox.multiversesignportals.exceptions.NoMultiverseSignFoundException;
+import com.onarandombox.multiversesignportals.utils.PortalDetector;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
