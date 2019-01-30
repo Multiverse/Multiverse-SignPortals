@@ -47,26 +47,26 @@ public class PortalDetector {
         Location portalStart;
         Location portalEnd;
         List<Sign> foundSigns = null;
-        if (block.getType() == Material.PORTAL) {
+        if (block.getType() == Material.NETHER_PORTAL) {
             // We found the bottom 2: ##
-            if (block.getRelative(1, 0, 0).getType() == Material.PORTAL) {
+            if (block.getRelative(1, 0, 0).getType() == Material.NETHER_PORTAL) {
                 portalEnd = block.getRelative(1, 0, 0).getLocation();
                 portalStart = block.getRelative(0, 2, 0).getLocation();
                 foundSigns = this.checkBlocksOutside(l.getWorld().getBlockAt(portalStart), l.getWorld().getBlockAt(portalEnd), Axis.X);
                 this.plugin.log(Level.FINER, "Found normal X");
 
-            } else if (block.getRelative(-1, 0, 0).getType() == Material.PORTAL) {
+            } else if (block.getRelative(-1, 0, 0).getType() == Material.NETHER_PORTAL) {
                 portalEnd = block.getLocation();
                 portalStart = block.getRelative(-1, 2, 0).getLocation();
                 foundSigns = this.checkBlocksOutside(l.getWorld().getBlockAt(portalStart), l.getWorld().getBlockAt(portalEnd), Axis.X);
                 this.plugin.log(Level.FINER, "Found inverse X");
-            } else if (block.getRelative(0, 0, 1).getType() == Material.PORTAL) {
+            } else if (block.getRelative(0, 0, 1).getType() == Material.NETHER_PORTAL) {
                 portalEnd = block.getRelative(0, 0, 1).getLocation();
                 portalStart = block.getRelative(0, 2, 0).getLocation();
                 foundSigns = this.checkBlocksOutside(l.getWorld().getBlockAt(portalStart), l.getWorld().getBlockAt(portalEnd), Axis.Z);
                 this.plugin.log(Level.FINER, "Found normal Z");
 
-            } else if (block.getRelative(0, 0, -1).getType() == Material.PORTAL) {
+            } else if (block.getRelative(0, 0, -1).getType() == Material.NETHER_PORTAL) {
                 portalEnd = block.getLocation();
                 portalStart = block.getRelative(0, 2, -1).getLocation();
                 foundSigns = this.checkBlocksOutside(l.getWorld().getBlockAt(portalStart), l.getWorld().getBlockAt(portalEnd), Axis.Z);
@@ -335,7 +335,7 @@ public class PortalDetector {
                     this.plugin.log(Level.FINEST, "Looking for sign at " +
                             this.plugin.getCore().getLocationManipulation().strCoordsRaw(looking));
                     Material isASign = topper.getWorld().getBlockAt(looking).getType();
-                    if (isASign == Material.WALL_SIGN || isASign == Material.SIGN_POST) {
+                    if (isASign == Material.WALL_SIGN || isASign == Material.SIGN) {
                         this.plugin.log(Level.FINER, "WOO Found one! " +
                                 this.plugin.getCore().getLocationManipulation().strCoordsRaw(looking));
                         signs.add((Sign) topper.getWorld().getBlockAt(looking).getState());
