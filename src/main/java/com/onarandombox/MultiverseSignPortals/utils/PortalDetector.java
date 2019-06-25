@@ -17,6 +17,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Entity;
@@ -334,11 +335,11 @@ public class PortalDetector {
                     looking.setZ(z);
                     this.plugin.log(Level.FINEST, "Looking for sign at " +
                             this.plugin.getCore().getLocationManipulation().strCoordsRaw(looking));
-                    Material isASign = topper.getWorld().getBlockAt(looking).getType();
-                    if (isASign == Material.WALL_SIGN || isASign == Material.SIGN) {
+                    BlockState signBlock = topper.getWorld().getBlockAt(looking).getState();
+                    if (signBlock instanceof Sign) {
                         this.plugin.log(Level.FINER, "WOO Found one! " +
                                 this.plugin.getCore().getLocationManipulation().strCoordsRaw(looking));
-                        signs.add((Sign) topper.getWorld().getBlockAt(looking).getState());
+                        signs.add((Sign) signBlock);
                     }
                 }
             }
