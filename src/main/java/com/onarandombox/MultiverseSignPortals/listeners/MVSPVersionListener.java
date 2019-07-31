@@ -7,6 +7,7 @@
 
 package com.onarandombox.MultiverseSignPortals.listeners;
 
+import com.dumptruckman.minecraft.util.Logging;
 import com.onarandombox.MultiverseCore.api.MVDestination;
 import com.onarandombox.MultiverseCore.event.MVPlayerTouchedPortalEvent;
 import com.onarandombox.MultiverseCore.event.MVVersionEvent;
@@ -75,5 +76,10 @@ public class MVSPVersionListener implements Listener {
                     String.format("%sSorry %sbut more than 1 sign was found where the second line was [mv] or [multiverse]. Please remove one of the signs.",
                             ChatColor.RED, ChatColor.WHITE), false);
         }
+    }
+
+    @EventHandler
+    public void debugModeChange(MVDebugModeEvent event) {
+        Logging.setDebugLevel(event.getLevel());
     }
 }

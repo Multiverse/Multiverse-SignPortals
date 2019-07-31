@@ -26,11 +26,13 @@ public class MultiverseSignPortals extends JavaPlugin implements MVPlugin {
     protected MVSPPlayerListener playerListener;
     protected MVSPPluginListener pluginListener;
     protected MVSPBlockListener blockListener;
-    private final static int requiresProtocol = 23;
+    private final static int requiresProtocol = 24;
 
     private PortalDetector portalDetector;
 
     public void onEnable() {
+        Logging.init(this);
+
         this.core = (MultiverseCore) getServer().getPluginManager().getPlugin("Multiverse-Core");
         // Test if the Core was found, if not we'll disable this plugin.
         if (this.core == null) {
@@ -47,6 +49,8 @@ public class MultiverseSignPortals extends JavaPlugin implements MVPlugin {
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
+
+        Logging.setDebugLevel(core.getMVConfig().getGlobalDebug());
 
         this.core.incrementPluginCount();
 
