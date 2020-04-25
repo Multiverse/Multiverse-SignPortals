@@ -58,6 +58,7 @@ public class MVSPPlayerListener implements Listener {
             if (destString != null) {
                 this.plugin.log(Level.FINER, "Found a Multiverse Sign");
                 DestinationFactory df = this.plugin.getCore().getDestFactory();
+                destString = stripColor(destString);
                 MVDestination dest = df.getDestination(destString);
                 MVSPTravelAgent travelAgent = new MVSPTravelAgent(this.plugin.getCore(), dest, event.getPlayer());
                 travelAgent.setPortalEventTravelAgent(event);
