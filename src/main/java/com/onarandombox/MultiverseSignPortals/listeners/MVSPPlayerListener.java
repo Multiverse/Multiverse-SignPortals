@@ -11,7 +11,6 @@ import com.onarandombox.MultiverseCore.api.MVDestination;
 import com.onarandombox.MultiverseCore.destination.DestinationFactory;
 import com.onarandombox.MultiverseCore.enums.TeleportResult;
 import com.onarandombox.MultiverseCore.utils.MVPermissions;
-import com.onarandombox.MultiverseCore.utils.MVTravelAgent;
 import com.onarandombox.MultiverseCore.api.SafeTTeleporter;
 import com.onarandombox.MultiverseSignPortals.MultiverseSignPortals;
 import com.onarandombox.MultiverseSignPortals.exceptions.MoreThanOneSignFoundException;
@@ -56,12 +55,13 @@ public class MVSPPlayerListener implements Listener {
         try {
             String destString = detector.getNotchPortalDestination(event.getPlayer(), event.getFrom());
             if (destString != null) {
+                // this is a Multiverse SignPortal, so we'll cancel the event
+                event.setCancelled(true);
+
                 this.plugin.log(Level.FINER, "Found a Multiverse Sign");
                 DestinationFactory df = this.plugin.getCore().getDestFactory();
                 MVDestination dest = df.getDestination(destString);
-                MVSPTravelAgent travelAgent = new MVSPTravelAgent(this.plugin.getCore(), dest, event.getPlayer());
-                travelAgent.setPortalEventTravelAgent(event);
-                event.setTo(dest.getLocation(event.getPlayer()));
+                event.getPlayer().teleport(dest.getLocation(event.getPlayer()));
             }
 
         } catch (NoMultiverseSignFoundException e) {
