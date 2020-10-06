@@ -1,6 +1,9 @@
 ---
-name: Request a Feature
+name: 💡 Request a Feature
 about: Suggest a feature you want to see in Multiverse-SignPortals!
+title: ''
+labels: 'type: Suggestion'
+assignees: ''
 
 ---
 
