@@ -2,7 +2,7 @@
 name: 🐛 Report a Bug
 about: Report a Multiverse-SignPortals bug. Only use this if you're 100% sure it's something wrong with Multiverse-SignPortals - otherwise, try "Help!".
 title: ''
-labels: 'type: Bug'
+labels: 'Bug'
 assignees: ''
 
 ---
