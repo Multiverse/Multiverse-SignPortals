@@ -113,7 +113,7 @@ public class MultiverseSignPortals extends JavaPlugin implements MVPlugin {
     }
 
     public String getVersionInfo() {
-        return new StringBuilder("[Multiverse-SignPortals] Multiverse-SignPortals Version: ").append(this.getDescription().getVersion()).append('\n').toString();
+        return "[Multiverse-SignPortals] Multiverse-SignPortals Version: " + this.getDescription().getVersion() + System.lineSeparator();
     }
 
     // No longer using, use getVersionInfo instead.
