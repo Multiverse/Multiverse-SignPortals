@@ -7,6 +7,7 @@
 
 package com.onarandombox.MultiverseSignPortals.listeners;
 
+import com.dumptruckman.minecraft.util.Logging;
 import com.onarandombox.MultiverseCore.api.MVDestination;
 import com.onarandombox.MultiverseCore.api.SafeTTeleporter;
 import com.onarandombox.MultiverseCore.enums.TeleportResult;
@@ -49,7 +50,7 @@ public class MVSPBlockListener implements Listener {
         if (event.isCancelled()) {
             return;
         }
-        this.plugin.log(Level.FINER, "Sign changed");
+        Logging.finer("Sign changed");
         if (event.getLine(1).equalsIgnoreCase("[mv]") || event.getLine(1).equalsIgnoreCase("[multiverse]")) {
             createMultiverseSignPortal(event);
         } else {
@@ -84,29 +85,29 @@ public class MVSPBlockListener implements Listener {
         if (destString != null) {
             SafeTTeleporter teleporter = plugin.getCore().getSafeTTeleporter();
             MVDestination d = plugin.getCore().getDestFactory().getDestination(destString);
-            plugin.log(Level.FINER, "Found a Destination! (" + d + ")");
+            Logging.finer("Found a Destination! (" + d + ")");
             if (entity instanceof Player) {
                 Player player = (Player) entity;
                 if (plugin.getPortalDetector().playerCanGoToDestination(player, d)) {
                     TeleportResult result = teleporter.safelyTeleport(Bukkit.getConsoleSender(), player, d);
                     if (result == TeleportResult.FAIL_UNSAFE) {
-                        plugin.log(Level.FINER, "The Destination was not safe! (" + ChatColor.RED + d + ChatColor.WHITE + ")");
+                        Logging.finer("The Destination was not safe! (" + ChatColor.RED + d + ChatColor.WHITE + ")");
                     } else {
-                        plugin.log(Level.FINER, "Teleported " + entity + " to: " + ChatColor.GREEN + d);
+                        Logging.finer("Teleported " + entity + " to: " + ChatColor.GREEN + d);
                     }
                 } else {
-                    plugin.log(Level.FINER, "Denied permission to go to destination!");
+                    Logging.finer("Denied permission to go to destination!");
                 }
             } else {
                 TeleportResult result = teleporter.safelyTeleport(Bukkit.getConsoleSender(), entity, d.getLocation(entity), true);
                 if (result == TeleportResult.FAIL_UNSAFE) {
-                    plugin.log(Level.FINER, "The Destination was not safe! (" + ChatColor.RED + d + ChatColor.WHITE + ")");
+                    Logging.finer("The Destination was not safe! (" + ChatColor.RED + d + ChatColor.WHITE + ")");
                 } else {
-                    plugin.log(Level.FINER, "Teleported " + entity + " to: " + ChatColor.GREEN + d);
+                    Logging.finer("Teleported " + entity + " to: " + ChatColor.GREEN + d);
                 }
             }
         } else {
-            plugin.log(Level.FINER, "The destination was not set on the sign!");
+            Logging.finer("The destination was not set on the sign!");
         }
     }
 
@@ -161,7 +162,7 @@ public class MVSPBlockListener implements Listener {
 
     private void checkForHack(SignChangeEvent event) {
         if (SignTools.isMVSign(event.getLine(1), ChatColor.DARK_GREEN) || SignTools.isMVSign(event.getLine(1), ChatColor.DARK_BLUE)) {
-            this.plugin.log(Level.WARNING, "WOAH! Player: [" + event.getPlayer().getName() + "] tried to HACK a Multiverse SignPortal into existance!");
+            Logging.warning("WOAH! Player: [" + event.getPlayer().getName() + "] tried to HACK a Multiverse SignPortal into existance!");
             this.warnOps("WOAH! Player: [" + event.getPlayer().getName() + "] tried to " + ChatColor.RED + "HACK" + ChatColor.WHITE + " a"
                     + ChatColor.AQUA + " Multiverse SignPortal" + ChatColor.WHITE + " into existance!");
             event.setCancelled(true);
@@ -170,11 +171,11 @@ public class MVSPBlockListener implements Listener {
 
     private void createMultiverseSignPortal(SignChangeEvent event) {
         if (this.plugin.getCore().getMVPerms().hasPermission(event.getPlayer(), "multiverse.signportal.create", true)) {
-            this.plugin.log(Level.FINER, "MV SignPortal Created");
+            Logging.finer("MV SignPortal Created");
             event.setLine(1, ChatColor.DARK_GREEN + event.getLine(1));
             checkRedstoneTeleportTargets(event);
         } else {
-            this.plugin.log(Level.FINER, "No Perms to create");
+            Logging.finer("No Perms to create");
             event.setLine(1, ChatColor.DARK_RED + event.getLine(1));
             event.getPlayer().sendMessage("You don't have permission to create a SignPortal!");
             event.getPlayer().sendMessage(ChatColor.GREEN + CREATE_PERM);

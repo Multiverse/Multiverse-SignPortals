@@ -1,5 +1,6 @@
 package com.onarandombox.MultiverseSignPortals.listeners;
 
+import com.dumptruckman.minecraft.util.Logging;
 import com.onarandombox.MultiverseCore.MultiverseCore;
 import com.onarandombox.MultiverseCore.api.MVDestination;
 import com.onarandombox.MultiverseCore.utils.BukkitTravelAgent;
@@ -21,7 +22,7 @@ class MVSPTravelAgent extends MVTravelAgent {
             event.useTravelAgent(true);
             new BukkitTravelAgent(this).setPortalEventTravelAgent(event);
         } catch (ClassNotFoundException ignore) {
-            core.log(Level.FINE, "TravelAgent not available for PlayerPortalEvent for " + player.getName());
+            Logging.fine("TravelAgent not available for PlayerPortalEvent for " + player.getName());
         }
     }
 }

@@ -7,6 +7,7 @@
 
 package com.onarandombox.MultiverseSignPortals.utils;
 
+import com.dumptruckman.minecraft.util.Logging;
 import com.onarandombox.MultiverseCore.api.MVDestination;
 import com.onarandombox.MultiverseCore.destination.InvalidDestination;
 import com.onarandombox.MultiverseSignPortals.MultiverseSignPortals;
@@ -54,31 +55,31 @@ public class PortalDetector {
                 portalEnd = block.getRelative(1, 0, 0).getLocation();
                 portalStart = block.getRelative(0, 2, 0).getLocation();
                 foundSigns = this.checkBlocksOutside(l.getWorld().getBlockAt(portalStart), l.getWorld().getBlockAt(portalEnd), Axis.X);
-                this.plugin.log(Level.FINER, "Found normal X");
+                Logging.finer("Found normal X");
 
             } else if (block.getRelative(-1, 0, 0).getType() == Material.NETHER_PORTAL) {
                 portalEnd = block.getLocation();
                 portalStart = block.getRelative(-1, 2, 0).getLocation();
                 foundSigns = this.checkBlocksOutside(l.getWorld().getBlockAt(portalStart), l.getWorld().getBlockAt(portalEnd), Axis.X);
-                this.plugin.log(Level.FINER, "Found inverse X");
+                Logging.finer("Found inverse X");
             } else if (block.getRelative(0, 0, 1).getType() == Material.NETHER_PORTAL) {
                 portalEnd = block.getRelative(0, 0, 1).getLocation();
                 portalStart = block.getRelative(0, 2, 0).getLocation();
                 foundSigns = this.checkBlocksOutside(l.getWorld().getBlockAt(portalStart), l.getWorld().getBlockAt(portalEnd), Axis.Z);
-                this.plugin.log(Level.FINER, "Found normal Z");
+                Logging.finer("Found normal Z");
 
             } else if (block.getRelative(0, 0, -1).getType() == Material.NETHER_PORTAL) {
                 portalEnd = block.getLocation();
                 portalStart = block.getRelative(0, 2, -1).getLocation();
                 foundSigns = this.checkBlocksOutside(l.getWorld().getBlockAt(portalStart), l.getWorld().getBlockAt(portalEnd), Axis.Z);
-                this.plugin.log(Level.FINER, "Found inverse Z");
+                Logging.finer("Found inverse Z");
             }
         }
         if (foundSigns != null) {
-            this.plugin.log(Level.FINE, "Woo! Notch Portal!");
+            Logging.fine("Woo! Notch Portal!");
             return processSigns(foundSigns, p);
         } else {
-            this.plugin.log(Level.FINE, ":( No Notch Portal Here...");
+            Logging.fine(":( No Notch Portal Here...");
         }
         return null;
     }
@@ -144,7 +145,7 @@ public class PortalDetector {
         }
         if (legacySign != null) {
             if (this.plugin.getCore().getMVPerms().hasPermission(player, "multiverse.signportal.validate", true)) {
-                this.plugin.log(Level.FINE, "Migrating Legacy Sign");
+                Logging.fine("Migrating Legacy Sign");
                 legacySign.setLine(1, SignTools.setColor(legacySign.getLine(1), ChatColor.DARK_BLUE));
                 legacySign.update(true);
                 this.invalidateOtherSigns(legacySign, foundSigns);
@@ -152,7 +153,7 @@ public class PortalDetector {
             }
         }
         if (normalSign != null) {
-            this.plugin.log(Level.FINE, "Migrating Normal Sign");
+            Logging.fine("Migrating Normal Sign");
             normalSign.setLine(1, SignTools.setColor(normalSign.getLine(1), ChatColor.DARK_BLUE));
             normalSign.update(true);
             return normalSign.getLine(2);
@@ -171,7 +172,7 @@ public class PortalDetector {
 
     public String processSign(Sign sign) {
         if (SignTools.isMVSign(sign.getLine(1), ChatColor.DARK_GREEN)) {
-            this.plugin.log(Level.FINER, "Found a MV Sign");
+            Logging.finer("Found a MV Sign");
             return sign.getLine(2) + sign.getLine(3);
         }
         return null;
@@ -179,19 +180,19 @@ public class PortalDetector {
 
     public SignStatus getSignStatus(Sign sign) {
         if (SignTools.isMVSign(sign.getLine(1), ChatColor.DARK_GREEN)) {
-            this.plugin.log(Level.FINER, "Found a MV Sign (Sign Portal)");
+            Logging.finer("Found a MV Sign (Sign Portal)");
             return SignStatus.SignPortal;
         }
         if (SignTools.isMVSign(sign.getLine(1), ChatColor.DARK_BLUE)) {
-            this.plugin.log(Level.FINER, "Found a MV Sign (Nether Portal that has a Sign)");
+            Logging.finer("Found a MV Sign (Nether Portal that has a Sign)");
             return SignStatus.NetherPortalSign;
         }
         if (SignTools.isMVSign(sign.getLine(1), ChatColor.DARK_RED)) {
-            this.plugin.log(Level.FINER, "Found a MV Sign (Disabled)");
+            Logging.finer("Found a MV Sign (Disabled)");
             return SignStatus.Disabled;
         }
         if (SignTools.isMVSign(sign.getLine(1), null)) {
-            this.plugin.log(Level.FINER, "Found a MV Sign (Legacy)");
+            Logging.finer("Found a MV Sign (Legacy)");
             return SignStatus.Legacy;
         }
         return SignStatus.NotASignPortal;
@@ -248,17 +249,17 @@ public class PortalDetector {
             for (LivingEntity entity : worldEntities) {
                 if ((type == ALL || type == ANIMALS) && (entity instanceof Animals || entity instanceof Squid)) {
                     if (entity.getLocation().toVector().isInAABB(min, max)) {
-                        plugin.log(Level.FINEST, "Found " + entity + " within range!");
+                        Logging.finest("Found " + entity + " within range!");
                         entitiesInRange.add(entity);
                     }
                 } else if ((type == ALL || type == MONSTERS) && (entity instanceof Monster)) {
                     if (entity.getLocation().toVector().isInAABB(min, max)) {
-                        plugin.log(Level.FINEST, "Found " + entity + " within range!");
+                        Logging.finest("Found " + entity + " within range!");
                         entitiesInRange.add(entity);
                     }
                 } else if ((type == ALL || type == PLAYERS) && (entity instanceof HumanEntity)) {
                     if (entity.getLocation().toVector().isInAABB(min, max)) {
-                        plugin.log(Level.FINEST, "Found " + entity + " within range!");
+                        Logging.finest("Found " + entity + " within range!");
                         entitiesInRange.add(entity);
                     }
                 }
@@ -288,7 +289,7 @@ public class PortalDetector {
         if (top.getRelative(xM, 1, zM).getType() != Material.OBSIDIAN) {
             return null;
         }
-        this.plugin.log(Level.FINER, "Found top 2");
+        Logging.finer("Found top 2");
         // Check the bottom 2
         if (bottom.getRelative(0, -1, 0).getType() != Material.OBSIDIAN) {
             return null;
@@ -296,7 +297,7 @@ public class PortalDetector {
         if (bottom.getRelative(-1 * xM, -1, -1 * zM).getType() != Material.OBSIDIAN) {
             return null;
         }
-        this.plugin.log(Level.FINER, "Found bottom 2");
+        Logging.finer("Found bottom 2");
         // Check the Left 3
         if (top.getRelative(-1 * xM, 0, -1 * zM).getType() != Material.OBSIDIAN) {
             return null;
@@ -307,7 +308,7 @@ public class PortalDetector {
         if (top.getRelative(-1 * xM, -2, -1 * zM).getType() != Material.OBSIDIAN) {
             return null;
         }
-        this.plugin.log(Level.FINER, "Found left 3");
+        Logging.finer("Found left 3");
         // Check the Right 3
         if (bottom.getRelative(xM, 0, zM).getType() != Material.OBSIDIAN) {
             return null;
@@ -318,7 +319,7 @@ public class PortalDetector {
         if (bottom.getRelative(xM, 2, zM).getType() != Material.OBSIDIAN) {
             return null;
         }
-        this.plugin.log(Level.FINER, "Found right 3");
+        Logging.finer("Found right 3");
         Block topper = top.getRelative(-1 - xM, 1, -1 - zM);
         Block bottomer = bottom.getRelative(1 + xM, -1, 1 + zM);
         return this.checkZoneForSigns(topper, bottomer);
@@ -333,11 +334,11 @@ public class PortalDetector {
                 looking.setY(y);
                 for (int z = topper.getZ(); z <= bottomer.getZ(); z++) {
                     looking.setZ(z);
-                    this.plugin.log(Level.FINEST, "Looking for sign at " +
+                    Logging.finest("Looking for sign at " +
                             this.plugin.getCore().getLocationManipulation().strCoordsRaw(looking));
                     BlockState signBlock = topper.getWorld().getBlockAt(looking).getState();
                     if (signBlock instanceof Sign) {
-                        this.plugin.log(Level.FINER, "WOO Found one! " +
+                        Logging.finer("WOO Found one! " +
                                 this.plugin.getCore().getLocationManipulation().strCoordsRaw(looking));
                         signs.add((Sign) signBlock);
                     }
