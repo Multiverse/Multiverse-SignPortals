@@ -7,6 +7,7 @@
 
 package com.onarandombox.MultiverseSignPortals.listeners;
 
+import com.dumptruckman.minecraft.util.Logging;
 import com.onarandombox.MultiverseCore.api.MVDestination;
 import com.onarandombox.MultiverseCore.destination.DestinationFactory;
 import com.onarandombox.MultiverseCore.enums.TeleportResult;
@@ -56,7 +57,7 @@ public class MVSPPlayerListener implements Listener {
         try {
             String destString = detector.getNotchPortalDestination(event.getPlayer(), event.getFrom());
             if (destString != null) {
-                this.plugin.log(Level.FINER, "Found a Multiverse Sign");
+                Logging.finer("Found a Multiverse Sign");
                 DestinationFactory df = this.plugin.getCore().getDestFactory();
                 destString = ChatColor.stripColor(destString);
                 MVDestination dest = df.getDestination(destString);
@@ -67,7 +68,7 @@ public class MVSPPlayerListener implements Listener {
 
         } catch (NoMultiverseSignFoundException e) {
             // This will simply act as a notch portal.
-            this.plugin.log(Level.FINER, "Did NOT find a Multiverse Sign");
+            Logging.finer("Did NOT find a Multiverse Sign");
         } catch (MoreThanOneSignFoundException e) {
             this.plugin.getCore().getMessaging().sendMessage(event.getPlayer(),
                     String.format("%sSorry %sbut more than 1 sign was found where the second line was [mv] or [multiverse]. Please remove one of the signs.",
@@ -87,7 +88,7 @@ public class MVSPPlayerListener implements Listener {
         }
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             if (event.getClickedBlock().getState() instanceof Sign) {
-                this.plugin.log(Level.FINER, "Found a Sign!");
+                Logging.finer("Found a Sign!");
                 Sign s = (Sign) event.getClickedBlock().getState();
                 SignStatus status = this.pd.getSignStatus(s);
                 if (status == SignStatus.SignPortal) {
@@ -109,19 +110,19 @@ public class MVSPPlayerListener implements Listener {
 
     private void takePlayerToDestination(Player player, String destString) {
         if (destString != null) {
-            this.plugin.log(Level.FINER, "Found a SignPortal! (" + destString + ")");
+            Logging.finer("Found a SignPortal! (" + destString + ")");
             SafeTTeleporter teleporter = this.plugin.getCore().getSafeTTeleporter();
             DestinationFactory df = this.plugin.getCore().getDestFactory();
 
             MVDestination d = df.getDestination(destString);
-            this.plugin.log(Level.FINER, "Found a Destination! (" + d + ")");
+            Logging.finer("Found a Destination! (" + d + ")");
             if (this.pd.playerCanGoToDestination(player, d)) {
                 TeleportResult result = teleporter.safelyTeleport(player, player, d);
                 if (result == TeleportResult.FAIL_UNSAFE) {
                     player.sendMessage("The Destination was not safe! (" + ChatColor.RED + d + ChatColor.WHITE + ")");
                 }
             } else {
-                this.plugin.log(Level.FINER, "Denied permission to go to destination!");
+                Logging.finer("Denied permission to go to destination!");
             }
         } else {
             player.sendMessage("The Destination was not set on the sign!");

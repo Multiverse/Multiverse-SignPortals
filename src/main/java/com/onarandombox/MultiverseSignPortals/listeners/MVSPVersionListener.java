@@ -47,7 +47,7 @@ public class MVSPVersionListener implements Listener {
      */
     @EventHandler
     public void portalTouchEvent(MVPlayerTouchedPortalEvent event) {
-        this.plugin.log(Level.FINER, "Found The TouchedPortal event.");
+        Logging.finer("Found The TouchedPortal event.");
         Player p = event.getPlayer();
         Location l = event.getBlockTouched();
 
@@ -57,20 +57,20 @@ public class MVSPVersionListener implements Listener {
 
             if (destString != null) {
                 MVDestination d = this.plugin.getCore().getDestFactory().getDestination(destString);
-                this.plugin.log(Level.FINE, destString + " ::: " + d);
+                Logging.fine(destString + " ::: " + d);
                 if (detector.playerCanGoToDestination(p, d)) {
                     // If the player can go to the destination on the sign...
                     // We're overriding NetherPortals.
-                    this.plugin.log(Level.FINE, "Player could go to destination!");
+                    Logging.fine("Player could go to destination!");
                     event.setCancelled(true);
                 } else {
-                    this.plugin.log(Level.FINE, "Player could NOT go to destination!");
+                    Logging.fine("Player could NOT go to destination!");
                 }
             }
 
         } catch (NoMultiverseSignFoundException e) {
             // This will simply act as a notch portal.
-            this.plugin.log(Level.FINER, "Did NOT find a Multiverse Sign");
+            Logging.finer("Did NOT find a Multiverse Sign");
         } catch (MoreThanOneSignFoundException e) {
             this.plugin.getCore().getMessaging().sendMessage(p,
                     String.format("%sSorry %sbut more than 1 sign was found where the second line was [mv] or [multiverse]. Please remove one of the signs.",
