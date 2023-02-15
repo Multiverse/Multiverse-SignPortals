@@ -8,18 +8,18 @@
 package com.onarandombox.MultiverseSignPortals.listeners;
 
 import com.dumptruckman.minecraft.util.Logging;
-import com.onarandombox.MultiverseCore.api.MVDestination;
-import com.onarandombox.MultiverseCore.destination.DestinationFactory;
-import com.onarandombox.MultiverseCore.enums.TeleportResult;
-import com.onarandombox.MultiverseCore.utils.MVPermissions;
-import com.onarandombox.MultiverseCore.utils.MVTravelAgent;
 import com.onarandombox.MultiverseCore.api.SafeTTeleporter;
+import com.onarandombox.MultiverseCore.destination.DestinationsProvider;
+import com.onarandombox.MultiverseCore.destination.ParsedDestination;
+import com.onarandombox.MultiverseCore.teleportation.TeleportResult;
+import com.onarandombox.MultiverseCore.utils.MVPermissions;
 import com.onarandombox.MultiverseSignPortals.MultiverseSignPortals;
 import com.onarandombox.MultiverseSignPortals.exceptions.MoreThanOneSignFoundException;
 import com.onarandombox.MultiverseSignPortals.exceptions.NoMultiverseSignFoundException;
 import com.onarandombox.MultiverseSignPortals.utils.PortalDetector;
 import com.onarandombox.MultiverseSignPortals.utils.SignStatus;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -28,8 +28,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.permissions.PermissionDefault;
-
-import java.util.logging.Level;
 
 public class MVSPPlayerListener implements Listener {
 
@@ -58,21 +56,30 @@ public class MVSPPlayerListener implements Listener {
             String destString = detector.getNotchPortalDestination(event.getPlayer(), event.getFrom());
             if (destString != null) {
                 Logging.finer("Found a Multiverse Sign");
-                DestinationFactory df = this.plugin.getCore().getDestFactory();
+                DestinationsProvider destinationsProvider = this.plugin.getCore().getDestinationsProvider();
                 destString = ChatColor.stripColor(destString);
-                MVDestination dest = df.getDestination(destString);
-                MVSPTravelAgent travelAgent = new MVSPTravelAgent(this.plugin.getCore(), dest, event.getPlayer());
-                travelAgent.setPortalEventTravelAgent(event);
-                event.setTo(dest.getLocation(event.getPlayer()));
+                ParsedDestination<?> dest = destinationsProvider.parseDestination(destString);
+                if (dest == null) {
+                    Logging.finer("Destination was null!");
+                    return;
+                }
+
+                // This is a valid sign portal, so we need to cancel the event.
+                event.setCancelled(true);
+                SafeTTeleporter teleporter = this.plugin.getCore().getSafeTTeleporter();
+                TeleportResult result = teleporter.safelyTeleport(
+                        this.plugin.getCore().getMVCommandManager().getCommandIssuer(event.getPlayer()), event.getPlayer(), dest);
+                if (result == TeleportResult.FAIL_UNSAFE) {
+                    event.getPlayer().sendMessage("The Destination was not safe! (" + ChatColor.RED + dest + ChatColor.WHITE + ")");
+                }
             }
 
         } catch (NoMultiverseSignFoundException e) {
             // This will simply act as a notch portal.
             Logging.finer("Did NOT find a Multiverse Sign");
         } catch (MoreThanOneSignFoundException e) {
-            this.plugin.getCore().getMessaging().sendMessage(event.getPlayer(),
-                    String.format("%sSorry %sbut more than 1 sign was found where the second line was [mv] or [multiverse]. Please remove one of the signs.",
-                            ChatColor.RED, ChatColor.WHITE), false);
+            event.getPlayer().sendMessage(String.format("%sSorry %sbut more than 1 sign was found where the second line was [mv] or [multiverse]. Please remove one of the signs.",
+                            ChatColor.RED, ChatColor.WHITE));
             event.setCancelled(true);
         }
     }
@@ -112,14 +119,15 @@ public class MVSPPlayerListener implements Listener {
         if (destString != null) {
             Logging.finer("Found a SignPortal! (" + destString + ")");
             SafeTTeleporter teleporter = this.plugin.getCore().getSafeTTeleporter();
-            DestinationFactory df = this.plugin.getCore().getDestFactory();
+            DestinationsProvider destinationsProvider = this.plugin.getCore().getDestinationsProvider();
 
-            MVDestination d = df.getDestination(destString);
-            Logging.finer("Found a Destination! (" + d + ")");
-            if (this.pd.playerCanGoToDestination(player, d)) {
-                TeleportResult result = teleporter.safelyTeleport(player, player, d);
+            ParsedDestination<?> destination = destinationsProvider.parseDestination(destString);
+            Logging.finer("Found a Destination! (" + destination + ")");
+            if (this.pd.playerCanGoToDestination(player, destination)) {
+                TeleportResult result = teleporter.safelyTeleport(
+                        this.plugin.getCore().getMVCommandManager().getCommandIssuer(player), player, destination);
                 if (result == TeleportResult.FAIL_UNSAFE) {
-                    player.sendMessage("The Destination was not safe! (" + ChatColor.RED + d + ChatColor.WHITE + ")");
+                    player.sendMessage("The Destination was not safe! (" + ChatColor.RED + destination + ChatColor.WHITE + ")");
                 }
             } else {
                 Logging.finer("Denied permission to go to destination!");
@@ -128,6 +136,4 @@ public class MVSPPlayerListener implements Listener {
             player.sendMessage("The Destination was not set on the sign!");
         }
     }
-
-
 }

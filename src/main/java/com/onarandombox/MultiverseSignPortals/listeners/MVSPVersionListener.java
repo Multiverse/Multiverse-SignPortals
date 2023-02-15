@@ -8,7 +8,7 @@
 package com.onarandombox.MultiverseSignPortals.listeners;
 
 import com.dumptruckman.minecraft.util.Logging;
-import com.onarandombox.MultiverseCore.api.MVDestination;
+import com.onarandombox.MultiverseCore.destination.ParsedDestination;
 import com.onarandombox.MultiverseCore.event.MVDebugModeEvent;
 import com.onarandombox.MultiverseCore.event.MVPlayerTouchedPortalEvent;
 import com.onarandombox.MultiverseCore.event.MVVersionEvent;
@@ -21,8 +21,6 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-
-import java.util.logging.Level;
 
 public class MVSPVersionListener implements Listener {
     private MultiverseSignPortals plugin;
@@ -56,7 +54,7 @@ public class MVSPVersionListener implements Listener {
             String destString = detector.getNotchPortalDestination(p, l);
 
             if (destString != null) {
-                MVDestination d = this.plugin.getCore().getDestFactory().getDestination(destString);
+                ParsedDestination<?> d = this.plugin.getCore().getDestinationsProvider().parseDestination(destString);
                 Logging.fine(destString + " ::: " + d);
                 if (detector.playerCanGoToDestination(p, d)) {
                     // If the player can go to the destination on the sign...
@@ -72,9 +70,8 @@ public class MVSPVersionListener implements Listener {
             // This will simply act as a notch portal.
             Logging.finer("Did NOT find a Multiverse Sign");
         } catch (MoreThanOneSignFoundException e) {
-            this.plugin.getCore().getMessaging().sendMessage(p,
-                    String.format("%sSorry %sbut more than 1 sign was found where the second line was [mv] or [multiverse]. Please remove one of the signs.",
-                            ChatColor.RED, ChatColor.WHITE), false);
+            p.sendMessage(String.format("%sSorry %sbut more than 1 sign was found where the second line was [mv] or [multiverse]. Please remove one of the signs.",
+                            ChatColor.RED, ChatColor.WHITE));
         }
     }
 

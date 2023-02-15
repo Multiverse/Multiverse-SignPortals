@@ -99,35 +99,8 @@ public class MultiverseSignPortals extends JavaPlugin implements MVPlugin {
         return authors.substring(2);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated This is now deprecated, nobody needs it any longer.
-     * All logging is now done with {@link Logging}.
-     */
-    @Override
-    @Deprecated
-    public void log(Level level, String msg) {
-        Logging.log(level, msg);
-    }
-
-    // No longer using, use getVersionInfo instead.
-    @Override
-    @Deprecated
-    public String dumpVersionInfo(String buffer) {
-        buffer += logAndAddToPasteBinBuffer(this.getVersionInfo());
-        return buffer;
-    }
-
     public String getVersionInfo() {
         return "[Multiverse-SignPortals] Multiverse-SignPortals Version: " + this.getDescription().getVersion() + '\n';
-    }
-
-    // No longer using, use getVersionInfo instead.
-    @Deprecated
-    private String logAndAddToPasteBinBuffer(String string) {
-        Logging.info(string);
-        return Logging.getPrefixedMessage(string, false);
     }
 
     @Override
