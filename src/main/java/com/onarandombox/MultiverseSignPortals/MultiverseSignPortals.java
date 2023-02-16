@@ -7,120 +7,112 @@
 
 package com.onarandombox.MultiverseSignPortals;
 
+import java.util.List;
+
 import com.dumptruckman.minecraft.util.Logging;
-import com.onarandombox.MultiverseCore.MultiverseCore;
+import com.onarandombox.MultiverseCore.api.MVCore;
 import com.onarandombox.MultiverseCore.api.MVPlugin;
 import com.onarandombox.MultiverseSignPortals.listeners.MVSPBlockListener;
 import com.onarandombox.MultiverseSignPortals.listeners.MVSPPlayerListener;
-import com.onarandombox.MultiverseSignPortals.listeners.MVSPPluginListener;
 import com.onarandombox.MultiverseSignPortals.listeners.MVSPVersionListener;
 import com.onarandombox.MultiverseSignPortals.utils.PortalDetector;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.logging.Level;
-
 public class MultiverseSignPortals extends JavaPlugin implements MVPlugin {
+    private static final int PROTOCOL = 50;
 
-    protected MultiverseCore core;
-    protected MVSPPlayerListener playerListener;
-    protected MVSPPluginListener pluginListener;
-    protected MVSPBlockListener blockListener;
-    private final static int requiresProtocol = 24;
-
+    private MVCore core;
     private PortalDetector portalDetector;
 
-    public void onEnable() {
-        Logging.init(this);
-
-        this.core = (MultiverseCore) getServer().getPluginManager().getPlugin("Multiverse-Core");
-        // Test if the Core was found, if not we'll disable this plugin.
-        if (this.core == null) {
-            Logging.info("Multiverse-Core not found, will keep looking.");
-            getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
-        if (this.core.getProtocolVersion() < requiresProtocol) {
-            Logging.severe("Your Multiverse-Core is OUT OF DATE");
-            Logging.severe("This version of SignPortals requires Protocol Level: " + requiresProtocol);
-            Logging.severe("Your of Core Protocol Level is: " + this.core.getProtocolVersion());
-            Logging.severe("Grab an updated copy at: ");
-            Logging.severe("http://dev.bukkit.org/bukkit-plugins/multiverse-core/");
-            getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
-
-        Logging.setDebugLevel(core.getMVConfig().getGlobalDebug());
-
-        this.core.incrementPluginCount();
-
-        // Init our listeners
-        this.pluginListener = new MVSPPluginListener(this);
-        this.playerListener = new MVSPPlayerListener(this);
-        this.blockListener = new MVSPBlockListener(this);
-
-        // Init our events
-        PluginManager pm = this.getServer().getPluginManager();
-        pm.registerEvents(this.pluginListener, this);
-        pm.registerEvents(this.playerListener, this);
-        pm.registerEvents(this.blockListener, this);
-        pm.registerEvents(new MVSPVersionListener(this), this);
-
-        this.portalDetector = new PortalDetector(this);
-
-        Logging.log(true, Level.INFO, " Enabled - By %s", getAuthors());
-    }
-
-    public void onDisable() {
-        // The Usual
-        Logging.info("- Disabled");
-    }
-
-    /** This fires before I get Enabled. */
+    /**
+     * This fires before I get Enabled.
+     */
     public void onLoad() {
         Logging.init(this);
         this.getDataFolder().mkdirs();
     }
 
     /**
-     * Parse the Authors Array into a readable String with ',' and 'and'.
-     *
-     * @return An comma separated string of authors
+     * {@inheritDoc}
      */
-    private String getAuthors() {
-        String authors = "";
-        for (int i = 0; i < this.getDescription().getAuthors().size(); i++) {
-            if (i == this.getDescription().getAuthors().size() - 1) {
-                authors += " and " + this.getDescription().getAuthors().get(i);
-            } else {
-                authors += ", " + this.getDescription().getAuthors().get(i);
-            }
+    @Override
+    public final void onEnable() {
+        this.core = (MVCore) this.getServer().getPluginManager().getPlugin("Multiverse-Core");
+        if (this.core == null) {
+            Logging.severe("Core not found! You must have Multiverse-Core installed to use this plugin!");
+            Logging.severe("Grab a copy at: ");
+            Logging.severe("https://dev.bukkit.org/projects/multiverse-core");
+            Logging.severe("Disabling!");
+            this.getServer().getPluginManager().disablePlugin(this);
+            return;
         }
-        return authors.substring(2);
+        if (this.core.getProtocolVersion() < this.getProtocolVersion()) {
+            Logging.severe("Your Multiverse-Core is OUT OF DATE");
+            Logging.severe("This version of " + this.getDescription().getName() + " requires Protocol Level: " + this.getProtocolVersion());
+            Logging.severe("Your of Core Protocol Level is: " + this.core.getProtocolVersion());
+            Logging.severe("Grab an updated copy at: ");
+            Logging.severe("https://dev.bukkit.org/projects/multiverse-core");
+            Logging.severe("Disabling!");
+            this.getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+        Logging.setDebugLevel(core.getMVConfig().getGlobalDebug());
+        this.core.incrementPluginCount();
+        this.onMVPluginEnable();
+        Logging.config("Version %s (API v%s) Enabled - By %s", this.getDescription().getVersion(), getProtocolVersion(), getAuthors());
     }
 
-    public String getVersionInfo() {
-        return "[Multiverse-SignPortals] Multiverse-SignPortals Version: " + this.getDescription().getVersion() + '\n';
+    private void onMVPluginEnable() {
+        // Init our events
+        PluginManager pm = this.getServer().getPluginManager();
+        pm.registerEvents(new MVSPPlayerListener(this), this);
+        pm.registerEvents(new MVSPBlockListener(this), this);
+        pm.registerEvents(new MVSPVersionListener(this), this);
+
+        this.portalDetector = new PortalDetector(this);
+    }
+
+    public void onDisable() {
+        this.core.decrementPluginCount();
+        Logging.shutdown();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getAuthors() {
+        List<String> authorsList = this.getDescription().getAuthors();
+        if (authorsList.size() == 0) {
+            return "";
+        }
+
+        StringBuilder authors = new StringBuilder();
+        authors.append(authorsList.get(0));
+
+        for (int i = 1; i < authorsList.size(); i++) {
+            if (i == authorsList.size() - 1) {
+                authors.append(" and ").append(authorsList.get(i));
+            } else {
+                authors.append(", ").append(authorsList.get(i));
+            }
+        }
+
+        return authors.toString();
     }
 
     @Override
-    public MultiverseCore getCore() {
+    public MVCore getCore() {
         return this.core;
     }
 
     @Override
-    public void setCore(MultiverseCore core) {
-        this.core = core;
-    }
-
-    @Override
     public int getProtocolVersion() {
-        return 1;
+        return PROTOCOL;
     }
 
     public PortalDetector getPortalDetector() {
         return this.portalDetector;
     }
-
-
 }

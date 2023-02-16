@@ -35,7 +35,7 @@ public class MVSPVersionListener implements Listener {
      */
     @EventHandler
     public void versionEvent(MVVersionEvent event) {
-        event.appendVersionInfo(this.plugin.getVersionInfo());
+        event.appendVersionInfo("[Multiverse-SignPortals] Multiverse-SignPortals Version: " + this.plugin.getDescription().getVersion() + '\n');
     }
 
     /**
