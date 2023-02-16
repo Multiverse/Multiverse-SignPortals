@@ -8,9 +8,9 @@
 package com.onarandombox.MultiverseSignPortals.listeners;
 
 import com.dumptruckman.minecraft.util.Logging;
-import com.onarandombox.MultiverseCore.api.MVDestination;
 import com.onarandombox.MultiverseCore.api.SafeTTeleporter;
-import com.onarandombox.MultiverseCore.enums.TeleportResult;
+import com.onarandombox.MultiverseCore.destination.ParsedDestination;
+import com.onarandombox.MultiverseCore.teleportation.TeleportResult;
 import com.onarandombox.MultiverseCore.utils.MVPermissions;
 import com.onarandombox.MultiverseSignPortals.MultiverseSignPortals;
 import com.onarandombox.MultiverseSignPortals.utils.PortalDetector;
@@ -31,8 +31,6 @@ import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.material.RedstoneTorch;
 import org.bukkit.permissions.PermissionDefault;
-
-import java.util.logging.Level;
 
 public class MVSPBlockListener implements Listener {
     private final String CREATE_PERM = "multiverse.signportal.create";
@@ -84,12 +82,13 @@ public class MVSPBlockListener implements Listener {
     private void takeEntityToDestination(Entity entity, String destString) {
         if (destString != null) {
             SafeTTeleporter teleporter = plugin.getCore().getSafeTTeleporter();
-            MVDestination d = plugin.getCore().getDestFactory().getDestination(destString);
+            ParsedDestination<?> d = plugin.getCore().getDestinationsProvider().parseDestination(destString);
             Logging.finer("Found a Destination! (" + d + ")");
             if (entity instanceof Player) {
                 Player player = (Player) entity;
                 if (plugin.getPortalDetector().playerCanGoToDestination(player, d)) {
-                    TeleportResult result = teleporter.safelyTeleport(Bukkit.getConsoleSender(), player, d);
+                    TeleportResult result = teleporter.safelyTeleport(
+                            this.plugin.getCore().getMVCommandManager().getCommandIssuer(Bukkit.getConsoleSender()), player, d);
                     if (result == TeleportResult.FAIL_UNSAFE) {
                         Logging.finer("The Destination was not safe! (" + ChatColor.RED + d + ChatColor.WHITE + ")");
                     } else {

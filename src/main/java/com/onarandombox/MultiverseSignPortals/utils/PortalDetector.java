@@ -7,9 +7,12 @@
 
 package com.onarandombox.MultiverseSignPortals.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
+
 import com.dumptruckman.minecraft.util.Logging;
-import com.onarandombox.MultiverseCore.api.MVDestination;
-import com.onarandombox.MultiverseCore.destination.InvalidDestination;
+import com.onarandombox.MultiverseCore.destination.ParsedDestination;
 import com.onarandombox.MultiverseSignPortals.MultiverseSignPortals;
 import com.onarandombox.MultiverseSignPortals.enums.Axis;
 import com.onarandombox.MultiverseSignPortals.exceptions.MoreThanOneSignFoundException;
@@ -29,11 +32,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Squid;
 import org.bukkit.entity.Villager;
 import org.bukkit.util.Vector;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.regex.Pattern;
 
 public class PortalDetector {
 
@@ -349,12 +347,11 @@ public class PortalDetector {
         return signs;
     }
 
-    public boolean playerCanGoToDestination(Player player, MVDestination d) {
-            if (d instanceof InvalidDestination || !d.isValid()) {
-                this.plugin.getCore().getMessaging().sendMessage(player, "The Destination on this sign is Invalid!", false);
+    public boolean playerCanGoToDestination(Player player, ParsedDestination<?> destination) {
+            if (destination == null) {
+                player.sendMessage("The Destination on this sign is Invalid!");
                 return false;
             }
-            return this.plugin.getCore().getMVPerms().hasPermission(player, d.getRequiredPermission(), true);
+            return true;
         }
-
 }
