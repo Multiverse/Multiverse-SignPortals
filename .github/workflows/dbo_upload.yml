@@ -30,7 +30,7 @@ jobs:
           escapeData: true
           data: >-
             {
-              "metadata": {
+              "metadata": '{
                 "changelog": "${{ steps.release-artifact.outputs.body }}",
                 "changelogType": "markdown",
                 "releaseType": "release",
@@ -44,7 +44,7 @@ jobs:
                     }
                   ]
                 }
-              }
+              }'
             }
 
 # Bukkit Version IDs
