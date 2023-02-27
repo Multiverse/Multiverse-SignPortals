@@ -27,11 +27,10 @@ jobs:
           contentType: multipart/form-data
           customHeaders: '{ "X-Api-Token": "${{ secrets.DBO_UPLOAD_API_TOKEN }}" }'
           files: '{ "file": "${{ github.workspace }}/multiverse-signportals-${{ github.event.inputs.version }}.jar" }'
-          escapeData: true
           data: >-
             {
               "metadata": "{
-                \"changelog\": \"${{ steps.release-artifact.outputs.body }}\",
+                \"changelog\": \"\",
                 \"changelogType\": \"markdown\",
                 \"releaseType\": \"release\",
                 \"displayName\": \"${{ github.event.inputs.version }}\",
