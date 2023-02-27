@@ -19,6 +19,9 @@ jobs:
           version: tags/${{ github.event.inputs.version }}
           file: multiverse-signportals-${{ github.event.inputs.version }}.jar
 
+      - name: PWD
+        run: pwd
+
       - name: Upload to dev.bukkit.org
         uses: fjogeleit/http-request-action@v1
         with:
