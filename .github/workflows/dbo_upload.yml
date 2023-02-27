@@ -29,11 +29,8 @@ jobs:
             {
               "X-Api-Token": "${{ secrets.DBO_UPLOAD_API_TOKEN }}"
             }
-          files: |
-            {
-              "file": "./multiverse-signportals-${{ github.event.inputs.version }}.jar"
-            }
-          data: |
+          files: '{ "file": "./multiverse-signportals-${{ github.event.inputs.version }}.jar" }'
+          data: >-
             {
               "metadata": {
                 "changelog": "${{ toJson(steps.release-artifact.outputs.body) }}",
