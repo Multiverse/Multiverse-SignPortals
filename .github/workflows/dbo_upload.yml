@@ -30,7 +30,21 @@ jobs:
           escapeData: true
           data: >-
             {
-              "metadata": ${{ toJson({ changelog: steps.release-artifact.outputs.body }) }}
+              "metadata": "{
+                \"changelog\": \"${{ steps.release-artifact.outputs.body }}\",
+                \"changelogType\": \"markdown\",
+                \"releaseType\": \"release\",
+                \"displayName\": \"${{ github.event.inputs.version }}\",
+                \"gameVersions\": [9561, 9560, 9261, 9190, 9016, 8897, 8849, 8503, 7915, 7667, 7330, 7105],
+                \"relations\": {
+                  \"projects\": [
+                    {
+                      \"slug\": \"multiverse-core\",
+                      \"type\": \"requiredDependency\"
+                    }
+                  ]
+                }
+              }"
             }
 
 # Bukkit Version IDs
