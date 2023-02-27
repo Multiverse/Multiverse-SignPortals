@@ -17,10 +17,32 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           version: tags/${{ github.event.inputs.version }}
-          file: 'multiverse-signportals-${{ github.event.inputs.version }}.jar'
+          file: multiverse-signportals-${{ github.event.inputs.version }}.jar
 
-      - name: Describe
-        run: |
-          echo "Release name: ${{ steps.release-artifact.outputs.name }}"
-          echo "Release description: ${{ steps.release-artifact.outputs.body }}"
-          ls -al
+      - name: Upload to dev.bukkit.org
+        uses: fjogeleit/http-request-action@v1
+        with:
+          url: https://dev.bukkit.org/api/projects/31376/upload-file
+          method: POST
+          contentType: multipart/form-data
+          headers: |
+            X-Api-Token: ${{ secrets.DBO_UPLOAD_API_TOKEN }}
+          files:
+            file: ./multiverse-signportals-${{ github.event.inputs.version }}.jar
+          data: |
+            "metadata": {
+              "changelog": "${{ steps.release-artifact.outputs.body }}",
+              "changelogType": "markdown",
+              "releaseType": "release",
+              "displayName": "${{ github.event.inputs.version }}",
+              "gameVersions": ["1.16.5", "1.17.1"],
+              "recommended": true
+              "relations": {
+                "projects": [
+                  {
+                    "slug": "multiverse-core",
+                    "type": "requiredDependency"
+                  }
+                ]
+              }
+            }
