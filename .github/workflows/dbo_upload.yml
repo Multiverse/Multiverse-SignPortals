@@ -20,7 +20,7 @@ jobs:
           file: multiverse-signportals-${{ github.event.inputs.version }}.jar
 
       - name: Upload to dev.bukkit.org
-        uses: fjogeleit/http-request-action@v1
+        uses: Multiverse/http-request-action@debug
         with:
           url: https://dev.bukkit.org/api/projects/31376/upload-file
           method: POST
