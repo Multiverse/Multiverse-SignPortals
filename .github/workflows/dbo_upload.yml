@@ -30,7 +30,7 @@ jobs:
           data: >-
             {
               "metadata": {
-                "changelog": "${{ toJson(steps.release-artifact.outputs.body) }}",
+                "changelog": ${{ toJson(steps.release-artifact.outputs.body) }},
                 "changelogType": "markdown",
                 "releaseType": "release",
                 "displayName": "${{ github.event.inputs.version }}",
