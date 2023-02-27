@@ -17,8 +17,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           version: tags/${{ github.event.inputs.version }}
-          regex: true
-          file: 'multiverse-.\w+?-${{ github.event.inputs.version }}.jar'
+          file: 'multiverse-signportals-${{ github.event.inputs.version }}.jar'
 
       - name: Describe
         run: |
