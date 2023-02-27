@@ -27,22 +27,26 @@ jobs:
           contentType: multipart/form-data
           headers: |
             X-Api-Token: ${{ secrets.DBO_UPLOAD_API_TOKEN }}
-          files:
-            file: ./multiverse-signportals-${{ github.event.inputs.version }}.jar
+          files: |
+            {
+              "file": "./multiverse-signportals-${{ github.event.inputs.version }}.jar"
+            }
           data: |
-            "metadata": {
-              "changelog": "${{ steps.release-artifact.outputs.body }}",
-              "changelogType": "markdown",
-              "releaseType": "release",
-              "displayName": "${{ github.event.inputs.version }}",
-              "gameVersions": ["1.16.5", "1.17.1"],
-              "recommended": true
-              "relations": {
-                "projects": [
-                  {
-                    "slug": "multiverse-core",
-                    "type": "requiredDependency"
-                  }
-                ]
+            {
+              "metadata": {
+                "changelog": "${{ steps.release-artifact.outputs.body }}",
+                "changelogType": "markdown",
+                "releaseType": "release",
+                "displayName": "${{ github.event.inputs.version }}",
+                "gameVersions": ["1.16.5", "1.17.1"],
+                "recommended": true
+                "relations": {
+                  "projects": [
+                    {
+                      "slug": "multiverse-core",
+                      "type": "requiredDependency"
+                    }
+                  ]
+                }
               }
             }
