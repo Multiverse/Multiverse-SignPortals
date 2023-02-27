@@ -25,8 +25,10 @@ jobs:
           url: https://dev.bukkit.org/api/projects/31376/upload-file
           method: POST
           contentType: multipart/form-data
-          headers: |
-            X-Api-Token: ${{ secrets.DBO_UPLOAD_API_TOKEN }}
+          customHeaders: |
+            {
+              "X-Api-Token": "${{ secrets.DBO_UPLOAD_API_TOKEN }}"
+            }
           files: |
             {
               "file": "./multiverse-signportals-${{ github.event.inputs.version }}.jar"
