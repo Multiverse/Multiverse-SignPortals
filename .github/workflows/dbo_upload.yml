@@ -1,0 +1,27 @@
+name: Manually upload release to dev.bukkit.org
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release to upload'
+        required: true
+
+jobs:
+  manually_upload_dbo_release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download release artifact
+        id: release-artifact
+        uses: dsaltares/fetch-gh-release-asset@master
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          version: tags/${{ github.event.inputs.version }}
+          regex: true
+          file: 'multiverse-.\w+?-${{ github.event.inputs.version }}.jar'
+
+      - name: Describe
+        run: |
+          echo "Release name: ${{ steps.release-artifact.outputs.name }}"
+          echo "Release description: ${{ steps.release-artifact.outputs.body }}"
+          ls -al
