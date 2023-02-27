@@ -37,7 +37,7 @@ jobs:
                 "changelogType": "markdown",
                 "releaseType": "release",
                 "displayName": "${{ github.event.inputs.version }}",
-                "gameVersions": ["1.16.5", "1.17.1"],
+                "gameVersions": [9561, 9560, 9261, 9190, 9016, 8897, 8849, 8503, 7915, 7667, 7330, 7105],
                 "recommended": true
                 "relations": {
                   "projects": [
@@ -49,3 +49,17 @@ jobs:
                 }
               }
             }
+
+# Bukkit Version IDs
+# 9561: 1.19.3
+# 9560: 1.19.2
+# 9261: 1.19.1
+# 9190: 1.19
+# 9016: 1.18.2
+# 8897: 1.18.1
+# 8849: 1.18
+# 8503: 1.17
+# 7915: 1.16
+# 7667: 1.15
+# 7330: 1.14
+# 7105: 1.13
