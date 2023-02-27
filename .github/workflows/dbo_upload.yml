@@ -19,6 +19,17 @@ jobs:
           version: tags/${{ github.event.inputs.version }}
           file: multiverse-signportals-${{ github.event.inputs.version }}.jar
 
+      - name: Build DBO metadata
+        id: metadata
+        uses: nickofthyme/object-remap@v1
+        with:
+          changelog: ${{ toJson(steps.release-artifact.outputs.body) }}
+          changelogType: markdown
+          releaseType: release
+          displayName: ${{ github.event.inputs.version }}
+          gameVersions: '[9561, 9560, 9261, 9190, 9016, 8897, 8849, 8503, 7915, 7667, 7330, 7105]'
+          relations.projects: '[{"slug": "multiverse-core", "type": "requiredDependency"}]'
+
       - name: Upload to dev.bukkit.org
         uses: Multiverse/http-request-action@debug
         with:
@@ -27,24 +38,7 @@ jobs:
           contentType: multipart/form-data
           customHeaders: '{ "X-Api-Token": "${{ secrets.DBO_UPLOAD_API_TOKEN }}" }'
           files: '{ "file": "${{ github.workspace }}/multiverse-signportals-${{ github.event.inputs.version }}.jar" }'
-          data: >-
-            {
-              "metadata": "{
-                \"changelog\": \"\",
-                \"changelogType\": \"markdown\",
-                \"releaseType\": \"release\",
-                \"displayName\": \"${{ github.event.inputs.version }}\",
-                \"gameVersions\": [9561, 9560, 9261, 9190, 9016, 8897, 8849, 8503, 7915, 7667, 7330, 7105],
-                \"relations\": {
-                  \"projects\": [
-                    {
-                      \"slug\": \"multiverse-core\",
-                      \"type\": \"requiredDependency\"
-                    }
-                  ]
-                }
-              }"
-            }
+          data: '{ "metadata": ${{ toJson(steps.metadata.outputs.json) }} }'
 
 # Bukkit Version IDs
 # 9561: 1.19.3
