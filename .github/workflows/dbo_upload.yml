@@ -27,7 +27,7 @@ jobs:
           changelog_type: markdown
           release_type: release
           display_name: ${{ github.event.inputs.version }}
-          game_versions: '[9561, 9560, 9261, 9190, 9016, 8897, 8849, 8503, 7915, 7667, 7330, 7105]'
+          game_versions: '[9994, 9974, 9973, 9561, 9560, 9261, 9190, 9016, 8897, 8849, 8503, 7915, 7667, 7330, 7105]'
           relations.projects: '[{"slug": "multiverse-core", "type": "requiredDependency"}]'
 
       - name: Upload to dev.bukkit.org
@@ -41,6 +41,9 @@ jobs:
           data: '{ "metadata": ${{ toJson(steps.metadata.outputs.json) }} }'
 
 # Bukkit Version IDs
+# 9994: 1.20.1
+# 9974: 1.20
+# 9973: 1.19.4
 # 9561: 1.19.3
 # 9560: 1.19.2
 # 9261: 1.19.1
