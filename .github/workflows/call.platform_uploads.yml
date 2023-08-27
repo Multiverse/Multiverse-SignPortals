@@ -52,11 +52,7 @@ jobs:
           {
             "name": "Multiverse-Core",
             "required": true,
-            "namespace": {
-              "owner": "Multiverse",
-              "slug": "Multiverse-Core"
-            }
-          }
+            "platforms": ["PAPER"]
         ]}
 
       target_tag: ${{ inputs.target_tag }}
