@@ -32,7 +32,6 @@ import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.regex.Pattern;
 
 public class PortalDetector {
@@ -257,17 +256,19 @@ public class PortalDetector {
             List<LivingEntity> entitiesInRange = new ArrayList<LivingEntity>(worldEntities.size());
 
             for (LivingEntity entity : worldEntities) {
-                if ((type == RedstoneTeleportType.ALL || type == RedstoneTeleportType.ANIMALS) && (entity instanceof Animals || entity instanceof Squid || entity instanceof Villager)) {
-                    if (entity.getLocation().toVector().isInAABB(min, max)) {
-                        Logging.finest("Found " + entity + " within range!");
-                        entitiesInRange.add(entity);
-                    }
-                } else if ((type == RedstoneTeleportType.ALL || type == RedstoneTeleportType.MONSTERS) && (entity instanceof Monster)) {
-                    if (entity.getLocation().toVector().isInAABB(min, max)) {
-                        Logging.finest("Found " + entity + " within range!");
-                        entitiesInRange.add(entity);
-                    }
-                } else if ((type == RedstoneTeleportType.ALL || type == RedstoneTeleportType.PLAYERS) && (entity instanceof HumanEntity)) {
+                boolean tryToAddEntity = false;
+
+                if (type == RedstoneTeleportType.ALL) {
+                    tryToAddEntity = true;
+                } else if (type == RedstoneTeleportType.ANIMALS && (entity instanceof Animals || entity instanceof Squid || entity instanceof Villager)) {
+                    tryToAddEntity = true;
+                } else if (type == RedstoneTeleportType.MONSTERS && (entity instanceof Monster)) {
+                    tryToAddEntity = true;
+                } else if (type == RedstoneTeleportType.PLAYERS && (entity instanceof HumanEntity)) {
+                    tryToAddEntity = true;
+                }
+
+                if (tryToAddEntity && entity.getLocation().toVector().isInAABB(min, max)) {
                     if (entity.getLocation().toVector().isInAABB(min, max)) {
                         Logging.finest("Found " + entity + " within range!");
                         entitiesInRange.add(entity);
