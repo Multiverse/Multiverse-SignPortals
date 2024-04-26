@@ -34,6 +34,7 @@ import java.util.logging.Level;
 public class MVSPPlayerListener implements Listener {
 
     private static final String USE_PERMISSION = "multiverse.signportal.use";
+    private static final String VALIDATE_PERMISSION = "multiverse.signportal.validate";
     private final MultiverseSignPortals plugin;
     private final MVPermissions permissions;
     private final PortalDetector pd;
@@ -41,7 +42,7 @@ public class MVSPPlayerListener implements Listener {
     public MVSPPlayerListener(MultiverseSignPortals plugin) {
         this.plugin = plugin;
         this.permissions = this.plugin.getCore().getMVPerms();
-        this.permissions.addPermission("multiverse.signportal.validate", PermissionDefault.OP);
+        this.permissions.addPermission(VALIDATE_PERMISSION, PermissionDefault.OP);
         this.permissions.addPermission(USE_PERMISSION, PermissionDefault.TRUE);
         this.pd = new PortalDetector(this.plugin);
     }
@@ -85,7 +86,7 @@ public class MVSPPlayerListener implements Listener {
      */
     @EventHandler
     public void playerInteract(PlayerInteractEvent event) {
-        Player player = event.getPlayer();
+
 
         // The event must not be canceled...
         if (event.isCancelled()) {
@@ -106,22 +107,23 @@ public class MVSPPlayerListener implements Listener {
         Sign s = (Sign) event.getClickedBlock().getState();
         SignStatus status = this.pd.getSignStatus(s);
 
+        Player player = event.getPlayer();
         switch (status) {
             case SignPortal:
                 if (permissions.hasPermission(player, USE_PERMISSION, false)) {
                     String destString = this.pd.processSign(s);
-                    this.takePlayerToDestination(event.getPlayer(), destString);
+                    this.takePlayerToDestination(player, destString);
                 } else {
                     player.sendMessage(ChatColor.RED + "You do not have the required permission to use SignPortals (" + USE_PERMISSION + ")");
                 }
                 event.setCancelled(true);
                 break;
             case Legacy:
-                this.pd.activateSignPortal(event.getPlayer(), ChatColor.AQUA + "Legacy", s);
+                this.pd.activateSignPortal(player, ChatColor.AQUA + "Legacy", s);
                 event.setCancelled(true);
                 break;
             case Disabled:
-                this.pd.activateSignPortal(event.getPlayer(), ChatColor.RED + "Disabled", s);
+                this.pd.activateSignPortal(player, ChatColor.RED + "Disabled", s);
                 event.setCancelled(true);
                 break;
             case NetherPortalSign:
