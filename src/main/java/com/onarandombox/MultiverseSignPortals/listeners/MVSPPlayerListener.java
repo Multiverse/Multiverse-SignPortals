@@ -12,7 +12,6 @@ import com.onarandombox.MultiverseCore.api.MVDestination;
 import com.onarandombox.MultiverseCore.destination.DestinationFactory;
 import com.onarandombox.MultiverseCore.enums.TeleportResult;
 import com.onarandombox.MultiverseCore.utils.MVPermissions;
-import com.onarandombox.MultiverseCore.utils.MVTravelAgent;
 import com.onarandombox.MultiverseCore.api.SafeTTeleporter;
 import com.onarandombox.MultiverseSignPortals.MultiverseSignPortals;
 import com.onarandombox.MultiverseSignPortals.exceptions.MoreThanOneSignFoundException;
@@ -28,8 +27,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.permissions.PermissionDefault;
-
-import java.util.logging.Level;
 
 public class MVSPPlayerListener implements Listener {
 
@@ -86,8 +83,6 @@ public class MVSPPlayerListener implements Listener {
      */
     @EventHandler
     public void playerInteract(PlayerInteractEvent event) {
-
-
         // The event must not be canceled...
         if (event.isCancelled()) {
             return;
@@ -128,9 +123,6 @@ public class MVSPPlayerListener implements Listener {
                 break;
             case NetherPortalSign:
                 event.setCancelled(true);
-                break;
-            case NotASignPortal: // We shouldn't bother with other people's stuff
-                event.setCancelled(false);
         }
     }
 
