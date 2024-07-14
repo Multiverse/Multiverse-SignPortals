@@ -32,7 +32,6 @@ import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.regex.Pattern;
 
 public class PortalDetector {
@@ -199,26 +198,26 @@ public class PortalDetector {
         return SignStatus.NotASignPortal;
     }
 
-    private final static int ALL = 0;
-    private final static int PLAYERS = 1;
-    private final static int MONSTERS = 2;
-    private final static int ANIMALS = 3;
-
     public Entity[] getRedstoneTeleportEntities(Sign sign) {
         if (REDSTONE_TELEPORT_PATTERN.matcher(sign.getLine(0)).matches()) {
             String line = ChatColor.stripColor(sign.getLine(0).replaceAll("(\\[|\\])", ""));
             String[] data = line.split(":");
-            final int type;
-            if (data[0].equals("ALL") || data[0].equals("all")) {
-                type = ALL;
-            } else if (data[0].equals("p") || data[0].equals("P")) {
-                type = PLAYERS;
-            } else if (data[0].equals("m") || data[0].equals("M")) {
-                type = MONSTERS;
-            } else if (data[0].equals("a") || data[0].equals("A")) {
-                type = ANIMALS;
-            } else {
-                return new Entity[0];
+            final RedstoneTeleportType type;
+            switch (data[0].toUpperCase()) {
+                case "ALL":
+                    type = RedstoneTeleportType.ALL;
+                    break;
+                case "P":
+                    type = RedstoneTeleportType.PLAYERS;
+                    break;
+                case "M":
+                    type = RedstoneTeleportType.MONSTERS;
+                    break;
+                case "A":
+                    type = RedstoneTeleportType.ANIMALS;
+                    break;
+                default:
+                    return new Entity[0];
             }
             final int radius;
             try {
@@ -227,19 +226,27 @@ public class PortalDetector {
                 return new Entity[0];
             }
             int xOff = 0, yOff = 0, zOff = 0;
+            // Get offset
             if (data.length > 2) {
-                if (data[2].equals("north") || data[2].equals("NORTH")) {
-                    xOff = -radius;
-                } else if (data[2].equals("south") || data[2].equals("SOUTH")) {
-                    xOff = radius;
-                } else if (data[2].equals("east") || data[2].equals("EAST")) {
-                    zOff = -radius;
-                } else if (data[2].equals("west") || data[2].equals("WEST")) {
-                    zOff = radius;
-                } else if (data[2].equals("up") || data[2].equals("UP")) {
-                    yOff = radius;
-                } else if (data[2].equals("down") || data[2].equals("DOWN")) {
-                    yOff = -radius;
+                switch (data[2].toUpperCase()) {
+                    case "NORTH":
+                        xOff = -radius;
+                        break;
+                    case "SOUTH":
+                        xOff = radius;
+                        break;
+                    case "EAST":
+                        zOff = -radius;
+                        break;
+                    case "WEST":
+                        zOff = radius;
+                        break;
+                    case "UP":
+                        yOff = radius;
+                        break;
+                    case "DOWN":
+                        yOff = -radius;
+                        break;
                 }
             }
             Vector signVector = sign.getBlock().getLocation().toVector();
@@ -247,18 +254,21 @@ public class PortalDetector {
             Vector max = new Vector(signVector.getX() + (xOff + radius), signVector.getY() + (yOff + radius), signVector.getZ() + (zOff + radius));
             List<LivingEntity> worldEntities = sign.getBlock().getWorld().getLivingEntities();
             List<LivingEntity> entitiesInRange = new ArrayList<LivingEntity>(worldEntities.size());
+
             for (LivingEntity entity : worldEntities) {
-                if ((type == ALL || type == ANIMALS) && (entity instanceof Animals || entity instanceof Squid || entity instanceof Villager)) {
-                    if (entity.getLocation().toVector().isInAABB(min, max)) {
-                        Logging.finest("Found " + entity + " within range!");
-                        entitiesInRange.add(entity);
-                    }
-                } else if ((type == ALL || type == MONSTERS) && (entity instanceof Monster)) {
-                    if (entity.getLocation().toVector().isInAABB(min, max)) {
-                        Logging.finest("Found " + entity + " within range!");
-                        entitiesInRange.add(entity);
-                    }
-                } else if ((type == ALL || type == PLAYERS) && (entity instanceof HumanEntity)) {
+                boolean tryToAddEntity = false;
+
+                if (type == RedstoneTeleportType.ALL) {
+                    tryToAddEntity = true;
+                } else if (type == RedstoneTeleportType.ANIMALS && (entity instanceof Animals || entity instanceof Squid || entity instanceof Villager)) {
+                    tryToAddEntity = true;
+                } else if (type == RedstoneTeleportType.MONSTERS && (entity instanceof Monster)) {
+                    tryToAddEntity = true;
+                } else if (type == RedstoneTeleportType.PLAYERS && (entity instanceof HumanEntity)) {
+                    tryToAddEntity = true;
+                }
+
+                if (tryToAddEntity && entity.getLocation().toVector().isInAABB(min, max)) {
                     if (entity.getLocation().toVector().isInAABB(min, max)) {
                         Logging.finest("Found " + entity + " within range!");
                         entitiesInRange.add(entity);
@@ -355,6 +365,13 @@ public class PortalDetector {
                 return false;
             }
             return this.plugin.getCore().getMVPerms().hasPermission(player, d.getRequiredPermission(), true);
-        }
+    }
+
+    enum RedstoneTeleportType {
+        ALL,
+        PLAYERS,
+        MONSTERS,
+        ANIMALS
+    }
 
 }
