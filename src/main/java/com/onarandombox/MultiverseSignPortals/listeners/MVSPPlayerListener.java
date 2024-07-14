@@ -12,7 +12,6 @@ import com.onarandombox.MultiverseCore.api.MVDestination;
 import com.onarandombox.MultiverseCore.destination.DestinationFactory;
 import com.onarandombox.MultiverseCore.enums.TeleportResult;
 import com.onarandombox.MultiverseCore.utils.MVPermissions;
-import com.onarandombox.MultiverseCore.utils.MVTravelAgent;
 import com.onarandombox.MultiverseCore.api.SafeTTeleporter;
 import com.onarandombox.MultiverseSignPortals.MultiverseSignPortals;
 import com.onarandombox.MultiverseSignPortals.exceptions.MoreThanOneSignFoundException;
@@ -29,18 +28,19 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.permissions.PermissionDefault;
 
-import java.util.logging.Level;
-
 public class MVSPPlayerListener implements Listener {
 
-    private MultiverseSignPortals plugin;
-    private MVPermissions permissions;
-    private PortalDetector pd;
+    private static final String USE_PERMISSION = "multiverse.signportal.use";
+    private static final String VALIDATE_PERMISSION = "multiverse.signportal.validate";
+    private final MultiverseSignPortals plugin;
+    private final MVPermissions permissions;
+    private final PortalDetector pd;
 
     public MVSPPlayerListener(MultiverseSignPortals plugin) {
         this.plugin = plugin;
         this.permissions = this.plugin.getCore().getMVPerms();
-        this.permissions.addPermission("multiverse.signportal.validate", PermissionDefault.OP);
+        this.permissions.addPermission(VALIDATE_PERMISSION, PermissionDefault.OP);
+        this.permissions.addPermission(USE_PERMISSION, PermissionDefault.TRUE);
         this.pd = new PortalDetector(this.plugin);
     }
 
@@ -83,28 +83,46 @@ public class MVSPPlayerListener implements Listener {
      */
     @EventHandler
     public void playerInteract(PlayerInteractEvent event) {
+        // The event must not be canceled...
         if (event.isCancelled()) {
             return;
         }
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            if (event.getClickedBlock().getState() instanceof Sign) {
-                Logging.finer("Found a Sign!");
-                Sign s = (Sign) event.getClickedBlock().getState();
-                SignStatus status = this.pd.getSignStatus(s);
-                if (status == SignStatus.SignPortal) {
+
+        // We must be right-clicking...
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
+            return;
+        }
+
+        // And it must be a sign
+        if (!(event.getClickedBlock().getState() instanceof Sign)) {
+            return;
+        }
+
+        Logging.finer("Found a Sign!");
+        Sign s = (Sign) event.getClickedBlock().getState();
+        SignStatus status = this.pd.getSignStatus(s);
+
+        Player player = event.getPlayer();
+        switch (status) {
+            case SignPortal:
+                if (permissions.hasPermission(player, USE_PERMISSION, false)) {
                     String destString = this.pd.processSign(s);
-                    this.takePlayerToDestination(event.getPlayer(), destString);
-                    event.setCancelled(true);
-                } else if (status == SignStatus.Disabled) {
-                    this.pd.activateSignPortal(event.getPlayer(), ChatColor.RED + "Disabled", s);
-                    event.setCancelled(true);
-                } else if (status == SignStatus.Legacy) {
-                    this.pd.activateSignPortal(event.getPlayer(), ChatColor.AQUA + "Legacy", s);
-                    event.setCancelled(true);
-                } else if (status == SignStatus.NetherPortalSign) {
-                    event.setCancelled(true);
+                    this.takePlayerToDestination(player, destString);
+                } else {
+                    player.sendMessage(ChatColor.RED + "You do not have the required permission to use SignPortals (" + USE_PERMISSION + ")");
                 }
-            }
+                event.setCancelled(true);
+                break;
+            case Legacy:
+                this.pd.activateSignPortal(player, ChatColor.AQUA + "Legacy", s);
+                event.setCancelled(true);
+                break;
+            case Disabled:
+                this.pd.activateSignPortal(player, ChatColor.RED + "Disabled", s);
+                event.setCancelled(true);
+                break;
+            case NetherPortalSign:
+                event.setCancelled(true);
         }
     }
 
