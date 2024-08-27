@@ -53,6 +53,7 @@ jobs:
             "name": "Multiverse-Core",
             "required": true,
             "platforms": ["PAPER"]
+          }
         ]}
 
       target_tag: ${{ inputs.target_tag }}
