@@ -6,10 +6,14 @@ plugins {
 }
 
 version = System.getenv('GITHUB_VERSION') ?: 'local'
-group = 'com.onarandombox.multiversesignportals'
+group = 'org.mvplugins.multiverse.signportals'
 description = 'Multiverse-SignPortals'
 
-java.sourceCompatibility = JavaVersion.VERSION_11
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
+}
 
 repositories {
     mavenLocal()
@@ -28,12 +32,12 @@ repositories {
 
 dependencies {
     // Spigot
-    implementation('org.bukkit:bukkit:1.13.2-R0.1-SNAPSHOT') {
+    implementation('org.spigotmc:spigot-api:1.18.2-R0.1-SNAPSHOT') {
         exclude group: 'junit', module: 'junit'
     }
 
     // Core
-    implementation 'com.onarandombox.multiversecore:Multiverse-Core:4.2.2'
+    implementation 'org.mvplugins.multiverse.core:multiverse-core:local'
 
     // Utils
     api('com.dumptruckman.minecraft:Logging:1.1.1') {
@@ -54,7 +58,6 @@ tasks.withType(JavaCompile).configureEach {
 tasks.withType(Javadoc).configureEach {
     options.encoding = 'UTF-8'
 }
-
 
 configurations {
     [apiElements, runtimeElements].each {
@@ -112,8 +115,8 @@ javadoc {
 project.configurations.api.canBeResolved = true
 
 shadowJar {
-    relocate 'com.dumptruckman.minecraft.util.Logging', 'com.onarandombox.MultiverseSignPortals.util.MVSPLogging'
-    relocate 'com.dumptruckman.minecraft.util.DebugLog', 'com.onarandombox.MultiverseSignPortals.util.DebugFileLogger'
+    relocate 'com.dumptruckman.minecraft.util.Logging', 'org.mvplugins.multiverse.signportals.util.MVSPLogging'
+    relocate 'com.dumptruckman.minecraft.util.DebugLog', 'org.mvplugins.multiverse.signportals.util.DebugFileLogger'
 
     configurations = [project.configurations.api]
 
@@ -122,3 +125,14 @@ shadowJar {
 
 build.dependsOn shadowJar
 jar.enabled = false
+
+tasks.register('runHabitatGenerator', JavaExec) {
+    classpath = configurations["compileClasspath"]
+    main = 'org.mvplugins.multiverse.external.jvnet.hk2.generator.HabitatGenerator'
+
+    args = [
+            '--file', "build/libs/multiverse-signportals-$version" + ".jar",
+            '--locator', 'Multiverse-SignPortals',
+    ]
+}
+tasks.named("build") { finalizedBy("runHabitatGenerator") }
