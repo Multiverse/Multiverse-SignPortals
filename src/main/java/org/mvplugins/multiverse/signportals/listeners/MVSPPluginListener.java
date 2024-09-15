@@ -5,19 +5,22 @@
  * with this project.
  */
 
-package com.onarandombox.MultiverseSignPortals.listeners;
+package org.mvplugins.multiverse.signportals.listeners;
 
-import com.onarandombox.MultiverseCore.MultiverseCore;
-import com.onarandombox.MultiverseSignPortals.MultiverseSignPortals;
+import org.jetbrains.annotations.NotNull;
+import org.mvplugins.multiverse.external.jakarta.inject.Inject;
+import org.mvplugins.multiverse.external.jvnet.hk2.annotations.Service;
+import org.mvplugins.multiverse.signportals.MultiverseSignPortals;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginEnableEvent;
 
-public class MVSPPluginListener implements Listener {
+@Service
+public class MVSPPluginListener implements SignPortalsListener {
 
-    private MultiverseSignPortals plugin;
+    private final MultiverseSignPortals plugin;
 
-    public MVSPPluginListener(MultiverseSignPortals plugin) {
+    @Inject
+    MVSPPluginListener(@NotNull MultiverseSignPortals plugin) {
         this.plugin = plugin;
     }
 
@@ -28,7 +31,7 @@ public class MVSPPluginListener implements Listener {
     @EventHandler
     public void onPluginEnable(PluginEnableEvent event) {
         if (event.getPlugin().getDescription().getName().equals("Multiverse-Core")) {
-            this.plugin.setCore(((MultiverseCore) plugin.getServer().getPluginManager().getPlugin("Multiverse-Core")));
+            // this.plugin.setCore(((MultiverseCore) plugin.getServer().getPluginManager().getPlugin("Multiverse-Core")));
             this.plugin.getServer().getPluginManager().enablePlugin(this.plugin);
         }
     }
