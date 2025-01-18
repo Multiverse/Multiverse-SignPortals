@@ -5,30 +5,39 @@
  * with this project.
  */
 
-package com.onarandombox.MultiverseSignPortals.listeners;
+package org.mvplugins.multiverse.signportals.listeners;
 
 import com.dumptruckman.minecraft.util.Logging;
-import com.onarandombox.MultiverseCore.api.MVDestination;
-import com.onarandombox.MultiverseCore.event.MVDebugModeEvent;
-import com.onarandombox.MultiverseCore.event.MVPlayerTouchedPortalEvent;
-import com.onarandombox.MultiverseCore.event.MVVersionEvent;
-import com.onarandombox.MultiverseSignPortals.MultiverseSignPortals;
-import com.onarandombox.MultiverseSignPortals.exceptions.MoreThanOneSignFoundException;
-import com.onarandombox.MultiverseSignPortals.exceptions.NoMultiverseSignFoundException;
-import com.onarandombox.MultiverseSignPortals.utils.PortalDetector;
 import org.bukkit.ChatColor;
+import org.mvplugins.multiverse.core.api.destination.DestinationInstance;
+import org.mvplugins.multiverse.core.api.destination.DestinationsProvider;
+import org.mvplugins.multiverse.core.api.event.MVDebugModeEvent;
+import org.mvplugins.multiverse.core.api.event.MVDumpsDebugInfoEvent;
+import org.mvplugins.multiverse.core.api.event.MVPlayerTouchedPortalEvent;
+import org.mvplugins.multiverse.external.jakarta.inject.Inject;
+import org.mvplugins.multiverse.external.jetbrains.annotations.NotNull;
+import org.mvplugins.multiverse.external.jvnet.hk2.annotations.Service;
+import org.mvplugins.multiverse.signportals.MultiverseSignPortals;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
+import org.mvplugins.multiverse.signportals.exceptions.MoreThanOneSignFoundException;
+import org.mvplugins.multiverse.signportals.exceptions.NoMultiverseSignFoundException;
+import org.mvplugins.multiverse.signportals.utils.PortalDetector;
 
-import java.util.logging.Level;
+@Service
+public class MVSPVersionListener implements SignPortalsListener {
+    private final MultiverseSignPortals plugin;
+    private final PortalDetector detector;
+    private final DestinationsProvider destinationsProvider;
 
-public class MVSPVersionListener implements Listener {
-    private MultiverseSignPortals plugin;
-
-    public MVSPVersionListener(MultiverseSignPortals plugin) {
+    @Inject
+    MVSPVersionListener(@NotNull MultiverseSignPortals plugin,
+                        @NotNull PortalDetector detector,
+                        @NotNull DestinationsProvider destinationsProvider) {
         this.plugin = plugin;
+        this.detector = detector;
+        this.destinationsProvider = destinationsProvider;
     }
 
     /**
@@ -36,8 +45,8 @@ public class MVSPVersionListener implements Listener {
      * @param event The Version event.
      */
     @EventHandler
-    public void versionEvent(MVVersionEvent event) {
-        event.appendVersionInfo(this.plugin.getVersionInfo());
+    public void versionEvent(MVDumpsDebugInfoEvent event) {
+        event.appendDebugInfo(this.plugin.getVersionInfo());
     }
 
     /**
@@ -51,12 +60,11 @@ public class MVSPVersionListener implements Listener {
         Player p = event.getPlayer();
         Location l = event.getBlockTouched();
 
-        PortalDetector detector = new PortalDetector(this.plugin);
         try {
             String destString = detector.getNotchPortalDestination(p, l);
 
             if (destString != null) {
-                MVDestination d = this.plugin.getCore().getDestFactory().getDestination(destString);
+                DestinationInstance<?, ?> d = this.destinationsProvider.parseDestination(destString).getOrNull();
                 Logging.fine(destString + " ::: " + d);
                 if (detector.playerCanGoToDestination(p, d)) {
                     // If the player can go to the destination on the sign...
@@ -72,9 +80,8 @@ public class MVSPVersionListener implements Listener {
             // This will simply act as a notch portal.
             Logging.finer("Did NOT find a Multiverse Sign");
         } catch (MoreThanOneSignFoundException e) {
-            this.plugin.getCore().getMessaging().sendMessage(p,
-                    String.format("%sSorry %sbut more than 1 sign was found where the second line was [mv] or [multiverse]. Please remove one of the signs.",
-                            ChatColor.RED, ChatColor.WHITE), false);
+            p.sendMessage(String.format("%sSorry %sbut more than 1 sign was found where the second line was [mv] or [multiverse]. Please remove one of the signs.",
+                            ChatColor.RED, ChatColor.WHITE));
         }
     }
 

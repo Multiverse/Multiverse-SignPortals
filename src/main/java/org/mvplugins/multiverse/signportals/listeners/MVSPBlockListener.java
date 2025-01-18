@@ -5,18 +5,23 @@
  * with this project.
  */
 
-package com.onarandombox.MultiverseSignPortals.listeners;
+package org.mvplugins.multiverse.signportals.listeners;
 
 import com.dumptruckman.minecraft.util.Logging;
-import com.onarandombox.MultiverseCore.api.MVDestination;
-import com.onarandombox.MultiverseCore.api.SafeTTeleporter;
-import com.onarandombox.MultiverseCore.enums.TeleportResult;
-import com.onarandombox.MultiverseCore.utils.MVPermissions;
-import com.onarandombox.MultiverseSignPortals.MultiverseSignPortals;
-import com.onarandombox.MultiverseSignPortals.utils.PortalDetector;
-import com.onarandombox.MultiverseSignPortals.utils.SignStatus;
-import com.onarandombox.MultiverseSignPortals.utils.SignTools;
 import org.bukkit.Bukkit;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
+import org.bukkit.plugin.PluginManager;
+import org.mvplugins.multiverse.core.api.destination.DestinationInstance;
+import org.mvplugins.multiverse.core.api.destination.DestinationsProvider;
+import org.mvplugins.multiverse.core.api.teleportation.SafetyTeleporter;
+import org.mvplugins.multiverse.external.jakarta.inject.Inject;
+import org.mvplugins.multiverse.external.jetbrains.annotations.NotNull;
+import org.mvplugins.multiverse.external.jvnet.hk2.annotations.Service;
+import org.mvplugins.multiverse.signportals.MultiverseSignPortals;
+import org.mvplugins.multiverse.signportals.utils.PortalDetector;
+import org.mvplugins.multiverse.signportals.utils.SignStatus;
+import org.mvplugins.multiverse.signportals.utils.SignTools;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -25,24 +30,35 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.material.RedstoneTorch;
-import org.bukkit.permissions.PermissionDefault;
 
-import java.util.logging.Level;
+import static org.mvplugins.multiverse.core.permissions.PermissionUtils.hasPermission;
 
-public class MVSPBlockListener implements Listener {
+@Service
+public class MVSPBlockListener implements SignPortalsListener {
     private final String CREATE_PERM = "multiverse.signportal.create";
-    private MultiverseSignPortals plugin;
-    private MVPermissions permissions;
+    private final MultiverseSignPortals plugin;
+    private final PortalDetector pd;
+    private final PortalDetector portalDetector;
+    private final DestinationsProvider destinationsProvider;
+    private final SafetyTeleporter safetyTeleporter;
 
-    public MVSPBlockListener(MultiverseSignPortals plugin) {
+    @Inject
+    public MVSPBlockListener(@NotNull MultiverseSignPortals plugin,
+                             @NotNull PortalDetector pd,
+                             @NotNull PluginManager pluginManager,
+                             @NotNull PortalDetector portalDetector,
+                             @NotNull DestinationsProvider destinationsProvider,
+                             @NotNull SafetyTeleporter safetyTeleporter) {
         this.plugin = plugin;
-        this.permissions = this.plugin.getCore().getMVPerms();
-        this.permissions.addPermission(CREATE_PERM, PermissionDefault.OP);
+        this.pd = pd;
+        this.portalDetector = portalDetector;
+        this.destinationsProvider = destinationsProvider;
+        this.safetyTeleporter = safetyTeleporter;
+        pluginManager.addPermission(new Permission(CREATE_PERM, PermissionDefault.OP));
     }
 
     @EventHandler
@@ -72,43 +88,30 @@ public class MVSPBlockListener implements Listener {
             return;
         }
         Sign sign = (Sign) block.getState();
-        SignStatus status = plugin.getPortalDetector().getSignStatus(sign);
+        SignStatus status = pd.getSignStatus(sign);
         if (status == SignStatus.SignPortal) {
-            String destString = plugin.getPortalDetector().processSign(sign);
-            for (Entity entity : plugin.getPortalDetector().getRedstoneTeleportEntities(sign)) {
+            String destString = pd.processSign(sign);
+            for (Entity entity : pd.getRedstoneTeleportEntities(sign)) {
                 this.takeEntityToDestination(entity, destString);
             }
         }
     }
 
     private void takeEntityToDestination(Entity entity, String destString) {
-        if (destString != null) {
-            SafeTTeleporter teleporter = plugin.getCore().getSafeTTeleporter();
-            MVDestination d = plugin.getCore().getDestFactory().getDestination(destString);
-            Logging.finer("Found a Destination! (" + d + ")");
-            if (entity instanceof Player) {
-                Player player = (Player) entity;
-                if (plugin.getPortalDetector().playerCanGoToDestination(player, d)) {
-                    TeleportResult result = teleporter.safelyTeleport(Bukkit.getConsoleSender(), player, d);
-                    if (result == TeleportResult.FAIL_UNSAFE) {
-                        Logging.finer("The Destination was not safe! (" + ChatColor.RED + d + ChatColor.WHITE + ")");
-                    } else {
-                        Logging.finer("Teleported " + entity + " to: " + ChatColor.GREEN + d);
-                    }
-                } else {
-                    Logging.finer("Denied permission to go to destination!");
-                }
-            } else {
-                TeleportResult result = teleporter.safelyTeleport(Bukkit.getConsoleSender(), entity, d.getLocation(entity), true);
-                if (result == TeleportResult.FAIL_UNSAFE) {
-                    Logging.finer("The Destination was not safe! (" + ChatColor.RED + d + ChatColor.WHITE + ")");
-                } else {
-                    Logging.finer("Teleported " + entity + " to: " + ChatColor.GREEN + d);
-                }
-            }
-        } else {
+        if (destString == null) {
             Logging.finer("The destination was not set on the sign!");
         }
+        DestinationInstance<?, ?> d = destinationsProvider.parseDestination(destString).getOrNull();
+        if (d == null) {
+            Logging.warning("Could not find destination: " + destString);
+            return;
+        }
+        Logging.finer("Found a Destination! (" + d + ")");
+        safetyTeleporter.to(d)
+                .by(Bukkit.getConsoleSender())
+                .teleport(entity)
+                .onSuccess(() -> Logging.finer("Teleported " + entity + " to: " + ChatColor.GREEN + d))
+                .onFailure(error -> Logging.warning("Failed to teleport " + entity + " to: " + d + " (" + error + ")"));
     }
 
     private Block getNearbySign(Block block, boolean torch) {
@@ -149,9 +152,8 @@ public class MVSPBlockListener implements Listener {
         BlockState state = event.getBlock().getState();
         if (state instanceof Sign) {
             Sign s = (Sign) state;
-            PortalDetector pd = this.plugin.getPortalDetector();
             if (pd.getSignStatus(s) == SignStatus.NetherPortalSign || pd.getSignStatus(s) == SignStatus.SignPortal) {
-                if (!this.permissions.hasPermission(event.getPlayer(), CREATE_PERM, true)) {
+                if (!hasPermission(event.getPlayer(), CREATE_PERM)) {
                     event.setCancelled(true);
                     event.getPlayer().sendMessage("You don't have permission to destroy a SignPortal!");
                     event.getPlayer().sendMessage(ChatColor.GREEN + CREATE_PERM);
@@ -170,7 +172,7 @@ public class MVSPBlockListener implements Listener {
     }
 
     private void createMultiverseSignPortal(SignChangeEvent event) {
-        if (this.plugin.getCore().getMVPerms().hasPermission(event.getPlayer(), "multiverse.signportal.create", true)) {
+        if (hasPermission(event.getPlayer(), "multiverse.signportal.create")) {
             Logging.finer("MV SignPortal Created");
             event.setLine(1, ChatColor.DARK_GREEN + event.getLine(1));
             checkRedstoneTeleportTargets(event);
