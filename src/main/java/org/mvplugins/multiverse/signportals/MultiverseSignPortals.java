@@ -9,10 +9,10 @@ package org.mvplugins.multiverse.signportals;
 
 import com.dumptruckman.minecraft.util.Logging;
 import org.mvplugins.multiverse.core.MultiverseCore;
-import org.mvplugins.multiverse.core.api.MVConfig;
-import org.mvplugins.multiverse.core.api.MVCore;
-import org.mvplugins.multiverse.core.api.MVPlugin;
+import org.mvplugins.multiverse.core.api.config.MVCoreConfig;
 import org.mvplugins.multiverse.core.inject.PluginServiceLocator;
+import org.mvplugins.multiverse.core.submodules.MVCore;
+import org.mvplugins.multiverse.core.submodules.MVPlugin;
 import org.mvplugins.multiverse.external.jvnet.hk2.annotations.Service;
 import org.mvplugins.multiverse.external.vavr.control.Option;
 import org.mvplugins.multiverse.external.vavr.control.Try;
@@ -57,7 +57,7 @@ public class MultiverseSignPortals extends JavaPlugin implements MVPlugin {
 
         initializeDependencyInjection();
         registerEvents();
-        Logging.setDebugLevel(serviceLocator.getActiveService(MVConfig.class).getGlobalDebug());
+        Logging.setDebugLevel(serviceLocator.getActiveService(MVCoreConfig.class).getGlobalDebug());
 
         this.core.incrementPluginCount();
         Logging.log(true, Level.INFO, " Enabled - By %s", getAuthors());

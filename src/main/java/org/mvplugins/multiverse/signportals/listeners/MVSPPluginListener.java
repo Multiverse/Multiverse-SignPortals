@@ -7,8 +7,8 @@
 
 package org.mvplugins.multiverse.signportals.listeners;
 
-import org.jetbrains.annotations.NotNull;
 import org.mvplugins.multiverse.external.jakarta.inject.Inject;
+import org.mvplugins.multiverse.external.jetbrains.annotations.NotNull;
 import org.mvplugins.multiverse.external.jvnet.hk2.annotations.Service;
 import org.mvplugins.multiverse.signportals.MultiverseSignPortals;
 import org.bukkit.event.EventHandler;

@@ -28,6 +28,12 @@ repositories {
         name = 'onarandombox'
         url = uri('https://repo.onarandombox.com/content/groups/public/')
     }
+
+    maven {
+        // todo: remove before mv5 release
+        name = 'benwoo1110'
+        url = uri('https://repo.c0ding.party/multiverse-beta')
+    }
 }
 
 dependencies {
@@ -37,7 +43,7 @@ dependencies {
     }
 
     // Core
-    implementation 'org.mvplugins.multiverse.core:multiverse-core:local'
+    implementation 'org.mvplugins.multiverse.core:multiverse-core:5.0.0-SNAPSHOT'
 
     // Utils
     api('com.dumptruckman.minecraft:Logging:1.1.1') {
