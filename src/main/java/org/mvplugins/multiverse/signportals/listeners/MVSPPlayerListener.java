@@ -12,13 +12,12 @@ import org.bukkit.Location;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.PluginManager;
-import org.mvplugins.multiverse.core.api.destination.DestinationInstance;
-import org.mvplugins.multiverse.core.api.destination.DestinationsProvider;
-import org.mvplugins.multiverse.core.api.teleportation.SafetyTeleporter;
+import org.mvplugins.multiverse.core.destination.DestinationInstance;
+import org.mvplugins.multiverse.core.destination.DestinationsProvider;
+import org.mvplugins.multiverse.core.teleportation.AsyncSafetyTeleporter;
 import org.mvplugins.multiverse.external.jakarta.inject.Inject;
 import org.mvplugins.multiverse.external.jetbrains.annotations.NotNull;
 import org.mvplugins.multiverse.external.jvnet.hk2.annotations.Service;
-import org.mvplugins.multiverse.signportals.MultiverseSignPortals;
 import org.mvplugins.multiverse.signportals.exceptions.MoreThanOneSignFoundException;
 import org.mvplugins.multiverse.signportals.exceptions.NoMultiverseSignFoundException;
 import org.mvplugins.multiverse.signportals.utils.PortalDetector;
@@ -39,14 +38,14 @@ public class MVSPPlayerListener implements SignPortalsListener {
     private static final String USE_PERMISSION = "multiverse.signportal.use";
     private static final String VALIDATE_PERMISSION = "multiverse.signportal.validate";
     private final DestinationsProvider destinationsProvider;
-    private final SafetyTeleporter safetyTeleporter;
+    private final AsyncSafetyTeleporter safetyTeleporter;
     private final PortalDetector pd;
 
     @Inject
     MVSPPlayerListener(@NotNull PortalDetector pd,
                        @NotNull PluginManager pluginManager,
                        @NotNull DestinationsProvider destinationsProvider,
-                       @NotNull SafetyTeleporter safetyTeleporter) {
+                       @NotNull AsyncSafetyTeleporter safetyTeleporter) {
         this.destinationsProvider = destinationsProvider;
         this.safetyTeleporter = safetyTeleporter;
         pluginManager.addPermission(new Permission(VALIDATE_PERMISSION, PermissionDefault.OP));

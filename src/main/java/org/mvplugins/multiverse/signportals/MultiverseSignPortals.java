@@ -8,23 +8,23 @@
 package org.mvplugins.multiverse.signportals;
 
 import com.dumptruckman.minecraft.util.Logging;
-import org.mvplugins.multiverse.core.MultiverseCore;
-import org.mvplugins.multiverse.core.api.config.MVCoreConfig;
+import org.mvplugins.multiverse.core.MultiverseCoreApi;
+import org.mvplugins.multiverse.core.MultiversePlugin;
+import org.mvplugins.multiverse.core.config.MVCoreConfig;
 import org.mvplugins.multiverse.core.inject.PluginServiceLocator;
-import org.mvplugins.multiverse.core.submodules.MVCore;
-import org.mvplugins.multiverse.core.submodules.MVPlugin;
+import org.mvplugins.multiverse.core.inject.PluginServiceLocatorFactory;
+import org.mvplugins.multiverse.core.utils.StringFormatter;
 import org.mvplugins.multiverse.external.jvnet.hk2.annotations.Service;
 import org.mvplugins.multiverse.external.vavr.control.Option;
 import org.mvplugins.multiverse.external.vavr.control.Try;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.mvplugins.multiverse.signportals.listeners.SignPortalsListener;
 
 import java.util.logging.Level;
 
 @Service
-public class MultiverseSignPortals extends JavaPlugin implements MVPlugin {
+public class MultiverseSignPortals extends MultiversePlugin {
 
-    private MultiverseCore core;
+    private MultiverseCoreApi core;
     private PluginServiceLocator serviceLocator;
 
     private final static int requiresProtocol = 50;
@@ -38,29 +38,13 @@ public class MultiverseSignPortals extends JavaPlugin implements MVPlugin {
     public void onEnable() {
         Logging.init(this);
 
-        this.core = (MultiverseCore) getServer().getPluginManager().getPlugin("Multiverse-Core");
-        // Test if the Core was found, if not we'll disable this plugin.
-        if (this.core == null) {
-            Logging.info("Multiverse-Core not found, will keep looking.");
-            getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
-        if (this.core.getProtocolVersion() < requiresProtocol) {
-            Logging.severe("Your Multiverse-Core is OUT OF DATE");
-            Logging.severe("This version of SignPortals requires Protocol Level: " + requiresProtocol);
-            Logging.severe("Your of Core Protocol Level is: " + this.core.getProtocolVersion());
-            Logging.severe("Grab an updated copy at: ");
-            Logging.severe("http://dev.bukkit.org/bukkit-plugins/multiverse-core/");
-            getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
+        this.core = MultiverseCoreApi.get();
 
         initializeDependencyInjection();
         registerEvents();
         Logging.setDebugLevel(serviceLocator.getActiveService(MVCoreConfig.class).getGlobalDebug());
 
-        this.core.incrementPluginCount();
-        Logging.log(true, Level.INFO, " Enabled - By %s", getAuthors());
+        Logging.log(true, Level.INFO, " Enabled - By %s", StringFormatter.joinAnd(getDescription().getAuthors()));
     }
 
     public void onDisable() {
@@ -70,7 +54,7 @@ public class MultiverseSignPortals extends JavaPlugin implements MVPlugin {
     }
 
     private void initializeDependencyInjection() {
-        serviceLocator = core.getServiceLocatorFactory()
+        serviceLocator = PluginServiceLocatorFactory.get()
                 .registerPlugin(new MultiverseSignPortalsPluginBinder(this), core.getServiceLocator())
                 .flatMap(PluginServiceLocator::enable)
                 .getOrElseThrow(exception -> {
@@ -102,24 +86,6 @@ public class MultiverseSignPortals extends JavaPlugin implements MVPlugin {
                 });
     }
 
-    /**
-     * Parse the Authors Array into a readable String with ',' and 'and'.
-     *
-     * @return An comma separated string of authors
-     */
-    @Override
-    public String getAuthors() {
-        String authors = "";
-        for (int i = 0; i < this.getDescription().getAuthors().size(); i++) {
-            if (i == this.getDescription().getAuthors().size() - 1) {
-                authors += " and " + this.getDescription().getAuthors().get(i);
-            } else {
-                authors += ", " + this.getDescription().getAuthors().get(i);
-            }
-        }
-        return authors.substring(2);
-    }
-
     @Override
     public PluginServiceLocator getServiceLocator() {
         return serviceLocator;
@@ -130,12 +96,7 @@ public class MultiverseSignPortals extends JavaPlugin implements MVPlugin {
     }
 
     @Override
-    public MVCore getCore() {
-        return this.core;
-    }
-
-    @Override
-    public int getProtocolVersion() {
-        return 1;
+    public int getTargetCoreProtocolVersion() {
+        return requiresProtocol;
     }
 }

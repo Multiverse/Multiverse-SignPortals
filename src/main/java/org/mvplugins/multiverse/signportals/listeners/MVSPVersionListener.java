@@ -9,11 +9,11 @@ package org.mvplugins.multiverse.signportals.listeners;
 
 import com.dumptruckman.minecraft.util.Logging;
 import org.bukkit.ChatColor;
-import org.mvplugins.multiverse.core.api.destination.DestinationInstance;
-import org.mvplugins.multiverse.core.api.destination.DestinationsProvider;
-import org.mvplugins.multiverse.core.api.event.MVDebugModeEvent;
-import org.mvplugins.multiverse.core.api.event.MVDumpsDebugInfoEvent;
-import org.mvplugins.multiverse.core.api.event.MVPlayerTouchedPortalEvent;
+import org.mvplugins.multiverse.core.destination.DestinationInstance;
+import org.mvplugins.multiverse.core.destination.DestinationsProvider;
+import org.mvplugins.multiverse.core.event.MVDebugModeEvent;
+import org.mvplugins.multiverse.core.event.MVDumpsDebugInfoEvent;
+import org.mvplugins.multiverse.core.event.MVPlayerTouchedPortalEvent;
 import org.mvplugins.multiverse.external.jakarta.inject.Inject;
 import org.mvplugins.multiverse.external.jetbrains.annotations.NotNull;
 import org.mvplugins.multiverse.external.jvnet.hk2.annotations.Service;

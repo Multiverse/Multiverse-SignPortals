@@ -8,12 +8,11 @@
 package org.mvplugins.multiverse.signportals.utils;
 
 import com.dumptruckman.minecraft.util.Logging;
-import org.mvplugins.multiverse.core.api.destination.DestinationInstance;
-import org.mvplugins.multiverse.core.api.teleportation.LocationManipulation;
+import org.mvplugins.multiverse.core.destination.DestinationInstance;
+import org.mvplugins.multiverse.core.teleportation.LocationManipulation;
 import org.mvplugins.multiverse.core.permissions.CorePermissionsChecker;
 import org.mvplugins.multiverse.external.jakarta.inject.Inject;
 import org.mvplugins.multiverse.external.jvnet.hk2.annotations.Service;
-import org.mvplugins.multiverse.signportals.MultiverseSignPortals;
 import org.mvplugins.multiverse.signportals.enums.Axis;
 import org.mvplugins.multiverse.signportals.exceptions.MoreThanOneSignFoundException;
 import org.mvplugins.multiverse.signportals.exceptions.NoMultiverseSignFoundException;

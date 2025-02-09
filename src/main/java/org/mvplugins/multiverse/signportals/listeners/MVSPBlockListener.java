@@ -12,9 +12,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.PluginManager;
-import org.mvplugins.multiverse.core.api.destination.DestinationInstance;
-import org.mvplugins.multiverse.core.api.destination.DestinationsProvider;
-import org.mvplugins.multiverse.core.api.teleportation.SafetyTeleporter;
+import org.mvplugins.multiverse.core.destination.DestinationInstance;
+import org.mvplugins.multiverse.core.destination.DestinationsProvider;
+import org.mvplugins.multiverse.core.teleportation.AsyncSafetyTeleporter;
 import org.mvplugins.multiverse.external.jakarta.inject.Inject;
 import org.mvplugins.multiverse.external.jetbrains.annotations.NotNull;
 import org.mvplugins.multiverse.external.jvnet.hk2.annotations.Service;
@@ -44,7 +44,7 @@ public class MVSPBlockListener implements SignPortalsListener {
     private final PortalDetector pd;
     private final PortalDetector portalDetector;
     private final DestinationsProvider destinationsProvider;
-    private final SafetyTeleporter safetyTeleporter;
+    private final AsyncSafetyTeleporter safetyTeleporter;
 
     @Inject
     public MVSPBlockListener(@NotNull MultiverseSignPortals plugin,
@@ -52,7 +52,7 @@ public class MVSPBlockListener implements SignPortalsListener {
                              @NotNull PluginManager pluginManager,
                              @NotNull PortalDetector portalDetector,
                              @NotNull DestinationsProvider destinationsProvider,
-                             @NotNull SafetyTeleporter safetyTeleporter) {
+                             @NotNull AsyncSafetyTeleporter safetyTeleporter) {
         this.plugin = plugin;
         this.pd = pd;
         this.portalDetector = portalDetector;
