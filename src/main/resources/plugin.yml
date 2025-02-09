@@ -1,5 +1,5 @@
 name: Multiverse-SignPortals
-main: com.onarandombox.MultiverseSignPortals.MultiverseSignPortals
+main: org.mvplugins.multiverse.signportals.MultiverseSignPortals
 authors: ['Rigby','fernferret']
 version: ${version}
 api-version: 1.13
