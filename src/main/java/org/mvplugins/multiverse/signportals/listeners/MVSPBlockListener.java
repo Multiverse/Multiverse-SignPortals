@@ -9,6 +9,7 @@ package org.mvplugins.multiverse.signportals.listeners;
 
 import com.dumptruckman.minecraft.util.Logging;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.PluginManager;
@@ -33,7 +34,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.block.SignChangeEvent;
-import org.bukkit.material.RedstoneTorch;
 
 import static org.mvplugins.multiverse.core.permissions.PermissionUtils.hasPermission;
 
@@ -42,7 +42,6 @@ public class MVSPBlockListener implements SignPortalsListener {
     private final String CREATE_PERM = "multiverse.signportal.create";
     private final MultiverseSignPortals plugin;
     private final PortalDetector pd;
-    private final PortalDetector portalDetector;
     private final DestinationsProvider destinationsProvider;
     private final AsyncSafetyTeleporter safetyTeleporter;
 
@@ -50,12 +49,10 @@ public class MVSPBlockListener implements SignPortalsListener {
     public MVSPBlockListener(@NotNull MultiverseSignPortals plugin,
                              @NotNull PortalDetector pd,
                              @NotNull PluginManager pluginManager,
-                             @NotNull PortalDetector portalDetector,
                              @NotNull DestinationsProvider destinationsProvider,
                              @NotNull AsyncSafetyTeleporter safetyTeleporter) {
         this.plugin = plugin;
         this.pd = pd;
-        this.portalDetector = portalDetector;
         this.destinationsProvider = destinationsProvider;
         this.safetyTeleporter = safetyTeleporter;
         pluginManager.addPermission(new Permission(CREATE_PERM, PermissionDefault.OP));
@@ -79,10 +76,9 @@ public class MVSPBlockListener implements SignPortalsListener {
         if (event.getNewCurrent() <= 0) {
             return;
         }
-        boolean torch = false;
-        if (event.getBlock().getState().getData() instanceof RedstoneTorch) {
-            torch = true;
-        }
+        Logging.fine("Redstone power: " + event.getNewCurrent());
+        boolean torch = event.getBlock().getType() == Material.REDSTONE_TORCH
+                || event.getBlock().getType() == Material.REDSTONE_WALL_TORCH;
         Block block = getNearbySign(event.getBlock(), torch);
         if (block == null) {
             return;
