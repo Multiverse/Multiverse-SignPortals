@@ -5,10 +5,10 @@
 # Multiverse SignPortals
 
 [![Modrinth](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/modrinth_vector.svg)](https://modrinth.com/plugin/Multiverse-SignPortals)
-[![hangar](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/hangar_vector.svg)](https://hangar.papermc.io/Multiverse/Multiverse-SignPortals)
-[![bukkit](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/supported/bukkit_vector.svg)](https://dev.bukkit.org/projects/Multiverse-SignPortals)
+[![Hangar](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/hangar_vector.svg)](https://hangar.papermc.io/Multiverse/Multiverse-SignPortals)
+[![Bukkit](https://raw.githubusercontent.com/intergrav/devins-badges/refs/heads/v3/assets/cozy/available/bukkit_vector.svg)](https://dev.bukkit.org/projects/Multiverse-SignPortals)
 
-![GitHub release (with filter)](https://img.shields.io/github/v/release/multiverse/multiverse-signportals)
+[![GitHub release (with filter)](https://img.shields.io/github/v/release/multiverse/multiverse-signportals)](https://github.com/Multiverse/Multiverse-SignPortals/releases/latest)
 [![Discord](https://img.shields.io/discord/325459248047980545?label=discord&logo=discord)](https://discord.gg/NZtfKky)
 [![Support us on Patreon](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fshieldsio-patreon.vercel.app%2Fapi%3Fusername%3Ddumptruckman%26type%3Dpatrons&style=flat)](https://patreon.com/dumptruckman)
 
