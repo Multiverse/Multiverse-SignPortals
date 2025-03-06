@@ -368,11 +368,11 @@ public class PortalDetector {
     }
 
     public boolean playerCanGoToDestination(Player player, DestinationInstance<?, ?> d) {
-            if (d == null) {
-                player.sendMessage("The Destination on this sign is Invalid!");
-                return false;
-            }
-            return permissionsChecker.checkTeleportPermissions(player, player, d);
+        if (d == null) {
+            player.sendMessage("The Destination on this sign is Invalid!");
+            return false;
+        }
+        return true;
     }
 
     enum RedstoneTeleportType {
