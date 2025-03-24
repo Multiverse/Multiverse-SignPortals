@@ -10,7 +10,7 @@ package org.mvplugins.multiverse.signportals;
 import com.dumptruckman.minecraft.util.Logging;
 import org.mvplugins.multiverse.core.MultiverseCoreApi;
 import org.mvplugins.multiverse.core.MultiversePlugin;
-import org.mvplugins.multiverse.core.config.MVCoreConfig;
+import org.mvplugins.multiverse.core.config.CoreConfig;
 import org.mvplugins.multiverse.core.inject.PluginServiceLocator;
 import org.mvplugins.multiverse.core.inject.PluginServiceLocatorFactory;
 import org.mvplugins.multiverse.core.utils.StringFormatter;
@@ -42,7 +42,7 @@ public class MultiverseSignPortals extends MultiversePlugin {
 
         initializeDependencyInjection();
         registerEvents();
-        Logging.setDebugLevel(serviceLocator.getActiveService(MVCoreConfig.class).getGlobalDebug());
+        Logging.setDebugLevel(serviceLocator.getActiveService(CoreConfig.class).getGlobalDebug());
 
         Logging.log(true, Level.INFO, " Enabled - By %s", StringFormatter.joinAnd(getDescription().getAuthors()));
     }
