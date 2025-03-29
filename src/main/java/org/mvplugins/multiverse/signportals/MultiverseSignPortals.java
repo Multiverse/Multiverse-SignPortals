@@ -24,10 +24,10 @@ import java.util.logging.Level;
 @Service
 public class MultiverseSignPortals extends MultiversePlugin {
 
+    private static final double TARGET_CORE_API_VERSION = 5.0;
+
     private MultiverseCoreApi core;
     private PluginServiceLocator serviceLocator;
-
-    private final static int requiresProtocol = 50;
 
     /** This fires before I get Enabled. */
     public void onLoad() {
@@ -96,7 +96,7 @@ public class MultiverseSignPortals extends MultiversePlugin {
     }
 
     @Override
-    public int getTargetCoreProtocolVersion() {
-        return requiresProtocol;
+    public double getTargetCoreVersion() {
+        return TARGET_CORE_API_VERSION;
     }
 }
