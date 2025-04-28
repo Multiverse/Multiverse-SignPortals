@@ -2,8 +2,6 @@
 <img src="config/multiverse-banner.png" alt="Multiverse Logo">
 </p>
 
-# Multiverse SignPortals
-
 [![Modrinth](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/modrinth_vector.svg)](https://modrinth.com/plugin/Multiverse-SignPortals)
 [![hangar](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/hangar_vector.svg)](https://hangar.papermc.io/Multiverse/Multiverse-SignPortals)
 [![bukkit](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/supported/bukkit_vector.svg)](https://dev.bukkit.org/projects/Multiverse-SignPortals)
