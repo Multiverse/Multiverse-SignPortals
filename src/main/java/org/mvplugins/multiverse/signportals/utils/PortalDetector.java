@@ -5,15 +5,17 @@
  * with this project.
  */
 
-package com.onarandombox.MultiverseSignPortals.utils;
+package org.mvplugins.multiverse.signportals.utils;
 
 import com.dumptruckman.minecraft.util.Logging;
-import com.onarandombox.MultiverseCore.api.MVDestination;
-import com.onarandombox.MultiverseCore.destination.InvalidDestination;
-import com.onarandombox.MultiverseSignPortals.MultiverseSignPortals;
-import com.onarandombox.MultiverseSignPortals.enums.Axis;
-import com.onarandombox.MultiverseSignPortals.exceptions.MoreThanOneSignFoundException;
-import com.onarandombox.MultiverseSignPortals.exceptions.NoMultiverseSignFoundException;
+import org.mvplugins.multiverse.core.destination.DestinationInstance;
+import org.mvplugins.multiverse.core.teleportation.LocationManipulation;
+import org.mvplugins.multiverse.core.permissions.CorePermissionsChecker;
+import org.mvplugins.multiverse.external.jakarta.inject.Inject;
+import org.mvplugins.multiverse.external.jvnet.hk2.annotations.Service;
+import org.mvplugins.multiverse.signportals.enums.Axis;
+import org.mvplugins.multiverse.signportals.exceptions.MoreThanOneSignFoundException;
+import org.mvplugins.multiverse.signportals.exceptions.NoMultiverseSignFoundException;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -34,13 +36,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import static org.mvplugins.multiverse.core.permissions.PermissionUtils.hasPermission;
+
+@Service
 public class PortalDetector {
 
     public static final Pattern REDSTONE_TELEPORT_PATTERN = Pattern.compile(".*\\[([pPaAmM]|all|ALL):\\d+(:(north|NORTH|south|SOUTH|east|EAST|west|WEST|up|UP|down|DOWN))?\\]");
-    private MultiverseSignPortals plugin;
+    private final LocationManipulation locationManipulation;
+    private final CorePermissionsChecker permissionsChecker;
 
-    public PortalDetector(MultiverseSignPortals plugin) {
-        this.plugin = plugin;
+    @Inject
+    PortalDetector(LocationManipulation locationManipulation, CorePermissionsChecker permissionsChecker) {
+        this.locationManipulation = locationManipulation;
+        this.permissionsChecker = permissionsChecker;
     }
 
     public String getNotchPortalDestination(Player p, Location l) throws MoreThanOneSignFoundException, NoMultiverseSignFoundException {
@@ -85,7 +93,7 @@ public class PortalDetector {
     }
 
     public void activateSignPortal(Player player, String type, Sign sign) {
-        if (this.plugin.getCore().getMVPerms().hasPermission(player, "multiverse.signportal.validate", true)) {
+        if (hasPermission(player, "multiverse.signportal.validate")) {
             // Do 2-stage validation
             ChatColor colorToChange = ChatColor.DARK_GREEN;
             if(SignTools.isMVSign("mv", ChatColor.GREEN)) {
@@ -144,13 +152,13 @@ public class PortalDetector {
             return foundSign.getLine(2);
         }
         if (legacySign != null) {
-            if (this.plugin.getCore().getMVPerms().hasPermission(player, "multiverse.signportal.validate", true)) {
-                Logging.fine("Migrating Legacy Sign");
-                legacySign.setLine(1, SignTools.setColor(legacySign.getLine(1), ChatColor.DARK_BLUE));
-                legacySign.update(true);
-                this.invalidateOtherSigns(legacySign, foundSigns);
-                return legacySign.getLine(2);
-            }
+//            if (this.plugin.getCore().getMVPerms().hasPermission(player, "multiverse.signportal.validate", true)) {
+//                Logging.fine("Migrating Legacy Sign");
+//                legacySign.setLine(1, SignTools.setColor(legacySign.getLine(1), ChatColor.DARK_BLUE));
+//                legacySign.update(true);
+//                this.invalidateOtherSigns(legacySign, foundSigns);
+//                return legacySign.getLine(2);
+//            }
         }
         if (normalSign != null) {
             Logging.fine("Migrating Normal Sign");
@@ -346,11 +354,11 @@ public class PortalDetector {
                 for (int z = topper.getZ(); z <= bottomer.getZ(); z++) {
                     looking.setZ(z);
                     Logging.finest("Looking for sign at " +
-                            this.plugin.getCore().getLocationManipulation().strCoordsRaw(looking));
+                            this.locationManipulation.strCoordsRaw(looking));
                     BlockState signBlock = topper.getWorld().getBlockAt(looking).getState();
                     if (signBlock instanceof Sign) {
                         Logging.finer("WOO Found one! " +
-                                this.plugin.getCore().getLocationManipulation().strCoordsRaw(looking));
+                                this.locationManipulation.strCoordsRaw(looking));
                         signs.add((Sign) signBlock);
                     }
                 }
@@ -359,12 +367,12 @@ public class PortalDetector {
         return signs;
     }
 
-    public boolean playerCanGoToDestination(Player player, MVDestination d) {
-            if (d instanceof InvalidDestination || !d.isValid()) {
-                this.plugin.getCore().getMessaging().sendMessage(player, "The Destination on this sign is Invalid!", false);
-                return false;
-            }
-            return this.plugin.getCore().getMVPerms().hasPermission(player, d.getRequiredPermission(), true);
+    public boolean playerCanGoToDestination(Player player, DestinationInstance<?, ?> d) {
+        if (d == null) {
+            player.sendMessage("The Destination on this sign is Invalid!");
+            return false;
+        }
+        return true;
     }
 
     enum RedstoneTeleportType {
