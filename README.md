@@ -46,3 +46,4 @@ Additionally, we would like to give a big thanks to everyone that has supported 
 ## License
 
 Multiverse-SignPortals is licensed under BSD-3-Clause License. Please see [LICENSE.md](LICENSE.md) for more info.
+
