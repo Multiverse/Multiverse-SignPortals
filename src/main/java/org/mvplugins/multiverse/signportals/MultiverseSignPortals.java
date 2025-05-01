@@ -8,12 +8,11 @@
 package org.mvplugins.multiverse.signportals;
 
 import com.dumptruckman.minecraft.util.Logging;
-import org.mvplugins.multiverse.core.MultiverseCoreApi;
 import org.mvplugins.multiverse.core.config.CoreConfig;
 import org.mvplugins.multiverse.core.inject.PluginServiceLocator;
 import org.mvplugins.multiverse.core.module.MultiverseModule;
 import org.mvplugins.multiverse.core.utils.StringFormatter;
-import org.mvplugins.multiverse.external.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.annotations.Service;
 import org.mvplugins.multiverse.signportals.listeners.SignPortalsListener;
 
 import java.util.logging.Level;
@@ -45,11 +44,6 @@ public class MultiverseSignPortals extends MultiverseModule {
     public void onDisable() {
         shutdownDependencyInjection();
         Logging.info("- Disabled");
-    }
-
-    @Override
-    public PluginServiceLocator getServiceLocator() {
-        return serviceLocator;
     }
 
     public String getVersionInfo() {
