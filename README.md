@@ -8,9 +8,9 @@
 
 [![GitHub release (with filter)](https://img.shields.io/github/v/release/multiverse/multiverse-signportals)](https://github.com/Multiverse/Multiverse-SignPortals/releases/latest)
 [![Pre-Release](https://img.shields.io/github/v/release/multiverse/multiverse-signportals?include_prereleases&label=Pre-release)](https://github.com/Multiverse/Multiverse-SignPortals/releases)
-[![Discord](https://img.shields.io/discord/325459248047980545?label=discord&logo=discord)](https://discord.gg/NZtfKky)
-[![Support us on Patreon](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fshieldsio-patreon.vercel.app%2Fapi%3Fusername%3Ddumptruckman%26type%3Dpatrons&style=flat)](https://patreon.com/dumptruckman)
-
+[![Discord](https://img.shields.io/discord/325459248047980545?label=Discord&logo=discord)](https://discord.gg/NZtfKky)
+[![Donate on Github Sponsor](https://img.shields.io/badge/Github%20Sponsor-Donate-pink?logo=githubsponsors)](https://github.com/sponsors/Multiverse)
+[![Donate on Open Collective](https://img.shields.io/badge/Open%20Collective-Donate-blue?style=flat&logo=opencollective)](https://opencollective.com/multiverse-plugins)
 
 ## About
 
@@ -39,7 +39,7 @@ Simply build the source with Gradle:
 * Want others to love Multiverse too? You can join the [Multiverse Discord community](https://discord.gg/NZtfKky) and help others with issues and setup!
 * A Multiverse guru? You can update our [Wiki](https://github.com/Multiverse/multiverse-web) with your latest tips, tricks and guides! The wiki open for all to edit and improve.
 * Love coding? You could look at some of our [issues](https://github.com/Multiverse/Multiverse-SignPortals/issues). We're always happy to receive bug fixes and feature additions as [pull requests](https://www.freecodecamp.org/news/how-to-make-your-first-pull-request-on-github-3/).
-* If you'd like to make a financial contribution to the project, do consider joining our [Patreon](https://www.patreon.com/dumptruckman) or make a one-time donation [here](https://paypal.me/dumptruckman)!
+* If you'd like to make a financial contribution to the project, do consider donating to our [Github Sponsors](https://github.com/sponsors/Multiverse) or [Open Collective](https://opencollective.com/multiverse-plugins)!
 
 Additionally, we would like to give a big thanks to everyone that has supported Multiverse over the years, as well as those in the years to come. Thank you!
 
