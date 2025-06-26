@@ -13,7 +13,7 @@ public class SignTools {
     public static boolean isMVSign(String test, ChatColor color) {
         if (color == null) {
             test = ChatColor.stripColor(test);
-            return test.toLowerCase().matches("[multiverse]") || test.equalsIgnoreCase("[mv]");
+            return test.equalsIgnoreCase("[multiverse]") || test.equalsIgnoreCase("[mv]");
         }
         return test.equalsIgnoreCase(color + "[multiverse]") || test.equalsIgnoreCase(color + "[mv]");
     }
