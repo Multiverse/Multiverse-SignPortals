@@ -8,14 +8,14 @@
 package org.mvplugins.multiverse.signportals;
 
 import com.dumptruckman.minecraft.util.Logging;
+import org.jetbrains.annotations.NotNull;
 import org.mvplugins.multiverse.core.config.CoreConfig;
-import org.mvplugins.multiverse.core.inject.PluginServiceLocator;
 import org.mvplugins.multiverse.core.module.MultiverseModule;
 import org.mvplugins.multiverse.core.utils.StringFormatter;
 import org.jvnet.hk2.annotations.Service;
 import org.mvplugins.multiverse.signportals.listeners.SignPortalsListener;
 
-import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Service
 public class MultiverseSignPortals extends MultiverseModule {
@@ -31,13 +31,12 @@ public class MultiverseSignPortals extends MultiverseModule {
 
     @Override
     public void onEnable() {
-        Logging.init(this);
-
         initializeDependencyInjection(new MultiverseSignPortalsPluginBinder(this));
-        registerEvents(SignPortalsListener.class);
         Logging.setDebugLevel(serviceLocator.getActiveService(CoreConfig.class).getGlobalDebug());
+        registerEvents(SignPortalsListener.class);
 
-        Logging.log(true, Level.INFO, " Enabled - By %s", StringFormatter.joinAnd(getDescription().getAuthors()));
+        Logging.config("Version %s (API v%s) Enabled - By %s",
+                this.getDescription().getVersion(), getVersionAsNumber(), StringFormatter.joinAnd(this.getDescription().getAuthors()));
     }
 
     @Override
@@ -53,5 +52,10 @@ public class MultiverseSignPortals extends MultiverseModule {
     @Override
     public double getTargetCoreVersion() {
         return TARGET_CORE_API_VERSION;
+    }
+
+    @Override
+    public @NotNull Logger getLogger() {
+        return Logging.getLogger();
     }
 }
