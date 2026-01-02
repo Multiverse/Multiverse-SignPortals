@@ -1,8 +1,8 @@
 package org.mvplugins.multiverse.signportals.listeners;
 
-import org.bukkit.event.Listener;
 import org.jvnet.hk2.annotations.Contract;
+import org.mvplugins.multiverse.core.dynamiclistener.DynamicListener;
 
 @Contract
-public interface SignPortalsListener extends Listener {
+public sealed interface SignPortalsListener extends DynamicListener permits MVSPBlockListener, MVSPPlayerListener, MVSPPluginListener, MVSPVersionListener {
 }

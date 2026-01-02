@@ -33,7 +33,7 @@ public class MultiverseSignPortals extends MultiverseModule {
     public void onEnable() {
         initializeDependencyInjection(new MultiverseSignPortalsPluginBinder(this));
         Logging.setDebugLevel(serviceLocator.getActiveService(CoreConfig.class).getGlobalDebug());
-        registerEvents(SignPortalsListener.class);
+        registerDynamicListeners(SignPortalsListener.class);
 
         Logging.config("Version %s (API v%s) Enabled - By %s",
                 this.getDescription().getVersion(), getVersionAsNumber(), StringFormatter.joinAnd(this.getDescription().getAuthors()));

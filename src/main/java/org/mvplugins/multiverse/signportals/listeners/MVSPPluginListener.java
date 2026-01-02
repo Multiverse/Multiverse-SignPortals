@@ -7,15 +7,15 @@
 
 package org.mvplugins.multiverse.signportals.listeners;
 
+import org.mvplugins.multiverse.core.dynamiclistener.annotations.EventMethod;
 import org.mvplugins.multiverse.external.jakarta.inject.Inject;
 import org.mvplugins.multiverse.external.jetbrains.annotations.NotNull;
 import org.jvnet.hk2.annotations.Service;
 import org.mvplugins.multiverse.signportals.MultiverseSignPortals;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.server.PluginEnableEvent;
 
 @Service
-public class MVSPPluginListener implements SignPortalsListener {
+final class MVSPPluginListener implements SignPortalsListener {
 
     private final MultiverseSignPortals plugin;
 
@@ -28,7 +28,7 @@ public class MVSPPluginListener implements SignPortalsListener {
      * This method is fired when any plugin enables.
      * @param event The PluginEnable event.
      */
-    @EventHandler
+    @EventMethod
     public void onPluginEnable(PluginEnableEvent event) {
         if (event.getPlugin().getDescription().getName().equals("Multiverse-Core")) {
             // this.plugin.setCore(((MultiverseCore) plugin.getServer().getPluginManager().getPlugin("Multiverse-Core")));
