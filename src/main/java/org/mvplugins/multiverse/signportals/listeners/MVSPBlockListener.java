@@ -15,6 +15,7 @@ import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.PluginManager;
 import org.mvplugins.multiverse.core.destination.DestinationInstance;
 import org.mvplugins.multiverse.core.destination.DestinationsProvider;
+import org.mvplugins.multiverse.core.dynamiclistener.annotations.EventMethod;
 import org.mvplugins.multiverse.core.teleportation.AsyncSafetyTeleporter;
 import org.mvplugins.multiverse.external.jakarta.inject.Inject;
 import org.mvplugins.multiverse.external.jetbrains.annotations.NotNull;
@@ -30,7 +31,6 @@ import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.block.SignChangeEvent;
@@ -38,7 +38,7 @@ import org.bukkit.event.block.SignChangeEvent;
 import static org.mvplugins.multiverse.core.permissions.PermissionUtils.hasPermission;
 
 @Service
-public class MVSPBlockListener implements SignPortalsListener {
+final class MVSPBlockListener implements SignPortalsListener {
     private final String CREATE_PERM = "multiverse.signportal.create";
     private final MultiverseSignPortals plugin;
     private final PortalDetector pd;
@@ -58,7 +58,7 @@ public class MVSPBlockListener implements SignPortalsListener {
         pluginManager.addPermission(new Permission(CREATE_PERM, PermissionDefault.OP));
     }
 
-    @EventHandler
+    @EventMethod
     public void onSignChange(SignChangeEvent event) {
         if (event.isCancelled()) {
             return;
@@ -71,7 +71,7 @@ public class MVSPBlockListener implements SignPortalsListener {
         }
     }
 
-    @EventHandler
+    @EventMethod
     public void redstonePower(BlockRedstoneEvent event) {
         if (event.getNewCurrent() <= 0) {
             return;
@@ -140,7 +140,7 @@ public class MVSPBlockListener implements SignPortalsListener {
         return null;
     }
 
-    @EventHandler
+    @EventMethod
     public void onBlockBreak(BlockBreakEvent event) {
         if (event.isCancelled()) {
             return;

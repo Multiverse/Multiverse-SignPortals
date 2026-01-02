@@ -11,6 +11,7 @@ import com.dumptruckman.minecraft.util.Logging;
 import org.bukkit.ChatColor;
 import org.mvplugins.multiverse.core.destination.DestinationInstance;
 import org.mvplugins.multiverse.core.destination.DestinationsProvider;
+import org.mvplugins.multiverse.core.dynamiclistener.annotations.EventMethod;
 import org.mvplugins.multiverse.core.event.MVDebugModeEvent;
 import org.mvplugins.multiverse.core.event.MVDumpsDebugInfoEvent;
 import org.mvplugins.multiverse.core.event.MVPlayerTouchedPortalEvent;
@@ -20,13 +21,12 @@ import org.jvnet.hk2.annotations.Service;
 import org.mvplugins.multiverse.signportals.MultiverseSignPortals;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.mvplugins.multiverse.signportals.exceptions.MoreThanOneSignFoundException;
 import org.mvplugins.multiverse.signportals.exceptions.NoMultiverseSignFoundException;
 import org.mvplugins.multiverse.signportals.utils.PortalDetector;
 
 @Service
-public class MVSPVersionListener implements SignPortalsListener {
+final class MVSPVersionListener implements SignPortalsListener {
     private final MultiverseSignPortals plugin;
     private final PortalDetector detector;
     private final DestinationsProvider destinationsProvider;
@@ -44,7 +44,7 @@ public class MVSPVersionListener implements SignPortalsListener {
      * This method is called when Multiverse-Core wants to know what version we are.
      * @param event The Version event.
      */
-    @EventHandler
+    @EventMethod
     public void versionEvent(MVDumpsDebugInfoEvent event) {
         event.appendDebugInfo(this.plugin.getVersionInfo());
     }
@@ -54,7 +54,7 @@ public class MVSPVersionListener implements SignPortalsListener {
      * It's used to handle the intriquite messiness of priority between MV plugins.
      * @param event The PTP event.
      */
-    @EventHandler
+    @EventMethod
     public void portalTouchEvent(MVPlayerTouchedPortalEvent event) {
         Logging.finer("Found The TouchedPortal event.");
         Player p = event.getPlayer();
@@ -85,7 +85,7 @@ public class MVSPVersionListener implements SignPortalsListener {
         }
     }
 
-    @EventHandler
+    @EventMethod
     public void debugModeChange(MVDebugModeEvent event) {
         Logging.setDebugLevel(event.getLevel());
     }

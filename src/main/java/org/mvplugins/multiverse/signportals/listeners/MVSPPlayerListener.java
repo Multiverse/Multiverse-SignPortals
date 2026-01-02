@@ -14,6 +14,7 @@ import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.PluginManager;
 import org.mvplugins.multiverse.core.destination.DestinationInstance;
 import org.mvplugins.multiverse.core.destination.DestinationsProvider;
+import org.mvplugins.multiverse.core.dynamiclistener.annotations.EventMethod;
 import org.mvplugins.multiverse.core.teleportation.AsyncSafetyTeleporter;
 import org.mvplugins.multiverse.external.jakarta.inject.Inject;
 import org.mvplugins.multiverse.external.jetbrains.annotations.NotNull;
@@ -25,7 +26,6 @@ import org.mvplugins.multiverse.signportals.utils.SignStatus;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
@@ -33,7 +33,7 @@ import org.bukkit.event.player.PlayerPortalEvent;
 import static org.mvplugins.multiverse.core.permissions.PermissionUtils.hasPermission;
 
 @Service
-public class MVSPPlayerListener implements SignPortalsListener {
+final class MVSPPlayerListener implements SignPortalsListener {
 
     private static final String USE_PERMISSION = "multiverse.signportal.use";
     private static final String VALIDATE_PERMISSION = "multiverse.signportal.validate";
@@ -57,7 +57,7 @@ public class MVSPPlayerListener implements SignPortalsListener {
      * Called when the portal is ready to take the player to the destination.
      * @param event The Portal event.
      */
-    @EventHandler
+    @EventMethod
     public void playerPortal(PlayerPortalEvent event) {
         if (event.isCancelled()) {
             return;
@@ -94,7 +94,7 @@ public class MVSPPlayerListener implements SignPortalsListener {
      * Called when a player clicks on anything.
      * @param event The Interact event.
      */
-    @EventHandler
+    @EventMethod
     public void playerInteract(PlayerInteractEvent event) {
         // The event must not be canceled...
         if (event.isCancelled()) {
