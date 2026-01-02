@@ -43,6 +43,7 @@ public class MultiverseSignPortals extends MultiverseModule {
     public void onDisable() {
         shutdownDependencyInjection();
         Logging.info("- Disabled");
+        Logging.shutdown();
     }
 
     public String getVersionInfo() {
