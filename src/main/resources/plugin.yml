@@ -1,6 +1,8 @@
 name: Multiverse-SignPortals
 main: org.mvplugins.multiverse.signportals.MultiverseSignPortals
 authors: ['Rigby','fernferret']
+website: 'https://modrinth.com/plugin/multiverse-signportals'
+description: 'Create Signs that (on click) can teleport players to Multiverse destinations!'
 version: ${version}
 api-version: 1.13
 depend: ['Multiverse-Core']
