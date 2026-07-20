@@ -59,7 +59,7 @@ public class MultiverseSignPortals extends MultiverseModule {
                     if (!(entity instanceof Player player)) {
                         return false;
                     }
-                    Logging.warning("Checking if player %s can use a portal at %s", player.getName(), portalLocation);
+                    Logging.finer("Checking if player %s can use NetherPortals at %s", player.getName(), portalLocation);
                     return Try.of(() -> portalDetectorProvider.get().getNotchPortalDestination(player, portalLocation) != null)
                             .getOrElse(false);
                 })));
