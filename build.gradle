@@ -17,7 +17,8 @@ configure(apiDependencies) {
 
 dependencies {
     // Core
-    externalPlugin 'org.mvplugins.multiverse.core:multiverse-core:5.0.0-SNAPSHOT'
+    externalPlugin 'org.mvplugins.multiverse.core:multiverse-core:5.0.0'
+    externalPlugin 'org.mvplugins.multiverse.netherportals:multiverse-netherportals:5.1.0-SNAPSHOT'
 
     // Utils
     shadowed('com.dumptruckman.minecraft:Logging:1.1.1') {
